@@ -8,7 +8,9 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.wing.tree.bruni.core.constant.ZERO
 import com.wing.tree.bruni.core.extension.string
@@ -17,10 +19,10 @@ import com.wing.tree.bruni.core.useCase.Result
 import com.wing.tree.bruni.translation.archive.databinding.ActivityProcessTextBinding
 import com.wing.tree.bruni.translation.archive.viewModel.ProcessTextViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProcessTextActivity : AppCompatActivity() {
-    private val lifecycleOwner: LifecycleOwner = this
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             val bottomSheetBehavior = BottomSheetBehavior.from(viewBinding.bottomSheet)
@@ -103,22 +105,24 @@ class ProcessTextActivity : AppCompatActivity() {
     }
 
     private fun ProcessTextViewModel.observe() {
-        translations.observe(lifecycleOwner) translations@ {
-            val translations = it ?: return@translations
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                translations.collect {
+                    when(it) {
+                        Result.Loading -> viewBinding.circularProgressIndicator.show()
+                        is Result.Success -> with(viewBinding) {
+                            circularProgressIndicator.hide()
 
-            when(translations) {
-                Result.Loading -> viewBinding.circularProgressIndicator.show()
-                is Result.Success -> with(viewBinding) {
-                    circularProgressIndicator.hide()
+                            val data = it.data.ifEmpty { return@collect }
+                            val translation = data.first()
 
-                    val data = translations.data.ifEmpty { return@translations }
-                    val translation = data.first()
-
-                    sourceText.setText(translation.sourceText)
-                    translatedText.text = translation.translatedText
-                }
-                is Result.Failure -> {
-                    viewBinding.circularProgressIndicator.hide()
+                            sourceText.setText(translation.sourceText)
+                            translatedText.text = translation.translatedText
+                        }
+                        is Result.Failure -> {
+                            viewBinding.circularProgressIndicator.hide()
+                        }
+                    }
                 }
             }
         }
