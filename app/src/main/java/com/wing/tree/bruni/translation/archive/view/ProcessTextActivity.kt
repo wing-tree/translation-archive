@@ -8,17 +8,12 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.size
 import androidx.lifecycle.LifecycleOwner
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.wing.tree.bruni.core.constant.ZERO
 import com.wing.tree.bruni.core.extension.string
 import com.wing.tree.bruni.core.extension.then
 import com.wing.tree.bruni.core.useCase.Result
-import com.wing.tree.bruni.translation.archive.BuildConfig
-import com.wing.tree.bruni.translation.archive.R
 import com.wing.tree.bruni.translation.archive.databinding.ActivityProcessTextBinding
 import com.wing.tree.bruni.translation.archive.viewModel.ProcessTextViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,8 +45,8 @@ class ProcessTextActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
-        viewBinding.bind()
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+        viewBinding.bind()
 
         with(viewModel) {
             processText?.let {
@@ -112,15 +107,19 @@ class ProcessTextActivity : AppCompatActivity() {
             val translations = it ?: return@translations
 
             when(translations) {
-                Result.Loading -> {  }
+                Result.Loading -> viewBinding.circularProgressIndicator.show()
                 is Result.Success -> with(viewBinding) {
+                    circularProgressIndicator.hide()
+
                     val data = translations.data.ifEmpty { return@translations }
                     val translation = data.first()
 
                     sourceText.setText(translation.sourceText)
                     translatedText.text = translation.translatedText
                 }
-                is Result.Failure -> {}
+                is Result.Failure -> {
+                    viewBinding.circularProgressIndicator.hide()
+                }
             }
         }
     }
