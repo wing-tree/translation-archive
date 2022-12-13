@@ -6,6 +6,6 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.wing.tree.bruni.translation.archive.view.MainFragment"
+        android:name="com.wing.tree.bruni.inPlaceTranslate.view.MainFragment"
         android:label="MainFragment" />
 </navigation>

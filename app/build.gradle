@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace 'com.wing.tree.bruni.translation.archive'
+    namespace 'com.wing.tree.bruni.inPlaceTranslate'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.wing.tree.bruni.translation.archive"
+        applicationId "com.wing.tree.bruni.inPlaceTranslate"
         minSdk 26
         targetSdk 33
         versionCode 1

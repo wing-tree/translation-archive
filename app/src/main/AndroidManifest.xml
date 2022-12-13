@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.TranslationArchive"
+        android:theme="@style/Theme.InPlaceTranslate"
         tools:targetApi="31">
         <activity
             android:name=".view.MainActivity"
@@ -35,7 +35,7 @@
             android:exported="true"
             android:label="@string/translate"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.TranslationArchive.ProcessText">
+            android:theme="@style/Theme.InPlaceTranslate.ProcessText">
 
             <intent-filter>
                 <action android:name="android.intent.action.PROCESS_TEXT" />

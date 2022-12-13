@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.wing.tree.bruni.translation.archive.domain'
+    namespace 'com.wing.tree.bruni.inPlaceTranslate.domain'
     compileSdk 33
 
     defaultConfig {
