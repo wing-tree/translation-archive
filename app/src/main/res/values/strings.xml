@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Translation Archive</string>
+    <string name="app_name">In Place Translate</string>
     <string name="archive">Archive</string>
     <string name="translate">Translate</string>
 </resources>
