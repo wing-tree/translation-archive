@@ -129,6 +129,6 @@ class ProcessTextActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val DELAY_MILLIS = 64L
+        private const val DELAY_MILLIS = 150L
     }
 }
