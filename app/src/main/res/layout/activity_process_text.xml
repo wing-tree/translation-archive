@@ -14,66 +14,124 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:behavior_hideable="true"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        app:layout_behavior=".bottomSheet.BottomSheetBehavior">
 
         <com.google.android.material.bottomsheet.BottomSheetDragHandleView
             android:id="@+id/bottom_sheet_drag_handle_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraint_layout"
             android:layout_width="0dp"
-            android:layout_height="240dp"
-            app:layout_constraintBottom_toTopOf="@+id/ad_view"
+            android:layout_height="40dp"
+            android:paddingHorizontal="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/bottom_sheet_drag_handle_view">
 
-            <EditText
-                android:id="@+id/source_text"
-                style="@style/TextAppearance.Material3.BodyLarge"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
+            <TextView
+                android:id="@+id/source"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="한국어" />
+
+            <ImageView
+                android:id="@+id/image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:background="@null"
-                android:clickable="false"
-                android:focusable="false"
-                android:gravity="start|top"
-                android:inputType="textMultiLine"
-                android:padding="8dp"
-                app:layout_constraintBottom_toTopOf="@+id/translated_text"
+                android:src="@drawable/ic_round_swap_horiz_20"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/source"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="?attr/colorOnSurface"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/target"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/image_view"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="영어" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="240dp"
+            android:layout_marginBottom="16dp"
+            android:paddingHorizontal="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/frame_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraint_layout">
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/nested_scroll_view_top"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:fadingEdgeLength="4dp"
+                android:fillViewport="true"
+                android:requiresFadingEdge="vertical"
+                app:layout_constraintBottom_toTopOf="@+id/nested_scroll_view_bottom"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_chainStyle="packed"
-                tools:ignore="Autofill,LabelFor"
-                tools:text="구글 번역은 텍스트 번역을 위해 구글이 무료로 제공하는 다언어 기계 번역 서비스이다." />
+                app:layout_constraintVertical_chainStyle="packed">
 
-            <TextView
-                android:id="@+id/translated_text"
-                style="@style/TextAppearance.Material3.BodyLarge"
-                android:layout_width="0dp"
+                <EditText
+                    android:id="@+id/source_text"
+                    style="@style/TextAppearance.Material3.BodyMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:gravity="start|top"
+                    android:inputType="textMultiLine"
+                    android:padding="8dp"
+                    tools:ignore="Autofill,LabelFor" />
+
+            </androidx.core.widget.NestedScrollView>
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/nested_scroll_view_bottom"
+                android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="?attr/colorSurfaceVariant"
-                android:gravity="start|top"
-                android:padding="8dp"
-                android:scrollbars="vertical"
+                android:layout_marginTop="16dp"
+                android:fadingEdgeLength="4dp"
+                android:fillViewport="true"
+                android:requiresFadingEdge="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/source_text"
-                tools:text="Google Translate is a multilingual machine translation service provided free of charge by Google for text translation."/>
+                app:layout_constraintTop_toBottomOf="@+id/nested_scroll_view_top">
+
+                <TextView
+                    android:id="@+id/translated_text"
+                    style="@style/TextAppearance.Material3.BodyMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/colorSurfaceVariant"
+                    android:gravity="start|top"
+                    android:padding="8dp"
+                    android:scrollbars="vertical" />
+
+            </androidx.core.widget.NestedScrollView>
 
             <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:id="@+id/circular_progress_indicator"
@@ -87,14 +145,12 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/ad_view"
+        <FrameLayout
+            android:id="@+id/frame_layout"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="32dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            app:adSize="BANNER"
-            app:adUnitId="@string/banner_ad_unit_id"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
