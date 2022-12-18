@@ -20,17 +20,16 @@
             android:id="@+id/constraint_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginHorizontal="16dp"
+            android:padding="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/source"
-                style="@style/TextAppearance.Material3.LabelLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -50,10 +49,10 @@
 
             <TextView
                 android:id="@+id/target"
-                style="@style/TextAppearance.Material3.LabelLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/image_view"
                 app:layout_constraintTop_toTopOf="parent"
@@ -63,8 +62,9 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_height="256dp"
-            android:padding="16dp"
+            android:layout_height="240dp"
+            android:layout_marginBottom="16dp"
+            android:paddingHorizontal="16dp"
             app:layout_constraintBottom_toTopOf="@+id/frame_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -74,8 +74,9 @@
                 android:id="@+id/nested_scroll_view"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:fadingEdgeLength="4dp"
+                android:fadingEdgeLength="6dp"
                 android:fillViewport="true"
+
                 android:requiresFadingEdge="vertical"
                 app:layout_constraintBottom_toTopOf="@+id/nested_scroll_view2"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -86,7 +87,6 @@
 
                 <EditText
                     android:id="@+id/source_text"
-                    style="@style/TextAppearance.Material3.BodyMedium"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"
@@ -95,6 +95,7 @@
                     android:gravity="start|top"
                     android:inputType="textMultiLine"
                     android:padding="12dp"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                     tools:ignore="Autofill,LabelFor" />
 
             </androidx.core.widget.NestedScrollView>
@@ -126,7 +127,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="16dp"
-                android:fadingEdgeLength="4dp"
+                android:background="@drawable/shape_translated_text"
+                android:backgroundTint="?attr/colorSurfaceVariant"
+                android:fadingEdgeLength="6dp"
                 android:fillViewport="true"
                 android:requiresFadingEdge="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -137,13 +140,12 @@
 
                 <TextView
                     android:id="@+id/translated_text"
-                    style="@style/TextAppearance.Material3.BodyMedium"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?attr/colorSurfaceVariant"
                     android:gravity="start|top"
                     android:padding="12dp"
-                    android:scrollbars="vertical" />
+                    android:scrollbars="vertical"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
             </androidx.core.widget.NestedScrollView>
 
