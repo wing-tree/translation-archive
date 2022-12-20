@@ -32,6 +32,14 @@ android {
             buildConfigField("String", "API_KEY", properties.getProperty("api.key"))
         }
     }
+    flavorDimensions += "version"
+    productFlavors {
+        create("koreanToEnglish") {
+            dimension = "version"
+            buildConfigField "String", "SOURCE", "\"ko\""
+            buildConfigField "String", "TARGET", "\"en\""
+        }
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -46,6 +54,7 @@ dependencies {
     implementation(project(":domain"))
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.datastore:datastore-preferences:1.0.0'
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'com.google.dagger:hilt-android:2.44'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'

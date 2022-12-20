@@ -26,6 +26,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions += "version"
+    productFlavors {
+        create("koreanToEnglish") {
+            dimension = "version"
+            applicationIdSuffix = ".koreanToEnglish"
+            versionNameSuffix = "-koreanToEnglish"
+        }
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -53,7 +61,7 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:2.5.3"
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
     implementation 'androidx.work:work-runtime:2.7.1'
-    implementation 'com.google.android.gms:play-services-ads:21.3.0'
+    implementation 'com.google.android.gms:play-services-ads:21.4.0'
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'com.google.dagger:hilt-android:2.44'
     implementation 'org.jetbrains.kotlin:kotlin-reflect:1.7.21'
