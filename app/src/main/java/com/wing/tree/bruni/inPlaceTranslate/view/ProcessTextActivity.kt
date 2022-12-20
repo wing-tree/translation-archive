@@ -101,6 +101,8 @@ class ProcessTextActivity : AppCompatActivity() {
     }
 
     private fun speak(loc: Locale, text: CharSequence) = textToSpeech?.let {
+        val utteranceId = loc.language.plus(text).hashCode().string
+
         when(it.setLanguage(loc)) {
             TextToSpeech.LANG_MISSING_DATA, TextToSpeech.LANG_NOT_SUPPORTED -> {
 
@@ -108,8 +110,7 @@ class ProcessTextActivity : AppCompatActivity() {
             else -> {
                 it.setSpeechRate(SPEECH_RATE)
                 it.setPitch(PITCH)
-
-                it.speak(text, TextToSpeech.QUEUE_FLUSH, null, "id1")
+                it.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId)
             }
         }
     }
