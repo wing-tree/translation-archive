@@ -32,14 +32,6 @@ android {
             buildConfigField("String", "API_KEY", properties.getProperty("api.key"))
         }
     }
-    flavorDimensions += "version"
-    productFlavors {
-        create("koreanToEnglish") {
-            dimension = "version"
-            buildConfigField "String", "SOURCE", "\"ko\""
-            buildConfigField "String", "TARGET", "\"en\""
-        }
-    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
