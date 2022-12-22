@@ -28,10 +28,12 @@ android {
     }
     flavorDimensions += "version"
     productFlavors {
-        create("koreanToEnglish") {
+        create("englishToKorean") {
             dimension = "version"
-            applicationIdSuffix = ".koreanToEnglish"
-            versionNameSuffix = "-koreanToEnglish"
+            applicationIdSuffix = ".englishToKorean"
+            versionNameSuffix = "-englishToKorean"
+            buildConfigField "String", "SOURCE", "\"en\""
+            buildConfigField "String", "TARGET", "\"ko\""
         }
     }
     compileOptions {
