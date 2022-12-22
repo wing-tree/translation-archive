@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:behavior_hideable="true"
-        app:layout_behavior=".bottomSheet.BottomSheetBehavior">
+        app:layout_behavior="com.wing.tree.bruni.core.bottomSheetBehavior.BottomSheetBehavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraint_layout"
@@ -27,19 +27,21 @@
 
             <TextView
                 android:id="@+id/source"
-                android:layout_width="wrap_content"
+                android:layout_width="56dp"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="한국어" />
 
-            <ImageView
-                android:id="@+id/image_view"
+            <ImageButton
+                android:id="@+id/swap"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:background="@null"
                 android:src="@drawable/ic_round_swap_horiz_20"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/source"
@@ -49,12 +51,13 @@
 
             <TextView
                 android:id="@+id/target"
-                android:layout_width="wrap_content"
+                android:layout_width="56dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:gravity="center"
                 android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/image_view"
+                app:layout_constraintStart_toEndOf="@+id/swap"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="영어" />
 

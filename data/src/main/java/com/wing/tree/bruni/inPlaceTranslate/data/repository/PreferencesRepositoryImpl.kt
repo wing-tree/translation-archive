@@ -2,9 +2,9 @@ package com.wing.tree.bruni.inPlaceTranslate.data.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
-import com.wing.tree.bruni.inPlaceTranslate.data.BuildConfig
+import com.wing.tree.bruni.core.constant.EMPTY
 import com.wing.tree.bruni.inPlaceTranslate.domain.repository.PreferencesRepository
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -22,11 +22,23 @@ class PreferencesRepositoryImpl @Inject constructor(
         val target = stringPreferencesKey(Name.TARGET)
     }
 
-    override suspend fun source(): String {
-        return dataStore.data.map { it[Key.source] }.firstOrNull() ?: BuildConfig.SOURCE
+    override fun getSource(): Flow<String> {
+        return dataStore.data.map { it[Key.source] ?: EMPTY }
     }
 
-    override suspend fun target(): String {
-        return dataStore.data.map { it[Key.target] }.firstOrNull() ?: BuildConfig.TARGET
+    override fun getTarget(): Flow<String> {
+        return dataStore.data.map { it[Key.target] ?: EMPTY }
+    }
+
+    override suspend fun putSource(source: String) {
+        dataStore.edit {
+            it[Key.source] = source
+        }
+    }
+
+    override suspend fun putTarget(target: String) {
+        dataStore.edit {
+            it[Key.target] = target
+        }
     }
 }

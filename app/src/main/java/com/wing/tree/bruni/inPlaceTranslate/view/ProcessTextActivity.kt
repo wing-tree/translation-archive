@@ -1,8 +1,10 @@
 package com.wing.tree.bruni.inPlaceTranslate.view
 
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
+import android.os.LocaleList
 import android.os.Looper
 import android.speech.tts.TextToSpeech
 import android.text.method.ScrollingMovementMethod
@@ -27,17 +29,21 @@ import com.wing.tree.bruni.core.extension.copyToClipboard
 import com.wing.tree.bruni.core.extension.string
 import com.wing.tree.bruni.core.extension.then
 import com.wing.tree.bruni.core.useCase.Result
+import com.wing.tree.bruni.core.useCase.getOrDefault
+import com.wing.tree.bruni.core.useCase.getOrNull
 import com.wing.tree.bruni.inPlaceTranslate.BuildConfig
 import com.wing.tree.bruni.inPlaceTranslate.R
 import com.wing.tree.bruni.inPlaceTranslate.databinding.ActivityProcessTextBinding
 import com.wing.tree.bruni.inPlaceTranslate.extension.letIsViewGroup
 import com.wing.tree.bruni.inPlaceTranslate.viewModel.ProcessTextViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
 
 @AndroidEntryPoint
 class ProcessTextActivity : AppCompatActivity() {
+    private val availableLocales = Locale.getAvailableLocales()
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             val bottomSheetBehavior = BottomSheetBehavior.from(viewBinding.bottomSheet)
@@ -67,7 +73,7 @@ class ProcessTextActivity : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
 
         viewBinding.bind()
-        viewModel.observe()
+        viewModel.collect()
 
         processText?.let {
             viewModel.translate(it.string)
@@ -158,6 +164,10 @@ class ProcessTextActivity : AppCompatActivity() {
     }
 
     private fun ActivityProcessTextBinding.imageButton() {
+        swap.setOnClickListener {
+            viewModel.swap()
+        }
+
         speakSourceText.setOnClickListener {
             speak(Locale.ENGLISH, sourceText.text)
         }
@@ -206,7 +216,31 @@ class ProcessTextActivity : AppCompatActivity() {
         }.loadAd(adRequest)
     }
 
-    private fun ProcessTextViewModel.observe() {
+    private fun ProcessTextViewModel.collect() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                source.collect { source ->
+                    val locale = availableLocales.find { locale ->
+                        locale.language == source
+                    }
+
+                    viewBinding.source.text = locale?.displayLanguage
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                target.collect { target ->
+                    val locale = availableLocales.find { locale ->
+                        locale.language == target
+                    }
+
+                    viewBinding.target.text = locale?.displayLanguage
+                }
+            }
+        }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 translations.collect {
