@@ -79,7 +79,6 @@
                 android:layout_height="0dp"
                 android:fadingEdgeLength="6dp"
                 android:fillViewport="true"
-
                 android:requiresFadingEdge="vertical"
                 app:layout_constraintBottom_toTopOf="@+id/nested_scroll_view2"
                 app:layout_constraintEnd_toEndOf="parent"
