@@ -6,7 +6,7 @@ interface Response {
     interface Data {
         interface Translation {
             val translatedText: String
-            val detectedSourceLanguage: String
+            val detectedSourceLanguage: String?
         }
 
         val translations: List<Translation>

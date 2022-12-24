@@ -15,7 +15,7 @@ internal class TranslationMapper : Mapper<Entity, Model> {
 
     override fun toModel(entity: Entity): Model {
         return object : Model {
-            override val detectedSourceLanguage: String = entity.detectedSourceLanguage
+            override val detectedSourceLanguage: String? = entity.detectedSourceLanguage
             override val sourceText = entity.sourceText
             override val target: String = entity.target
             override val translatedText = entity.translatedText
