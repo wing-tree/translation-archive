@@ -1,6 +1,6 @@
 package com.wing.tree.bruni.inPlaceTranslate.domain.repository
 
-import com.wing.tree.bruni.inPlaceTranslate.domain.enum.Source
+import com.wing.tree.bruni.inPlaceTranslate.domain.enum.DataSource
 import com.wing.tree.bruni.inPlaceTranslate.domain.model.Translation
 
 interface TranslationRepository {
@@ -8,8 +8,9 @@ interface TranslationRepository {
     suspend fun archive(translation: Translation)
     suspend fun archiveAll(list: List<Translation>)
     suspend fun translate(
+        dataSource: DataSource,
+        source: String,
         sourceText: String,
-        target: String,
-        source: Source
+        target: String
     ): List<Translation>
 }

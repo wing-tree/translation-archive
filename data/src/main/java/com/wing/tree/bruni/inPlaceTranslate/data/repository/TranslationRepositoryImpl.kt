@@ -5,7 +5,7 @@ import com.wing.tree.bruni.inPlaceTranslate.data.entity.Request
 import com.wing.tree.bruni.inPlaceTranslate.data.entity.Request.Body
 import com.wing.tree.bruni.inPlaceTranslate.data.entity.Translation
 import com.wing.tree.bruni.inPlaceTranslate.data.mapper.TranslationMapper
-import com.wing.tree.bruni.inPlaceTranslate.domain.enum.Source
+import com.wing.tree.bruni.inPlaceTranslate.domain.enum.DataSource
 import com.wing.tree.bruni.inPlaceTranslate.domain.repository.TranslationRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -40,20 +40,21 @@ class TranslationRepositoryImpl @Inject constructor(
     }
 
     override suspend fun translate(
+        dataSource: DataSource,
+        source: String,
         sourceText: String,
-        target: String,
-        source: Source
+        target: String
     ): List<Model> {
-        return when(source) {
-            Source.DEFAULT -> with(localDataSource.all(sourceText, target)) {
-                ifEmpty { translate(sourceText, target) }
+        return when(dataSource) {
+            DataSource.DEFAULT -> with(localDataSource.all(sourceText, target)) {
+                ifEmpty { translate(sourceText, source, target) }
             }
-            else -> translate(sourceText, target)
+            else -> translate(sourceText, source, target)
         }
     }
 
-    private suspend fun translate(sourceText: String, target: String): List<Translation> {
-        val body = Body(q = listOf(sourceText), target = target)
+    private suspend fun translate(sourceText: String, source: String, target: String): List<Translation> {
+        val body = Body(format = FORMAT, q = sourceText, source = source, target = target)
         val request = Request(key = BuildConfig.API_KEY, body = body)
 
         val response = remoteDataSource.translate(request)
@@ -74,4 +75,8 @@ class TranslationRepositoryImpl @Inject constructor(
     }
 
     private fun Model.toEntity() = translationMapper.toEntity(this)
+
+    companion object {
+        private const val FORMAT = "text"
+    }
 }
