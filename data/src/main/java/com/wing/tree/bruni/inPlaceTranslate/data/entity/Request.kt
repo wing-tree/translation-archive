@@ -7,7 +7,9 @@ data class Request(
     override val body: Body
 ) : Request {
     class Body(
-        override val q: List<String>,
+        override val format: String,
+        override val q: String,
+        override val source: String,
         override val target: String
     ) : Request.Body
 }

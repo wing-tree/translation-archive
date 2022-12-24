@@ -5,7 +5,9 @@ interface Request {
     val body: Body
 
     interface Body {
-        val q: List<String>
+        val format: String
+        val q: String
+        val source: String
         val target: String
     }
 }

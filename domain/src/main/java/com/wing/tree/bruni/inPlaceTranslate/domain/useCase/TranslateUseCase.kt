@@ -2,7 +2,7 @@ package com.wing.tree.bruni.inPlaceTranslate.domain.useCase
 
 import com.wing.tree.bruni.core.useCase.CoroutineUseCase
 import com.wing.tree.bruni.core.useCase.IOCoroutineDispatcher
-import com.wing.tree.bruni.inPlaceTranslate.domain.enum.Source
+import com.wing.tree.bruni.inPlaceTranslate.domain.enum.DataSource
 import com.wing.tree.bruni.inPlaceTranslate.domain.model.Translation
 import com.wing.tree.bruni.inPlaceTranslate.domain.repository.TranslationRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -14,15 +14,17 @@ class TranslateUseCase @Inject constructor(
 ) : CoroutineUseCase<TranslateUseCase.Parameter, List<Translation>>(coroutineDispatcher) {
     override suspend fun execute(parameter: Parameter): List<Translation> {
         return translationRepository.translate(
+            dataSource = parameter.dataSource,
+            source = parameter.source,
             sourceText = parameter.sourceText,
-            target = parameter.target,
-            source = parameter.source
+            target = parameter.target
         )
     }
 
     data class Parameter(
+        val dataSource: DataSource = DataSource.DEFAULT,
+        val source: String,
         val sourceText: String,
-        val target: String,
-        val source: Source = Source.DEFAULT
+        val target: String
     )
 }
