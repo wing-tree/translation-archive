@@ -1,5 +1,6 @@
 package com.wing.tree.bruni.inPlaceTranslate.data.repository
 
+import com.wing.tree.bruni.core.constant.EMPTY
 import com.wing.tree.bruni.inPlaceTranslate.data.BuildConfig
 import com.wing.tree.bruni.inPlaceTranslate.data.entity.Request
 import com.wing.tree.bruni.inPlaceTranslate.data.entity.Request.Body
@@ -62,7 +63,9 @@ class TranslationRepositoryImpl @Inject constructor(
 
         return translations.map {
             Translation(
-                detectedSourceLanguage = it.detectedSourceLanguage,
+                rowid = it.rowid(source, sourceText, target),
+                detectedSourceLanguage = it.detectedSourceLanguage ?: EMPTY,
+                source = source,
                 sourceText = sourceText,
                 target = target,
                 translatedText = it.translatedText

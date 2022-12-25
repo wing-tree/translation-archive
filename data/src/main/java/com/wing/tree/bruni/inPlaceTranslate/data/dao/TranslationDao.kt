@@ -14,9 +14,9 @@ interface TranslationDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(list: List<Translation>)
 
-    @Query("SELECT * FROM translation WHERE source_text = :sourceText AND target = :target")
+    @Query("SELECT *, `rowid` FROM translation WHERE source_text = :sourceText AND target = :target")
     suspend fun all(sourceText: String, target: String): List<Translation>
 
-    @Query("SELECT EXISTS(SELECT * FROM translation WHERE source_text = :sourceText AND target = :target)")
+    @Query("SELECT EXISTS(SELECT *, `rowid` FROM translation WHERE source_text = :sourceText AND target = :target)")
     suspend fun exists(sourceText: String, target: String) : Boolean
 }

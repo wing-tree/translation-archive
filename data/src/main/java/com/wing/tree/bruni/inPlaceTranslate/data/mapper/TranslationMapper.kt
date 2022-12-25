@@ -1,12 +1,14 @@
 package com.wing.tree.bruni.inPlaceTranslate.data.mapper
 
+import com.wing.tree.bruni.core.constant.EMPTY
 import com.wing.tree.bruni.inPlaceTranslate.data.entity.Translation as Entity
 import com.wing.tree.bruni.inPlaceTranslate.domain.model.Translation as Model
 
 internal class TranslationMapper : Mapper<Entity, Model> {
     override fun toEntity(model: Model): Entity {
         return Entity(
-            detectedSourceLanguage = model.detectedSourceLanguage,
+            detectedSourceLanguage = model.detectedSourceLanguage ?: EMPTY,
+            source = model.source,
             sourceText = model.sourceText,
             target = model.target,
             translatedText = model.translatedText
@@ -15,9 +17,10 @@ internal class TranslationMapper : Mapper<Entity, Model> {
 
     override fun toModel(entity: Entity): Model {
         return object : Model {
-            override val detectedSourceLanguage: String? = entity.detectedSourceLanguage
+            override val detectedSourceLanguage = entity.detectedSourceLanguage
+            override val source: String = entity.source
             override val sourceText = entity.sourceText
-            override val target: String = entity.target
+            override val target = entity.target
             override val translatedText = entity.translatedText
         }
     }
