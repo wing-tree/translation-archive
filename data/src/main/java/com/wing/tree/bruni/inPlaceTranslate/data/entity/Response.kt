@@ -8,7 +8,13 @@ data class Response(override val data: Data) : Response {
     ) : Response.Data {
         data class Translation(
             override val translatedText: String,
-            override val detectedSourceLanguage: String
-        ) : Response.Data.Translation
+            override val detectedSourceLanguage: String?
+        ) : Response.Data.Translation {
+            fun rowid(vararg values: String): Int {
+                return values.fold(translatedText.hashCode()) { acc, value ->
+                    31.times(acc).plus(value.hashCode())
+                }
+            }
+        }
     }
 }
