@@ -1,14 +1,13 @@
 package com.wing.tree.bruni.inPlaceTranslate.view
 
 import android.content.Intent
-import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
-import android.os.LocaleList
 import android.os.Looper
 import android.speech.tts.TextToSpeech
 import android.text.method.ScrollingMovementMethod
 import android.view.View
+import android.view.animation.AccelerateInterpolator
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
@@ -23,27 +22,21 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.wing.tree.bruni.core.constant.NEWLINE
+import com.wing.tree.bruni.core.constant.ONE
 import com.wing.tree.bruni.core.constant.ZERO
-import com.wing.tree.bruni.core.extension.context
-import com.wing.tree.bruni.core.extension.copyToClipboard
-import com.wing.tree.bruni.core.extension.string
-import com.wing.tree.bruni.core.extension.then
+import com.wing.tree.bruni.core.extension.*
 import com.wing.tree.bruni.core.useCase.Result
-import com.wing.tree.bruni.core.useCase.getOrDefault
-import com.wing.tree.bruni.core.useCase.getOrNull
 import com.wing.tree.bruni.inPlaceTranslate.BuildConfig
 import com.wing.tree.bruni.inPlaceTranslate.R
 import com.wing.tree.bruni.inPlaceTranslate.databinding.ActivityProcessTextBinding
 import com.wing.tree.bruni.inPlaceTranslate.extension.letIsViewGroup
 import com.wing.tree.bruni.inPlaceTranslate.viewModel.ProcessTextViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
 
 @AndroidEntryPoint
 class ProcessTextActivity : AppCompatActivity() {
-    private val availableLocales = Locale.getAvailableLocales()
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             val bottomSheetBehavior = BottomSheetBehavior.from(viewBinding.bottomSheet)
@@ -106,6 +99,12 @@ class ProcessTextActivity : AppCompatActivity() {
         } ?: finishThen { overridePendingTransition(ZERO, ZERO) }
     }
 
+    private fun findDisplayLanguageByLanguage(language: String): String? {
+        return Locale.getAvailableLocales().find {
+            it.language == language
+        }?.displayLanguage
+    }
+
     private fun speak(loc: Locale, text: CharSequence) = textToSpeech?.let {
         val utteranceId = loc.language.plus(text).hashCode().string
 
@@ -165,7 +164,29 @@ class ProcessTextActivity : AppCompatActivity() {
 
     private fun ActivityProcessTextBinding.imageButton() {
         swap.setOnClickListener {
-            viewModel.swap()
+            it.isClickable = false
+
+            val degree = it.rotation.plus(180.0F).rem(Float.MAX_VALUE)
+            val duration = resources.configShortAnimTime.long
+            val x = 8.0F.toPx(resources)
+
+            it.rotate(duration, degree, AccelerateInterpolator())
+
+            with(source) {
+                translateRight(duration.half, x) {
+                    viewModel.swap().then {
+                        translateLeft(duration.half, x) {
+                            it.isClickable = true
+                        }.alpha(ONE.float)
+                    }
+                }.alpha(ZERO.float)
+            }
+
+            with(target) {
+                translateLeft(duration.half, x) {
+                    translateRight(duration.half, x).alpha(ONE.float)
+                }.alpha(ZERO.float)
+            }
         }
 
         speakSourceText.setOnClickListener {
@@ -220,11 +241,7 @@ class ProcessTextActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 source.collect { source ->
-                    val locale = availableLocales.find { locale ->
-                        locale.language == source
-                    }
-
-                    viewBinding.source.text = locale?.displayLanguage
+                    viewBinding.source.text = findDisplayLanguageByLanguage(source)
                 }
             }
         }
@@ -232,24 +249,20 @@ class ProcessTextActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 target.collect { target ->
-                    val locale = availableLocales.find { locale ->
-                        locale.language == target
-                    }
-
-                    viewBinding.target.text = locale?.displayLanguage
+                    viewBinding.target.text = findDisplayLanguageByLanguage(target)
                 }
             }
         }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                translations.collect {
+                translations.collect label@ {
                     when(it) {
                         Result.Loading -> viewBinding.circularProgressIndicator.show()
                         is Result.Success -> with(viewBinding) {
                             circularProgressIndicator.hide()
 
-                            val data = it.data.ifEmpty { return@collect }
+                            val data = it.data.ifEmpty { return@label }
                             val translation = data.first()
 
                             sourceText.setText(translation.sourceText.plus(NEWLINE))
@@ -257,6 +270,7 @@ class ProcessTextActivity : AppCompatActivity() {
                         }
                         is Result.Failure -> {
                             viewBinding.circularProgressIndicator.hide()
+                            Toast.makeText(this@ProcessTextActivity, it.throwable.message, Toast.LENGTH_LONG).show()
                         }
                     }
                 }

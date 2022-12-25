@@ -2,7 +2,7 @@ package com.wing.tree.bruni.inPlaceTranslate.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.wing.tree.bruni.core.constant.EMPTY
+import com.wing.tree.bruni.core.extension.firstOrDefault
 import com.wing.tree.bruni.core.extension.string
 import com.wing.tree.bruni.core.useCase.Result
 import com.wing.tree.bruni.core.useCase.getOrDefault
@@ -11,10 +11,11 @@ import com.wing.tree.bruni.inPlaceTranslate.domain.model.Translation
 import com.wing.tree.bruni.inPlaceTranslate.domain.useCase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -39,27 +40,23 @@ class ProcessTextViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getSourceUseCase().map { result ->
-                result.getOrDefault(EMPTY).ifBlank {
-                    BuildConfig.SOURCE.also {
-                        putSourceUseCase(it)
-                    }
-                }
-            }.collectLatest { source ->
-                _source.value = source
-            }
+            val defaultValue = BuildConfig.SOURCE
+
+            _source.value = getSourceUseCase().map { result ->
+                result.getOrDefault(defaultValue)
+            }.firstOrDefault(defaultValue)
+
+            putSourceUseCase(source.value)
         }
 
         viewModelScope.launch {
-            getTargetUseCase().map { result ->
-                result.getOrDefault(EMPTY).ifBlank {
-                    BuildConfig.TARGET.also {
-                        putTargetUseCase(it)
-                    }
-                }
-            }.collectLatest { target ->
-                _target.value = target
-            }
+            val defaultValue = BuildConfig.TARGET
+
+            _target.value = getTargetUseCase().map { result ->
+                result.getOrDefault(defaultValue)
+            }.firstOrDefault(defaultValue)
+
+            putTargetUseCase(target.value)
         }
     }
 
@@ -67,11 +64,11 @@ class ProcessTextViewModel @Inject constructor(
         val source = source.value
         val target = target.value
 
-        viewModelScope.launch(ioDispatcher) {
-            putSourceUseCase(target)
-        }
+        _source.value = target
+        _target.value = source
 
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch {
+            putSourceUseCase(target)
             putTargetUseCase(source)
         }
     }
@@ -79,8 +76,9 @@ class ProcessTextViewModel @Inject constructor(
     fun translate(sourceText: CharSequence) = viewModelScope.launch {
         val result = withContext(ioDispatcher) {
             val parameter = TranslateUseCase.Parameter(
+                source = source.value,
                 sourceText = sourceText.string,
-                target = Locale.getDefault().language
+                target = target.value
             )
 
             translateUseCase(parameter)
