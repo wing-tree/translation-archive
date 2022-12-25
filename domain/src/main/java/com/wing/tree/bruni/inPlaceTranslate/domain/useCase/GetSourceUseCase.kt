@@ -10,8 +10,8 @@ import javax.inject.Inject
 class GetSourceUseCase @Inject constructor(
     @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher,
     private val preferencesRepository: PreferencesRepository
-) : NoParameterFlowUseCase<String>(coroutineDispatcher) {
-    override fun execute(): Flow<String> {
+) : NoParameterFlowUseCase<String?>(coroutineDispatcher) {
+    override fun execute(): Flow<String?> {
         return preferencesRepository.getSource()
     }
 }
