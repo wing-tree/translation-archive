@@ -42,15 +42,12 @@ class ProcessTextActivity : AppCompatActivity() {
             val bottomSheetBehavior = BottomSheetBehavior.from(viewBinding.bottomSheet)
 
             if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
-                finishThen { overridePendingTransition(ZERO, ZERO) }
+                finish()
             } else {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             }
         }
     }
-
-    private val processText: CharSequence?
-        get() = intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)
 
     private val viewBinding by lazy {
         ActivityProcessTextBinding.inflate(layoutInflater)
@@ -68,16 +65,19 @@ class ProcessTextActivity : AppCompatActivity() {
         viewBinding.bind()
         viewModel.collect()
 
-        processText?.let {
-            viewModel.translate(it.string)
-        } ?: finishThen {
-            overridePendingTransition(ZERO, ZERO)
+        if (processText(intent).not()) {
+            finish()
             return
         }
 
         textToSpeech = TextToSpeech(this) { status ->
 
         }
+    }
+
+    override fun onPause() {
+        overridePendingTransition(ZERO, ZERO)
+        super.onPause()
     }
 
     override fun onDestroy() {
@@ -92,17 +92,24 @@ class ProcessTextActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
 
-        val processText = intent?.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)
-
-        processText?.let {
-            viewModel.translate(it.string)
-        } ?: finishThen { overridePendingTransition(ZERO, ZERO) }
+        if (processText(intent).not()) {
+            finish()
+        }
     }
 
     private fun findDisplayLanguageByLanguage(language: String): String? {
         return Locale.getAvailableLocales().find {
             it.language == language
         }?.displayLanguage
+    }
+
+    private fun processText(intent: Intent?): Boolean {
+        val processText = intent?.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)
+        val sourceText = processText?.string ?: return false
+
+        viewModel.sourceText.value = sourceText
+
+        return true
     }
 
     private fun speak(loc: Locale, text: CharSequence) = textToSpeech?.let {
@@ -118,10 +125,6 @@ class ProcessTextActivity : AppCompatActivity() {
                 it.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId)
             }
         }
-    }
-
-    private inline fun finishThen(block: () -> Unit) {
-        finish().then { block() }
     }
 
     private fun ActivityProcessTextBinding.bind() {
@@ -145,7 +148,7 @@ class ProcessTextActivity : AppCompatActivity() {
                 bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
                     override fun onStateChanged(bottomSheet: View, newState: Int) {
                         if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                            finishThen { overridePendingTransition(ZERO, ZERO) }
+                            finish()
                         }
                     }
 
@@ -168,14 +171,14 @@ class ProcessTextActivity : AppCompatActivity() {
 
             val degree = it.rotation.plus(180.0F).rem(Float.MAX_VALUE)
             val duration = resources.configShortAnimTime.long
-            val x = 8.0F.toPx(resources)
+            val x = 16.toPx(resources)
 
             it.rotate(duration, degree, AccelerateInterpolator())
 
             with(source) {
                 translateRight(duration.half, x) {
                     viewModel.swap().then {
-                        translateLeft(duration.half, x) {
+                        translateLeft(duration.half, ZERO.float) {
                             it.isClickable = true
                         }.alpha(ONE.float)
                     }
@@ -184,7 +187,7 @@ class ProcessTextActivity : AppCompatActivity() {
 
             with(target) {
                 translateLeft(duration.half, x) {
-                    translateRight(duration.half, x).alpha(ONE.float)
+                    translateRight(duration.half, ZERO.float).alpha(ONE.float)
                 }.alpha(ZERO.float)
             }
         }
@@ -227,9 +230,8 @@ class ProcessTextActivity : AppCompatActivity() {
 
                     parent?.letIsViewGroup {
                         it.removeView(this@apply)
+                        it.addView(this@apply)
                     }
-
-                    frameLayout.addView(this@apply)
                 }
             }
 
@@ -256,6 +258,15 @@ class ProcessTextActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sourceText.collect {
+                    viewBinding.sourceText.setText(it.plus(NEWLINE))
+                    viewModel.translate(it)
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 translations.collect label@ {
                     when(it) {
                         Result.Loading -> viewBinding.circularProgressIndicator.show()
@@ -265,7 +276,6 @@ class ProcessTextActivity : AppCompatActivity() {
                             val data = it.data.ifEmpty { return@label }
                             val translation = data.first()
 
-                            sourceText.setText(translation.sourceText.plus(NEWLINE))
                             translatedText.text = translation.translatedText.plus(NEWLINE)
                         }
                         is Result.Failure -> {
