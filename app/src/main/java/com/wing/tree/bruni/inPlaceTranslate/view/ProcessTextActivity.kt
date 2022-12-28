@@ -51,6 +51,10 @@ class ProcessTextActivity : AppCompatActivity() {
 
     private val viewBinding by lazy {
         ActivityProcessTextBinding.inflate(layoutInflater)
+            .apply {
+                lifecycleOwner = this@ProcessTextActivity
+                setSourceText(viewModel.sourceText)
+            }
     }
 
     private val viewModel by viewModels<ProcessTextViewModel>()
@@ -259,7 +263,6 @@ class ProcessTextActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 sourceText.collect {
-                    viewBinding.sourceText.setText(it.plus(NEWLINE))
                     viewModel.translate(it)
                 }
             }
