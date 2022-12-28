@@ -22,7 +22,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProcessTextViewModel @Inject constructor(
-    private val archiveTranslationUseCase: ArchiveTranslationUseCase,
     getSourceUseCase: GetSourceUseCase,
     getTargetUseCase: GetTargetUseCase,
     private val putSourceUseCase: PutSourceUseCase,
