@@ -137,7 +137,7 @@ class ProcessTextActivity : AppCompatActivity() {
 
         bottomSheet()
         textView()
-        imageButton()
+        iconButton()
         adView()
     }
 
@@ -169,7 +169,7 @@ class ProcessTextActivity : AppCompatActivity() {
         translatedText.movementMethod = ScrollingMovementMethod()
     }
 
-    private fun ActivityProcessTextBinding.imageButton() {
+    private fun ActivityProcessTextBinding.iconButton() {
         swap.setOnClickListener {
             it.isClickable = false
 
@@ -196,11 +196,11 @@ class ProcessTextActivity : AppCompatActivity() {
             }
         }
 
-        speakSourceText.setOnClickListener {
+        speakSourceText.setOnIconClickListener {
             speak(Locale.ENGLISH, sourceText.text)
         }
 
-        copyToClipboard.setOnClickListener {
+        copyToClipboard.setOnIconClickListener {
             copyToClipboard(LABEL_PLAIN_TEXT, translatedText.text)
                 .then {
                     Toast.makeText(
@@ -211,7 +211,7 @@ class ProcessTextActivity : AppCompatActivity() {
                 }
         }
 
-        speakTranslatedText.setOnClickListener {
+        speakTranslatedText.setOnIconClickListener {
             speak(Locale.KOREA, translatedText.text)
         }
     }
