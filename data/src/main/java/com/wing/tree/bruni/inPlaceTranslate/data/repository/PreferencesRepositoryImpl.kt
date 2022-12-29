@@ -2,6 +2,7 @@ package com.wing.tree.bruni.inPlaceTranslate.data.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
+import com.wing.tree.bruni.core.constant.ZERO
 import com.wing.tree.bruni.inPlaceTranslate.domain.repository.PreferencesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -12,13 +13,19 @@ class PreferencesRepositoryImpl @Inject constructor(
 ) : PreferencesRepository {
     private object Name {
         private const val OBJECT_NAME = "Name"
+        const val CHARACTERS = "$OBJECT_NAME.CHARACTERS"
         const val SOURCE = "$OBJECT_NAME.SOURCE"
         const val TARGET = "$OBJECT_NAME.TARGET"
     }
 
     private object Key {
+        val characters = intPreferencesKey(Name.CHARACTERS)
         val source = stringPreferencesKey(Name.SOURCE)
         val target = stringPreferencesKey(Name.TARGET)
+    }
+
+    override fun getCharacters(): Flow<Int> {
+        return dataStore.data.map { it[Key.characters] ?: ZERO }
     }
 
     override fun getSource(): Flow<String?> {
@@ -27,6 +34,12 @@ class PreferencesRepositoryImpl @Inject constructor(
 
     override fun getTarget(): Flow<String?> {
         return dataStore.data.map { it[Key.target] }
+    }
+
+    override suspend fun increamentCharacters(characters: Int) {
+        dataStore.edit {
+            it[Key.characters] = it[Key.characters]?.plus(characters) ?: characters
+        }
     }
 
     override suspend fun putSource(source: String) {
