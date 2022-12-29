@@ -16,10 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.wing.tree.bruni.core.constant.NEWLINE
 import com.wing.tree.bruni.core.constant.ONE
@@ -234,8 +231,9 @@ class ProcessTextActivity : AppCompatActivity() {
 
                     parent?.letIsViewGroup {
                         it.removeView(this@apply)
-                        it.addView(this@apply)
                     }
+
+                    adView.addView(this@apply)
                 }
             }
 
