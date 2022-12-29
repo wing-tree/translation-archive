@@ -32,12 +32,12 @@ class TranslationRepositoryImpl @Inject constructor(
         return localDataSource.all(sourceText, target)
     }
 
-    override suspend fun archive(translation: Model) {
-        localDataSource.archive(translation.toEntity())
+    override suspend fun insert(translation: Model) {
+        localDataSource.insert(translation.toEntity())
     }
 
-    override suspend fun archiveAll(list: List<Model>) {
-        localDataSource.archiveAll(list.map { it.toEntity() })
+    override suspend fun insertAll(list: List<Model>) {
+        localDataSource.insertAll(list.map { it.toEntity() })
     }
 
     override suspend fun translate(
@@ -72,7 +72,7 @@ class TranslationRepositoryImpl @Inject constructor(
             )
         }.also {
             coroutineScope.launch(ioDispatcher) {
-                archiveAll(it)
+                insertAll(it)
             }
         }
     }

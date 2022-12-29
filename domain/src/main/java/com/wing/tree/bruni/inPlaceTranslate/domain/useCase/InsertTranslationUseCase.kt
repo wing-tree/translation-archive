@@ -7,11 +7,11 @@ import com.wing.tree.bruni.inPlaceTranslate.domain.repository.TranslationReposit
 import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
-class ArchiveTranslationUseCase @Inject constructor(
+class InsertTranslationUseCase @Inject constructor(
     @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher,
     private val translationRepository: TranslationRepository
 ) : CoroutineUseCase<Translation, Unit>(coroutineDispatcher) {
     override suspend fun execute(parameter: Translation) {
-        translationRepository.archive(parameter)
+        translationRepository.insert(parameter)
     }
 }

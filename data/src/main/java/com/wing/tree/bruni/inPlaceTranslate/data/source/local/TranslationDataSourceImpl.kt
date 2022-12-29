@@ -13,11 +13,11 @@ class TranslationDataSourceImpl @Inject constructor(
         return translationDao.all(sourceText, target)
     }
 
-    override suspend fun archive(translation: Translation) {
+    override suspend fun insert(translation: Translation) {
         translationDao.insert(translation)
     }
 
-    override suspend fun archiveAll(list: List<Translation>) {
+    override suspend fun insertAll(list: List<Translation>) {
         translationDao.insertAll(list)
     }
 }
