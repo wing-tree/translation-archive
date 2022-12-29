@@ -1,4 +1,4 @@
-package com.wing.tree.bruni.inPlaceTranslate.archive
+package com.wing.tree.bruni.inPlaceTranslate
 
 import org.junit.Test
 

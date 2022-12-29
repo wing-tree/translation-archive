@@ -1,4 +1,4 @@
-package com.wing.tree.bruni.inPlaceTranslate.archive
+package com.wing.tree.bruni.inPlaceTranslate
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

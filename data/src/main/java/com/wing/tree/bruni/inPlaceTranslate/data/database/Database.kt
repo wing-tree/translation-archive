@@ -15,7 +15,7 @@ abstract class Database : RoomDatabase() {
     abstract val translationDao: TranslationDao
 
     companion object {
-        private const val PACKAGE_NAME = "com.wing.tree.bruni.inPlaceTranslate.data.database.archive"
+        private const val PACKAGE_NAME = "com.wing.tree.bruni.inPlaceTranslate.data.database"
         private const val CLASS_NAME = "Database"
         private const val NAME = "$PACKAGE_NAME.$CLASS_NAME"
         private const val VERSION = "1.0.0"
