@@ -1,6 +1,7 @@
 package com.wing.tree.bruni.inPlaceTranslate.widget
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import com.wing.tree.bruni.inPlaceTranslate.R
@@ -28,6 +29,12 @@ class IconButton : FrameLayout {
             }
         }
     }
+
+    var imageTintList: ColorStateList?
+        get() = viewBinding.imageButton.imageTintList
+        set(value) {
+            viewBinding.imageButton.imageTintList = value
+        }
 
     private fun getAttrs(attrs: AttributeSet?) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.IconButton)
