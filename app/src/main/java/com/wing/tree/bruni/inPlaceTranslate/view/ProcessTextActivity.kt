@@ -25,15 +25,22 @@ import com.wing.tree.bruni.core.extension.*
 import com.wing.tree.bruni.core.useCase.Result
 import com.wing.tree.bruni.inPlaceTranslate.BuildConfig
 import com.wing.tree.bruni.inPlaceTranslate.R
+import com.wing.tree.bruni.inPlaceTranslate.ad.InterstitialAdLoader
+import com.wing.tree.bruni.inPlaceTranslate.ad.InterstitialAdLoaderImpl
 import com.wing.tree.bruni.inPlaceTranslate.databinding.ActivityProcessTextBinding
 import com.wing.tree.bruni.inPlaceTranslate.extension.letIsViewGroup
 import com.wing.tree.bruni.inPlaceTranslate.viewModel.ProcessTextViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filterNot
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.time.Duration.Companion.seconds
 
 @AndroidEntryPoint
-class ProcessTextActivity : AppCompatActivity() {
+class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAdLoaderImpl() {
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             val bottomSheetBehavior = BottomSheetBehavior.from(viewBinding.bottomSheet)
@@ -241,6 +248,7 @@ class ProcessTextActivity : AppCompatActivity() {
         }.loadAd(adRequest)
     }
 
+    @OptIn(FlowPreview::class)
     private fun ProcessTextViewModel.collect() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -260,9 +268,13 @@ class ProcessTextActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sourceText.collect {
-                    viewModel.translate(it)
-                }
+                sourceText
+                    .filterNot { it.isBlank() }
+                    .debounce(ONE.seconds)
+                    .onStart { viewModel.translate(sourceText.value) }
+                    .collect {
+                        viewModel.translate(it)
+                    }
             }
         }
 
