@@ -6,7 +6,8 @@ interface PreferencesRepository {
     fun getCharacters(): Flow<Int>
     fun getSource(): Flow<String?>
     fun getTarget(): Flow<String?>
-    suspend fun increamentCharacters(characters: Int)
+    suspend fun clearCharacters()
+    suspend fun incrementCharacters(characters: Int)
     suspend fun putSource(source: String)
     suspend fun putTarget(target: String)
 }

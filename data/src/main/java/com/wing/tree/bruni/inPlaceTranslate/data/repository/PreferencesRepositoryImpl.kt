@@ -36,7 +36,13 @@ class PreferencesRepositoryImpl @Inject constructor(
         return dataStore.data.map { it[Key.target] }
     }
 
-    override suspend fun increamentCharacters(characters: Int) {
+    override suspend fun clearCharacters() {
+        dataStore.edit {
+            it[Key.characters] = ZERO
+        }
+    }
+
+    override suspend fun incrementCharacters(characters: Int) {
         dataStore.edit {
             it[Key.characters] = it[Key.characters]?.plus(characters) ?: characters
         }

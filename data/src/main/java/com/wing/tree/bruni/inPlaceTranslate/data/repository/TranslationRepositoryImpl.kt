@@ -10,6 +10,7 @@ import com.wing.tree.bruni.inPlaceTranslate.data.entity.Translation
 import com.wing.tree.bruni.inPlaceTranslate.data.mapper.TranslationMapper
 import com.wing.tree.bruni.inPlaceTranslate.domain.enum.DataSource
 import com.wing.tree.bruni.inPlaceTranslate.domain.repository.TranslationRepository
+import com.wing.tree.bruni.inPlaceTranslate.domain.useCase.IncrementCharactersUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -23,13 +24,14 @@ import com.wing.tree.bruni.inPlaceTranslate.domain.model.Translation as Model
 class TranslationRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource,
     private val remoteDataSource: RemoteDataSource,
+    private val incrementCharactersUseCase: IncrementCharactersUseCase
 ) : TranslationRepository {
-    private val coroutineScope = CoroutineScope(SupervisorJob())
     private val expiredAt: Long get() = Calendar.getInstance().apply {
         add(Calendar.MONTH, expirationPeriod.months)
     }.timeInMillis
 
     private val ioDispatcher = Dispatchers.IO
+    private val coroutineScope = CoroutineScope(SupervisorJob() + ioDispatcher)
     private val translationMapper = TranslationMapper()
 
     override suspend fun all(
@@ -73,6 +75,10 @@ class TranslationRepositoryImpl @Inject constructor(
         val translations = response.data.translations
 
         return translations.map {
+            coroutineScope.launch {
+                incrementCharactersUseCase(it.translatedText.length)
+            }
+
             Translation(
                 rowid = it.rowid(source, sourceText, target),
                 detectedSourceLanguage = it.detectedSourceLanguage ?: EMPTY,
