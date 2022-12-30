@@ -1,6 +1,8 @@
 package com.wing.tree.bruni.inPlaceTranslate.data.repository
 
+import android.icu.util.Calendar
 import com.wing.tree.bruni.core.constant.EMPTY
+import com.wing.tree.bruni.core.constant.ONE
 import com.wing.tree.bruni.inPlaceTranslate.data.BuildConfig
 import com.wing.tree.bruni.inPlaceTranslate.data.entity.Request
 import com.wing.tree.bruni.inPlaceTranslate.data.entity.Request.Body
@@ -12,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import java.time.Period
 import javax.inject.Inject
 import com.wing.tree.bruni.inPlaceTranslate.data.source.local.TranslationDataSource as LocalDataSource
 import com.wing.tree.bruni.inPlaceTranslate.data.source.remote.TranslationDataSource as RemoteDataSource
@@ -22,6 +25,10 @@ class TranslationRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
 ) : TranslationRepository {
     private val coroutineScope = CoroutineScope(SupervisorJob())
+    private val expiredAt: Long get() = Calendar.getInstance().apply {
+        add(Calendar.MONTH, expirationPeriod.months)
+    }.timeInMillis
+
     private val ioDispatcher = Dispatchers.IO
     private val translationMapper = TranslationMapper()
 
@@ -48,7 +55,11 @@ class TranslationRepositoryImpl @Inject constructor(
     ): List<Model> {
         return when(dataSource) {
             DataSource.DEFAULT -> with(localDataSource.all(sourceText, target)) {
-                ifEmpty { translate(sourceText, source, target) }
+                filterNot {
+                    it.isExpired()
+                }.ifEmpty {
+                    translate(sourceText, source, target)
+                }
             }
             else -> translate(sourceText, source, target)
         }
@@ -65,6 +76,7 @@ class TranslationRepositoryImpl @Inject constructor(
             Translation(
                 rowid = it.rowid(source, sourceText, target),
                 detectedSourceLanguage = it.detectedSourceLanguage ?: EMPTY,
+                expiredAt = expiredAt,
                 source = source,
                 sourceText = sourceText,
                 target = target,
@@ -79,7 +91,15 @@ class TranslationRepositoryImpl @Inject constructor(
 
     private fun Model.toEntity() = translationMapper.toEntity(this)
 
+    private fun Translation.isExpired(): Boolean {
+        val calendar = Calendar.getInstance()
+        val timeInMillis = calendar.timeInMillis
+
+        return expiredAt < timeInMillis
+    }
+
     companion object {
         private const val FORMAT = "text"
+        val expirationPeriod: Period = Period.ofMonths(ONE)
     }
 }

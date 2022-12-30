@@ -8,6 +8,7 @@ internal class TranslationMapper : Mapper<Entity, Model> {
     override fun toEntity(model: Model): Entity {
         return Entity(
             detectedSourceLanguage = model.detectedSourceLanguage ?: EMPTY,
+            expiredAt = model.expiredAt,
             source = model.source,
             sourceText = model.sourceText,
             target = model.target,
@@ -18,6 +19,7 @@ internal class TranslationMapper : Mapper<Entity, Model> {
     override fun toModel(entity: Entity): Model {
         return object : Model {
             override val detectedSourceLanguage = entity.detectedSourceLanguage
+            override val expiredAt: Long = entity.expiredAt
             override val source: String = entity.source
             override val sourceText = entity.sourceText
             override val target = entity.target

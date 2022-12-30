@@ -4,6 +4,7 @@ import com.wing.tree.bruni.inPlaceTranslate.domain.model.Translation
 
 data class Translation(
     override val detectedSourceLanguage: String,
+    override val expiredAt: Long,
     override val source: String,
     override val sourceText: String,
     override val target: String,

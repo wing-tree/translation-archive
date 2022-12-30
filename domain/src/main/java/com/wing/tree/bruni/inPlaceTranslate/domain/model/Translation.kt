@@ -2,6 +2,7 @@ package com.wing.tree.bruni.inPlaceTranslate.domain.model
 
 interface Translation {
     val detectedSourceLanguage: String?
+    val expiredAt: Long
     val source: String
     val sourceText: String
     val target: String

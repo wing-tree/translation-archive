@@ -14,6 +14,8 @@ data class Translation(
     val rowid: Int = ZERO,
     @ColumnInfo(name = "detected_source_language")
     override val detectedSourceLanguage: String,
+    @ColumnInfo(name = "expired_at")
+    override val expiredAt: Long,
     override val source: String,
     @ColumnInfo(name = "source_text")
     override val sourceText: String,
