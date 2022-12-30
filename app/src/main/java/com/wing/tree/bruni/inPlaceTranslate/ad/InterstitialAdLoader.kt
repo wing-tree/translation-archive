@@ -7,15 +7,15 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 
 interface InterstitialAdLoader {
-    fun clear()
+    fun clearInterstitialAd()
 
-    fun load(
+    fun loadInterstitialAd(
         context: Context,
         onAdFailedToLoad: ((LoadAdError?) -> Unit)? = null,
         onAdLoaded: ((InterstitialAd) -> Unit)? = null
     )
 
-    fun show(
+    fun showInterstitialAd(
         activity: Activity,
         onAdClicked: (() -> Unit)? = null,
         onAdDismissedFullScreenContent: (() -> Unit)? = null,

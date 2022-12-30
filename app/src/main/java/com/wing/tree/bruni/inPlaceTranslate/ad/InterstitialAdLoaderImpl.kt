@@ -14,11 +14,11 @@ import com.wing.tree.bruni.inPlaceTranslate.R
 class InterstitialAdLoaderImpl : InterstitialAdLoader {
     private var interstitialAd: InterstitialAd? = null
 
-    override fun clear() {
+    override fun clearInterstitialAd() {
         interstitialAd = null
     }
 
-    override fun load(
+    override fun loadInterstitialAd(
         context: Context,
         onAdFailedToLoad: ((LoadAdError?) -> Unit)?,
         onAdLoaded: ((InterstitialAd) -> Unit)?
@@ -39,20 +39,17 @@ class InterstitialAdLoaderImpl : InterstitialAdLoader {
         InterstitialAd.load(context, adUnitId, adRequest, object : InterstitialAdLoadCallback() {
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 onAdFailedToLoad?.invoke(adError)
-                clear()
+                clearInterstitialAd()
             }
 
             override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                onAdLoaded?.invoke(
-                    interstitialAd.also {
-                        setInterstitialAd(it)
-                    }
-                )
+                setInterstitialAd(interstitialAd)
+                onAdLoaded?.invoke(interstitialAd)
             }
         })
     }
 
-    override fun show(
+    override fun showInterstitialAd(
         activity: Activity,
         onAdClicked: (() -> Unit)?,
         onAdDismissedFullScreenContent: (() -> Unit)?,
@@ -67,12 +64,12 @@ class InterstitialAdLoaderImpl : InterstitialAdLoader {
 
             override fun onAdDismissedFullScreenContent() {
                 onAdDismissedFullScreenContent?.invoke()
-                clear()
+                clearInterstitialAd()
             }
 
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                 onAdFailedToShowFullScreenContent?.invoke(adError)
-                clear()
+                clearInterstitialAd()
             }
 
             override fun onAdImpression() {
