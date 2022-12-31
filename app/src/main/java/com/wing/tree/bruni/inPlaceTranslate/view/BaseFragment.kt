@@ -6,8 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavDirections
-import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 
 abstract class BaseFragment<VB: ViewBinding> : Fragment() {
@@ -24,11 +22,9 @@ abstract class BaseFragment<VB: ViewBinding> : Fragment() {
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
 
-        return with(inflate(inflater, container)) {
-            _viewBinding = this
+        _viewBinding = inflate(inflater, container)
 
-            root
-        }
+        return viewBinding.root
     }
 
     @CallSuper
@@ -36,9 +32,5 @@ abstract class BaseFragment<VB: ViewBinding> : Fragment() {
         _viewBinding = null
 
         super.onDestroyView()
-    }
-
-    protected fun navigate(directions: NavDirections) {
-        findNavController().navigate(directions)
     }
 }
