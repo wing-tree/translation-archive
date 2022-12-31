@@ -1,9 +1,11 @@
 package com.wing.tree.bruni.inPlaceTranslate.widget
 
+import android.animation.TimeInterpolator
 import android.content.Context
 import android.content.res.ColorStateList
 import android.util.AttributeSet
 import android.widget.FrameLayout
+import com.wing.tree.bruni.core.extension.tintFade
 import com.wing.tree.bruni.inPlaceTranslate.R
 import com.wing.tree.bruni.inPlaceTranslate.databinding.IconButtonBinding
 
@@ -62,4 +64,14 @@ class IconButton : FrameLayout {
             }
         }
     }
+
+    fun tintFade(
+        duration: Long,
+        interpolator: TimeInterpolator,
+        vararg values: Int
+    ) = viewBinding.imageButton.tintFade(
+        duration = duration,
+        interpolator = interpolator,
+        *values
+    )
 }
