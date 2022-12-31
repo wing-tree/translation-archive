@@ -35,7 +35,7 @@
             android:name=".view.ProcessTextActivity"
             android:exported="true"
             android:label="@string/translate"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTask"
             android:theme="@style/Theme.InPlaceTranslate.ProcessText">
 
             <intent-filter>
