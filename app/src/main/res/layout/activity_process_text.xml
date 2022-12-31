@@ -130,6 +130,14 @@
                     app:layout_constraintStart_toStartOf="parent">
 
                     <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
+                        android:id="@+id/recognize_speech"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:src="@drawable/ic_round_mic_20"
+                        app:tint="?attr/colorOnSurface"
+                        tools:ignore="ContentDescription" />
+
+                    <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
                         android:id="@+id/speak_source_text"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
