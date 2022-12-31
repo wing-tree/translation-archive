@@ -32,7 +32,7 @@
                 android:layout_width="72dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -62,16 +62,6 @@
                 app:layout_constraintStart_toEndOf="@+id/swap"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="영어" />
-
-            <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
-                android:id="@+id/more"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:src="@drawable/ic_round_more_vert_20"
-                app:tint="?attr/colorOnSurface" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -121,6 +111,14 @@
                 app:layout_constraintBottom_toBottomOf="@+id/nested_scroll_view"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
+
+                <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
+                    android:id="@+id/paste_from_clipboard"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:src="@drawable/ic_round_content_paste_24"
+                    app:tint="?attr/colorOnSurface"
+                    tools:ignore="ContentDescription" />
 
                 <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
                     android:id="@+id/recognize_speech"
