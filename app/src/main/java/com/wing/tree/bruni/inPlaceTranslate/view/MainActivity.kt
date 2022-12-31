@@ -1,6 +1,7 @@
 package com.wing.tree.bruni.inPlaceTranslate.view
 
 import android.Manifest
+import android.content.ClipboardManager
 import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
@@ -239,8 +240,15 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
         }
 
         pasteFromClipboard.setOnIconClickListener {
-            pastePlanTextFromClipboard()?.let {
-                viewModel.sourceText.value = it.string
+            val clipboardManager = getSystemService(ClipboardManager::class.java)
+            val hasPrimaryClip = clipboardManager.hasPrimaryClip()
+
+            if (hasPrimaryClip) {
+                val primaryClip = clipboardManager.primaryClip
+                val item = primaryClip?.getItemAt(ZERO)
+                val text = item?.coerceToText(it.context)
+
+                viewModel.sourceText.value = text?.string ?: EMPTY
             }
         }
 
