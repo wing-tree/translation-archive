@@ -32,6 +32,7 @@ import com.wing.tree.bruni.core.constant.NEWLINE
 import com.wing.tree.bruni.core.constant.ONE
 import com.wing.tree.bruni.core.constant.ZERO
 import com.wing.tree.bruni.core.extension.*
+import com.wing.tree.bruni.core.regular.then
 import com.wing.tree.bruni.core.useCase.Result
 import com.wing.tree.bruni.inPlaceTranslate.BuildConfig
 import com.wing.tree.bruni.inPlaceTranslate.R
@@ -85,8 +86,6 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
         override fun onBufferReceived(buffer: ByteArray?) = Unit
         override fun onEndOfSpeech() = Unit
         override fun onError(error: Int) {
-            println("aaaaaa:onError:$error")
-
             with(binding.recognizeSpeech) {
                 val configMediumAnimTime = resources.configMediumAnimTime
                 val duration = configMediumAnimTime.quarter.long
@@ -296,7 +295,7 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
         }
 
         copyToClipboard.setOnIconClickListener {
-            copyToClipboard(LABEL_PLAIN_TEXT, translatedText.text)
+            copyPlainTextToClipboard(translatedText.text)
                 .then {
                     Toast.makeText(
                         context,
@@ -407,7 +406,6 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
         private const val AD_HEIGHT = 32
         private const val AD_WIDTH = 320
         private const val DELAY_MILLIS = 150L
-        private const val LABEL_PLAIN_TEXT = "text/plain"
         private const val PITCH = 1.0F
         private const val SPEECH_RATE = 1.0F
     }
