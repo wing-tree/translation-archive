@@ -1,23 +1,33 @@
 package com.wing.tree.bruni.inPlaceTranslate.view
 
+import android.Manifest
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.speech.RecognitionListener
+import android.speech.RecognizerIntent
+import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
 import android.text.method.ScrollingMovementMethod
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.google.android.gms.ads.*
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.wing.tree.bruni.core.constant.EMPTY
 import com.wing.tree.bruni.core.constant.NEWLINE
 import com.wing.tree.bruni.core.constant.ONE
 import com.wing.tree.bruni.core.constant.ZERO
@@ -29,11 +39,12 @@ import com.wing.tree.bruni.inPlaceTranslate.ad.InterstitialAdLoader
 import com.wing.tree.bruni.inPlaceTranslate.ad.InterstitialAdLoaderImpl
 import com.wing.tree.bruni.inPlaceTranslate.databinding.ActivityProcessTextBinding
 import com.wing.tree.bruni.inPlaceTranslate.extension.letIsViewGroup
+import com.wing.tree.bruni.inPlaceTranslate.regular.findDisplayLanguageByLanguage
 import com.wing.tree.bruni.inPlaceTranslate.viewModel.ProcessTextViewModel
+import com.wing.tree.bruni.inPlaceTranslate.viewModel.TranslatorViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import java.util.*
@@ -43,7 +54,7 @@ import kotlin.time.Duration.Companion.seconds
 class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAdLoaderImpl() {
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            val bottomSheetBehavior = BottomSheetBehavior.from(viewBinding.bottomSheet)
+            val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
 
             if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
                 finish()
@@ -53,7 +64,69 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
         }
     }
 
-    private val viewBinding by lazy {
+    private val recognitionListener = object : RecognitionListener {
+        override fun onReadyForSpeech(params: Bundle?) {
+            with(binding.recognizeSpeech) {
+                val configLongAnimTime = resources.configLongAnimTime
+                val duration = configLongAnimTime.quarter.long
+                val interpolator = context.decelerateQuadInterpolator
+
+                tintFade(
+                    duration,
+                    interpolator,
+                    imageTintList?.defaultColor ?: colorOnSurface,
+                    Color.RED
+                )
+            }
+        }
+
+        override fun onBeginningOfSpeech() = Unit
+        override fun onRmsChanged(rmsdB: Float) = Unit
+        override fun onBufferReceived(buffer: ByteArray?) = Unit
+        override fun onEndOfSpeech() = Unit
+        override fun onError(error: Int) {
+            println("aaaaaa:onError:$error")
+
+            with(binding.recognizeSpeech) {
+                val configMediumAnimTime = resources.configMediumAnimTime
+                val duration = configMediumAnimTime.quarter.long
+                val interpolator = context.accelerateQuadInterpolator
+
+                tintFade(
+                    duration,
+                    interpolator,
+                    imageTintList?.defaultColor ?: Color.RED,
+                    colorOnSurface
+                )
+            }
+        }
+
+        override fun onResults(results: Bundle?) {
+            val stringArrayList = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+
+            stringArrayList?.firstOrNull()?.let {
+                viewModel.sourceText.value = it
+            }
+
+            with(binding.recognizeSpeech) {
+                val configMediumAnimTime = resources.configMediumAnimTime
+                val duration = configMediumAnimTime.quarter.long
+                val interpolator = context.accelerateQuadInterpolator
+
+                tintFade(
+                    duration,
+                    interpolator,
+                    imageTintList?.defaultColor ?: Color.RED,
+                    colorOnSurface
+                )
+            }
+        }
+
+        override fun onPartialResults(partialResults: Bundle?) = Unit
+        override fun onEvent(eventType: Int, params: Bundle?) = Unit
+    }
+
+    private val binding by lazy {
         ActivityProcessTextBinding.inflate(layoutInflater)
             .apply {
                 lifecycleOwner = this@ProcessTextActivity
@@ -62,25 +135,31 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
     }
 
     private val viewModel by viewModels<ProcessTextViewModel>()
+    private val requestRecordAudioPermissionsLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()) { result ->
+        if (result) {
+            recognizeSpeech()
+        }
+    }
 
+    private var speechRecognizer: SpeechRecognizer? = null
     private var textToSpeech: TextToSpeech? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(viewBinding.root)
+        setContentView(binding.root)
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
 
-        viewBinding.bind()
+        binding.bind()
         viewModel.collect()
 
-        if (processText(intent).not()) {
-            finish()
-            return
-        }
+        processText(intent)
 
         textToSpeech = TextToSpeech(this) { status ->
 
         }
+
+        loadInterstitialAd(this)
     }
 
     override fun onPause() {
@@ -99,25 +178,28 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
+        processText(intent)
+    }
 
-        if (processText(intent).not()) {
-            finish()
+    private fun recognizeSpeech() {
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault()) // source 찾기. todo.
         }
+
+        val speechRecognizer = speechRecognizer ?: SpeechRecognizer
+            .createSpeechRecognizer(this)
+            .apply { setRecognitionListener(recognitionListener) }
+            .also { speechRecognizer = it }
+
+        speechRecognizer.startListening(intent)
     }
 
-    private fun findDisplayLanguageByLanguage(language: String): String? {
-        return Locale.getAvailableLocales().find {
-            it.language == language
-        }?.displayLanguage
-    }
-
-    private fun processText(intent: Intent?): Boolean {
+    private fun processText(intent: Intent?) {
         val processText = intent?.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)
-        val sourceText = processText?.string ?: return false
+        val sourceText = processText?.string ?: EMPTY
 
         viewModel.sourceText.value = sourceText
-
-        return true
     }
 
     private fun speak(loc: Locale, text: CharSequence) = textToSpeech?.let {
@@ -200,6 +282,15 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
             }
         }
 
+        recognizeSpeech.setOnIconClickListener {
+            when {
+                checkPermission(Manifest.permission.RECORD_AUDIO) -> recognizeSpeech()
+                shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO) -> {
+                }
+                else -> requestRecordAudioPermissionsLauncher.launch(Manifest.permission.RECORD_AUDIO)
+            }
+        }
+
         speakSourceText.setOnIconClickListener {
             speak(Locale.ENGLISH, sourceText.text)
         }
@@ -249,11 +340,22 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
     }
 
     @OptIn(FlowPreview::class)
-    private fun ProcessTextViewModel.collect() {
+    private fun TranslatorViewModel.collect() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                characters.collect {
+                    if (it >= 1000) {
+                        showInterstitialAd(this@ProcessTextActivity)
+                        clearCharacters()
+                    }
+                }
+            }
+        }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 source.collect { source ->
-                    viewBinding.source.text = findDisplayLanguageByLanguage(source)
+                    binding.source.text = findDisplayLanguageByLanguage(source)
                 }
             }
         }
@@ -261,7 +363,7 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 target.collect { target ->
-                    viewBinding.target.text = findDisplayLanguageByLanguage(target)
+                    binding.target.text = findDisplayLanguageByLanguage(target)
                 }
             }
         }
@@ -269,7 +371,7 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 sourceText
-                    .filterNot { it.isBlank() }
+                    .filterNotBlank()
                     .debounce(ONE.seconds)
                     .onStart { viewModel.translate(sourceText.value) }
                     .collect {
@@ -282,8 +384,8 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 translations.collect label@ {
                     when(it) {
-                        Result.Loading -> viewBinding.circularProgressIndicator.show()
-                        is Result.Success -> with(viewBinding) {
+                        Result.Loading -> binding.circularProgressIndicator.show()
+                        is Result.Success -> with(binding) {
                             circularProgressIndicator.hide()
 
                             val data = it.data.ifEmpty { return@label }
@@ -292,7 +394,7 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
                             translatedText.text = translation.translatedText.plus(NEWLINE)
                         }
                         is Result.Failure -> {
-                            viewBinding.circularProgressIndicator.hide()
+                            binding.circularProgressIndicator.hide()
                             Toast.makeText(this@ProcessTextActivity, it.throwable.message, Toast.LENGTH_LONG).show()
                         }
                     }
