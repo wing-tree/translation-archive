@@ -7,3 +7,9 @@ internal fun findDisplayLanguageByLanguage(language: String): String? {
         it.language == language
     }?.displayLanguage
 }
+
+internal fun findLanguageTagByLanguage(language: String): String? {
+    return Locale.getAvailableLocales().find {
+        it.language == language
+    }?.toLanguageTag()
+}
