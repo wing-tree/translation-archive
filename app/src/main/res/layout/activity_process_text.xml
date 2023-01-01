@@ -28,8 +28,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraint_layout"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:paddingHorizontal="16dp"
+                android:layout_height="@dimen/layout_height_48dp"
+                android:paddingHorizontal="@dimen/padding_horizontal_16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -49,7 +49,7 @@
                     android:id="@+id/swap"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="@dimen/layout_margin_start_16dp"
                     android:background="@null"
                     android:src="@drawable/ic_round_swap_horiz_20"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -72,8 +72,8 @@
 
                 <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
                     android:id="@+id/more"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="@dimen/layout_width_40dp"
+                    android:layout_height="@dimen/layout_height_40dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -84,9 +84,9 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
-                android:layout_height="240dp"
-                android:layout_marginBottom="16dp"
-                android:paddingHorizontal="16dp"
+                android:layout_height="@dimen/layout_height_240dp"
+                android:layout_marginBottom="@dimen/layout_margin_bottom_16dp"
+                android:paddingHorizontal="@dimen/padding_horizontal_16dp"
                 app:layout_constraintBottom_toTopOf="@+id/ad_view"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -113,7 +113,7 @@
                         android:background="@null"
                         android:gravity="start|top"
                         android:inputType="textMultiLine"
-                        android:padding="12dp"
+                        android:padding="@dimen/padding_12dp"
                         android:text="@={sourceText}"
                         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                         tools:ignore="Autofill,LabelFor" />
@@ -122,7 +122,7 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/layout_height_40dp"
                     android:alpha="0.62"
                     android:gravity="center_vertical|end"
                     app:layout_constraintBottom_toBottomOf="@+id/nested_scroll_view"
@@ -131,16 +131,16 @@
 
                     <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
                         android:id="@+id/recognize_speech"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="@dimen/layout_width_40dp"
+                        android:layout_height="@dimen/layout_height_40dp"
                         app:src="@drawable/ic_round_mic_20"
                         app:tint="?attr/colorOnSurface"
                         tools:ignore="ContentDescription" />
 
                     <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
                         android:id="@+id/speak_source_text"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="@dimen/layout_width_40dp"
+                        android:layout_height="@dimen/layout_height_40dp"
                         app:src="@drawable/ic_round_volume_up_20"
                         app:tint="?attr/colorOnSurface"
                         tools:ignore="ContentDescription" />
@@ -151,7 +151,7 @@
                     android:id="@+id/nested_scroll_view2"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="@dimen/layout_margin_top_16dp"
                     android:background="@drawable/shape_translated_text"
                     android:backgroundTint="?attr/colorSurfaceVariant"
                     android:fadingEdgeLength="6dp"
@@ -168,7 +168,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="start|top"
-                        android:padding="12dp"
+                        android:padding="@dimen/padding_12dp"
                         android:scrollbars="vertical"
                         android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
@@ -177,7 +177,7 @@
                 <LinearLayout
                     android:id="@+id/linearLayout"
                     android:layout_width="0dp"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/layout_height_40dp"
                     android:alpha="0.62"
                     android:gravity="center_vertical|end"
                     app:layout_constraintBottom_toBottomOf="@+id/nested_scroll_view2"
@@ -186,16 +186,16 @@
 
                     <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
                         android:id="@+id/copy_to_clipboard"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="@dimen/layout_width_40dp"
+                        android:layout_height="@dimen/layout_height_40dp"
                         app:src="@drawable/ic_round_content_copy_20"
                         app:tint="?attr/colorOnSurface"
                         tools:ignore="ContentDescription" />
 
                     <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
                         android:id="@+id/speak_translated_text"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="@dimen/layout_width_40dp"
+                        android:layout_height="@dimen/layout_height_40dp"
                         app:src="@drawable/ic_round_volume_up_20"
                         app:tint="?attr/colorOnSurface"
                         tools:ignore="ContentDescription" />
@@ -220,7 +220,7 @@
             <FrameLayout
                 android:id="@+id/ad_view"
                 android:layout_width="0dp"
-                android:layout_height="32dp"
+                android:layout_height="@dimen/layout_height_32dp"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 app:layout_constraintBottom_toBottomOf="parent"
