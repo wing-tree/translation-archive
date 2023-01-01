@@ -75,8 +75,10 @@ class TranslationRepositoryImpl @Inject constructor(
         val translations = response.data.translations
 
         return translations.map {
+            val translatedText = it.translatedText
+
             coroutineScope.launch {
-                incrementCharactersUseCase(it.translatedText.length)
+                incrementCharactersUseCase(translatedText.length)
             }
 
             Translation(
@@ -86,7 +88,7 @@ class TranslationRepositoryImpl @Inject constructor(
                 source = source,
                 sourceText = sourceText,
                 target = target,
-                translatedText = it.translatedText
+                translatedText = translatedText
             )
         }.also {
             coroutineScope.launch(ioDispatcher) {
