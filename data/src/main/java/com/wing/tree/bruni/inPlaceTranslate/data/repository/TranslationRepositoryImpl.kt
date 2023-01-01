@@ -64,6 +64,10 @@ class TranslationRepositoryImpl @Inject constructor(
     }
 
     private suspend fun translate(sourceText: String, source: String, target: String): List<Translation> {
+        if (sourceText.isBlank()) {
+            return emptyList()
+        }
+
         val body = Body(format = FORMAT, q = sourceText, source = source, target = target)
         val request = Request(key = BuildConfig.API_KEY, body = body)
 
