@@ -63,13 +63,13 @@ class InterstitialAdLoaderImpl : InterstitialAdLoader {
             }
 
             override fun onAdDismissedFullScreenContent() {
-                onAdDismissedFullScreenContent?.invoke()
                 clearInterstitialAd()
+                onAdDismissedFullScreenContent?.invoke()
             }
 
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                onAdFailedToShowFullScreenContent?.invoke(adError)
                 clearInterstitialAd()
+                onAdFailedToShowFullScreenContent?.invoke(adError)
             }
 
             override fun onAdImpression() {
