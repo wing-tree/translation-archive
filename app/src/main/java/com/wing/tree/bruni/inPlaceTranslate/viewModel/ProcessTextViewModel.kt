@@ -1,14 +1,14 @@
 package com.wing.tree.bruni.inPlaceTranslate.viewModel
 
-import com.wing.tree.bruni.inPlaceTranslate.domain.useCase.CharactersUseCase
-import com.wing.tree.bruni.inPlaceTranslate.domain.useCase.SourceUseCase
-import com.wing.tree.bruni.inPlaceTranslate.domain.useCase.TargetUseCase
-import com.wing.tree.bruni.inPlaceTranslate.domain.useCase.TranslateUseCase
+import com.wing.tree.bruni.core.useCase.getOrDefault
+import com.wing.tree.bruni.inPlaceTranslate.domain.useCase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @HiltViewModel
 class ProcessTextViewModel @Inject constructor(
+    adsRemovedUseCase: AdsRemovedUseCase,
     charactersUseCase: CharactersUseCase,
     translateUseCase: TranslateUseCase,
     sourceUseCase: SourceUseCase,
@@ -18,4 +18,6 @@ class ProcessTextViewModel @Inject constructor(
     translateUseCase = translateUseCase,
     sourceUseCase = sourceUseCase,
     targetUseCase = targetUseCase
-)
+) {
+    val adsRemoved = adsRemovedUseCase.get().map { it.getOrDefault(false) }
+}
