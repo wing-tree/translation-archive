@@ -12,8 +12,6 @@ import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
 import android.text.method.ScrollingMovementMethod
 import android.view.View
-import android.view.animation.AccelerateInterpolator
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -22,10 +20,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.wing.tree.bruni.core.constant.EMPTY
 import com.wing.tree.bruni.core.constant.NEWLINE
@@ -38,15 +33,21 @@ import com.wing.tree.bruni.inPlaceTranslate.BuildConfig
 import com.wing.tree.bruni.inPlaceTranslate.R
 import com.wing.tree.bruni.inPlaceTranslate.ad.InterstitialAdLoader
 import com.wing.tree.bruni.inPlaceTranslate.ad.InterstitialAdLoaderImpl
+import com.wing.tree.bruni.inPlaceTranslate.constant.DEGREE_180
+import com.wing.tree.bruni.inPlaceTranslate.constant.LIMIT_CHARACTERS
+import com.wing.tree.bruni.inPlaceTranslate.constant.PITCH
+import com.wing.tree.bruni.inPlaceTranslate.constant.SPEECH_RATE
 import com.wing.tree.bruni.inPlaceTranslate.databinding.ActivityProcessTextBinding
+import com.wing.tree.bruni.inPlaceTranslate.extension.clear
 import com.wing.tree.bruni.inPlaceTranslate.extension.letIsViewGroup
 import com.wing.tree.bruni.inPlaceTranslate.regular.findDisplayLanguageByLanguage
+import com.wing.tree.bruni.inPlaceTranslate.regular.findLanguageTagByLanguage
 import com.wing.tree.bruni.inPlaceTranslate.viewModel.ProcessTextViewModel
-import com.wing.tree.bruni.inPlaceTranslate.viewModel.TranslatorViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.time.Duration.Companion.seconds
@@ -155,7 +156,13 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
         processText(intent)
 
         textToSpeech = TextToSpeech(this) { status ->
-
+            if (status == TextToSpeech.SUCCESS) {
+                binding.speakSourceText.enable()
+                binding.speakTranslatedText.enable()
+            } else {
+                binding.speakSourceText.disable()
+                binding.speakTranslatedText.disable()
+            }
         }
 
         loadInterstitialAd(this)
@@ -167,10 +174,8 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
     }
 
     override fun onDestroy() {
-        textToSpeech?.let {
-            it.stop()
-            it.shutdown()
-        }
+        speechRecognizer?.clear()
+        textToSpeech?.clear()
 
         super.onDestroy()
     }
@@ -181,9 +186,11 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
     }
 
     private fun recognizeSpeech() {
+        val source = viewModel.source.value
+        val languageTag = findLanguageTagByLanguage(source) ?: Locale.getDefault().toLanguageTag()
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault()) // source 찾기. todo.
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE, languageTag)
         }
 
         val speechRecognizer = speechRecognizer ?: SpeechRecognizer
@@ -205,9 +212,8 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
         val utteranceId = loc.language.plus(text).hashCode().string
 
         when(it.setLanguage(loc)) {
-            TextToSpeech.LANG_MISSING_DATA, TextToSpeech.LANG_NOT_SUPPORTED -> {
-
-            }
+            TextToSpeech.LANG_MISSING_DATA -> showToast(R.string.language_data_is_missing)
+            TextToSpeech.LANG_NOT_SUPPORTED -> showToast(R.string.language_is_not_supported)
             else -> {
                 it.setSpeechRate(SPEECH_RATE)
                 it.setPitch(PITCH)
@@ -217,9 +223,6 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
     }
 
     private fun ActivityProcessTextBinding.bind() {
-        source.text = Locale.getDefault().getDisplayLanguage(Locale.ENGLISH)
-        target.text = Locale.getDefault().getDisplayLanguage(Locale.KOREAN)
-
         bottomSheet()
         textView()
         iconButton()
@@ -251,6 +254,8 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
     }
 
     private fun ActivityProcessTextBinding.textView() {
+        source.text = Locale.getDefault().getDisplayLanguage(Locale.ENGLISH)
+        target.text = Locale.getDefault().getDisplayLanguage(Locale.KOREAN)
         translatedText.movementMethod = ScrollingMovementMethod()
     }
 
@@ -258,11 +263,11 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
         swap.setOnClickListener {
             it.isClickable = false
 
-            val degree = it.rotation.plus(180.0F).rem(Float.MAX_VALUE)
             val duration = resources.configShortAnimTime.long
-            val x = 16.toPx(resources)
+            val rotationY = it.rotation.plus(DEGREE_180).rem(Float.MAX_VALUE)
+            val x = dimen(R.dimen.layout_margin_16dp)
 
-            it.rotate(duration, degree, AccelerateInterpolator())
+            it.rotateY(duration, rotationY)
 
             with(source) {
                 translateRight(duration.half, x) {
@@ -285,6 +290,7 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
             when {
                 checkPermission(Manifest.permission.RECORD_AUDIO) -> recognizeSpeech()
                 shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO) -> {
+                    // todo check.
                 }
                 else -> requestRecordAudioPermissionsLauncher.launch(Manifest.permission.RECORD_AUDIO)
             }
@@ -297,11 +303,7 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
         copyToClipboard.setOnIconClickListener {
             copyPlainTextToClipboard(translatedText.text)
                 .then {
-                    Toast.makeText(
-                        context,
-                        R.string.copied_to_clipboard,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showToast(R.string.copied_to_clipboard)
                 }
         }
 
@@ -339,12 +341,25 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
     }
 
     @OptIn(FlowPreview::class)
-    private fun TranslatorViewModel.collect() {
+    private fun ProcessTextViewModel.collect() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                characters.collect {
-                    if (it >= 1000) {
-                        showInterstitialAd(this@ProcessTextActivity)
+                adsRemoved.zip(characters) { adsRemoved, characters ->
+                    adsRemoved.not().and(characters > LIMIT_CHARACTERS)
+                }.collect { condition ->
+                    if (condition) {
+                        showInterstitialAd(
+                            this@ProcessTextActivity,
+                            onAdDismissedFullScreenContent = {
+                                loadInterstitialAd(this@ProcessTextActivity)
+                            },
+                            onAdFailedToShowFullScreenContent = {
+                                if (it.code == FullScreenContentCallback.ERROR_CODE_AD_REUSED) {
+                                    loadInterstitialAd(this@ProcessTextActivity)
+                                }
+                            }
+                        )
+
                         clearCharacters()
                     }
                 }
@@ -373,9 +388,7 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
                     .filterNotBlank()
                     .debounce(ONE.seconds)
                     .onStart { viewModel.translate(sourceText.value) }
-                    .collect {
-                        viewModel.translate(it)
-                    }
+                    .collect { viewModel.translate(it) }
             }
         }
 
@@ -394,7 +407,10 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
                         }
                         is Result.Failure -> {
                             binding.circularProgressIndicator.hide()
-                            Toast.makeText(this@ProcessTextActivity, it.throwable.message, Toast.LENGTH_LONG).show()
+
+                            with(it.throwable) {
+                                showToast(message ?: string)
+                            }
                         }
                     }
                 }
@@ -405,8 +421,6 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
     companion object {
         private const val AD_HEIGHT = 32
         private const val AD_WIDTH = 320
-        private const val DELAY_MILLIS = 150L
-        private const val PITCH = 1.0F
-        private const val SPEECH_RATE = 1.0F
+        private const val DELAY_MILLIS = 200L
     }
 }

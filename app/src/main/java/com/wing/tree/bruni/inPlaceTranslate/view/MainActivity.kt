@@ -4,25 +4,21 @@ import android.Manifest
 import android.content.ClipboardManager
 import android.content.Intent
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
 import android.text.method.ScrollingMovementMethod
-import android.view.animation.AccelerateInterpolator
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.*
 import com.wing.tree.bruni.core.constant.EMPTY
 import com.wing.tree.bruni.core.constant.NEWLINE
 import com.wing.tree.bruni.core.constant.ONE
@@ -34,15 +30,21 @@ import com.wing.tree.bruni.inPlaceTranslate.BuildConfig
 import com.wing.tree.bruni.inPlaceTranslate.R
 import com.wing.tree.bruni.inPlaceTranslate.ad.InterstitialAdLoader
 import com.wing.tree.bruni.inPlaceTranslate.ad.InterstitialAdLoaderImpl
+import com.wing.tree.bruni.inPlaceTranslate.constant.DEGREE_180
+import com.wing.tree.bruni.inPlaceTranslate.constant.LIMIT_CHARACTERS
+import com.wing.tree.bruni.inPlaceTranslate.constant.PITCH
+import com.wing.tree.bruni.inPlaceTranslate.constant.SPEECH_RATE
 import com.wing.tree.bruni.inPlaceTranslate.databinding.ActivityMainBinding
+import com.wing.tree.bruni.inPlaceTranslate.extension.clear
 import com.wing.tree.bruni.inPlaceTranslate.extension.letIsViewGroup
 import com.wing.tree.bruni.inPlaceTranslate.regular.findDisplayLanguageByLanguage
-import com.wing.tree.bruni.inPlaceTranslate.viewModel.ProcessTextViewModel
-import com.wing.tree.bruni.inPlaceTranslate.viewModel.TranslatorViewModel
+import com.wing.tree.bruni.inPlaceTranslate.regular.findLanguageTagByLanguage
+import com.wing.tree.bruni.inPlaceTranslate.viewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.time.Duration.Companion.seconds
@@ -117,7 +119,7 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
             }
     }
 
-    private val viewModel by viewModels<ProcessTextViewModel>()
+    private val viewModel by viewModels<MainViewModel>()
     private val requestRecordAudioPermissionsLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()) { result ->
         if (result) {
@@ -134,11 +136,16 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
 
         binding.bind()
         viewModel.collect()
-
         processText(intent)
 
         textToSpeech = TextToSpeech(this) { status ->
-
+            if (status == TextToSpeech.SUCCESS) {
+                binding.speakSourceText.enable()
+                binding.speakTranslatedText.enable()
+            } else {
+                binding.speakSourceText.disable()
+                binding.speakTranslatedText.disable()
+            }
         }
 
         loadInterstitialAd(this)
@@ -150,23 +157,18 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
     }
 
     override fun onDestroy() {
-        textToSpeech?.let {
-            it.stop()
-            it.shutdown()
-        }
+        speechRecognizer?.clear()
+        textToSpeech?.clear()
 
         super.onDestroy()
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        processText(intent)
-    }
-
     private fun recognizeSpeech() {
+        val source = viewModel.source.value
+        val languageTag = findLanguageTagByLanguage(source) ?: Locale.getDefault().toLanguageTag()
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault()) // source 찾기. todo.
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE, languageTag)
         }
 
         val speechRecognizer = speechRecognizer ?: SpeechRecognizer
@@ -188,9 +190,8 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
         val utteranceId = loc.language.plus(text).hashCode().string
 
         when(it.setLanguage(loc)) {
-            TextToSpeech.LANG_MISSING_DATA, TextToSpeech.LANG_NOT_SUPPORTED -> {
-
-            }
+            TextToSpeech.LANG_MISSING_DATA -> showToast(R.string.language_data_is_missing)
+            TextToSpeech.LANG_NOT_SUPPORTED -> showToast(R.string.language_is_not_supported)
             else -> {
                 it.setSpeechRate(SPEECH_RATE)
                 it.setPitch(PITCH)
@@ -200,15 +201,14 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
     }
 
     private fun ActivityMainBinding.bind() {
-        source.text = Locale.getDefault().getDisplayLanguage(Locale.ENGLISH)
-        target.text = Locale.getDefault().getDisplayLanguage(Locale.KOREAN)
-
         textView()
         iconButton()
         adView()
     }
 
     private fun ActivityMainBinding.textView() {
+        source.text = Locale.getDefault().getDisplayLanguage(Locale.ENGLISH)
+        target.text = Locale.getDefault().getDisplayLanguage(Locale.KOREAN)
         translatedText.movementMethod = ScrollingMovementMethod()
     }
 
@@ -216,19 +216,19 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
         swap.setOnClickListener {
             it.isClickable = false
 
-            val degree = it.rotation.plus(180.0F).rem(Float.MAX_VALUE)
             val duration = resources.configShortAnimTime.long
-            val x = 16.toPx(resources)
+            val rotationY = it.rotationY.plus(DEGREE_180).rem(Float.MAX_VALUE)
+            val x = dimen(R.dimen.layout_margin_16dp)
 
-            it.rotate(duration, degree, AccelerateInterpolator())
+            it.rotateY(duration, rotationY)
 
             with(source) {
                 translateRight(duration.half, x) {
-                    viewModel.swap().then {
-                        translateLeft(duration.half, ZERO.float) {
-                            it.isClickable = true
-                        }.alpha(ONE.float)
-                    }
+                    viewModel.swap()
+
+                    translateLeft(duration.half, ZERO.float) {
+                        it.isClickable = true
+                    }.alpha(ONE.float)
                 }.alpha(ZERO.float)
             }
 
@@ -256,6 +256,7 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
             when {
                 checkPermission(Manifest.permission.RECORD_AUDIO) -> recognizeSpeech()
                 shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO) -> {
+                    // todo 어쩔래/
                 }
                 else -> requestRecordAudioPermissionsLauncher.launch(Manifest.permission.RECORD_AUDIO)
             }
@@ -268,11 +269,7 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
         copyToClipboard.setOnIconClickListener {
             copyPlainTextToClipboard(translatedText.text)
                 .then {
-                    Toast.makeText(
-                        context,
-                        R.string.copied_to_clipboard,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showToast(R.string.copied_to_clipboard)
                 }
         }
 
@@ -310,12 +307,25 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
     }
 
     @OptIn(FlowPreview::class)
-    private fun TranslatorViewModel.collect() {
+    private fun MainViewModel.collect() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                characters.collect {
-                    if (it >= 1000) {
-                        showInterstitialAd(this@MainActivity)
+                adsRemoved.zip(characters) { adsRemoved, characters ->
+                    adsRemoved.not().and(characters > LIMIT_CHARACTERS)
+                }.collect { condition ->
+                    if (condition) {
+                        showInterstitialAd(
+                            this@MainActivity,
+                            onAdDismissedFullScreenContent = {
+                                loadInterstitialAd(this@MainActivity)
+                            },
+                            onAdFailedToShowFullScreenContent = {
+                                if (it.code == FullScreenContentCallback.ERROR_CODE_AD_REUSED) {
+                                    loadInterstitialAd(this@MainActivity)
+                                }
+                            }
+                        )
+
                         clearCharacters()
                     }
                 }
@@ -376,8 +386,5 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
     companion object {
         private const val AD_HEIGHT = 32
         private const val AD_WIDTH = 320
-        private const val DELAY_MILLIS = 150L
-        private const val PITCH = 1.0F
-        private const val SPEECH_RATE = 1.0F
     }
 }
