@@ -13,15 +13,21 @@ class PreferencesRepositoryImpl @Inject constructor(
 ) : PreferencesRepository {
     private object Name {
         private const val OBJECT_NAME = "Name"
+        const val ADS_REMOVED = "$OBJECT_NAME.ADS_REMOVED"
         const val CHARACTERS = "$OBJECT_NAME.CHARACTERS"
         const val SOURCE = "$OBJECT_NAME.SOURCE"
         const val TARGET = "$OBJECT_NAME.TARGET"
     }
 
     private object Key {
+        val adsRemoved = booleanPreferencesKey(Name.ADS_REMOVED)
         val characters = intPreferencesKey(Name.CHARACTERS)
         val source = stringPreferencesKey(Name.SOURCE)
         val target = stringPreferencesKey(Name.TARGET)
+    }
+
+    override fun getAdsRemoved(): Flow<Boolean> {
+        return dataStore.data.map { it[Key.adsRemoved] ?: false }
     }
 
     override fun getCharacters(): Flow<Int> {
@@ -45,6 +51,12 @@ class PreferencesRepositoryImpl @Inject constructor(
     override suspend fun incrementCharacters(characters: Int) {
         dataStore.edit {
             it[Key.characters] = it[Key.characters]?.plus(characters) ?: characters
+        }
+    }
+
+    override suspend fun putAdsRemoved(adsRemoved: Boolean) {
+        dataStore.edit {
+            it[Key.adsRemoved] = adsRemoved
         }
     }
 
