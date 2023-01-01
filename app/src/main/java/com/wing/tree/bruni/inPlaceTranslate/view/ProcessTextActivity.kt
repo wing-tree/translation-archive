@@ -24,6 +24,7 @@ import com.google.android.gms.ads.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.wing.tree.bruni.core.constant.*
 import com.wing.tree.bruni.core.extension.*
+import com.wing.tree.bruni.core.fluidContentResizer.FluidContentResizer
 import com.wing.tree.bruni.core.regular.then
 import com.wing.tree.bruni.core.useCase.Result
 import com.wing.tree.bruni.inPlaceTranslate.BuildConfig
@@ -149,8 +150,9 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
 
         binding.bind()
         viewModel.collect()
-
         processText(intent)
+
+        FluidContentResizer.registerActivity(this)
 
         textToSpeech = TextToSpeech(this) { status ->
             if (status == TextToSpeech.SUCCESS) {
@@ -261,7 +263,7 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
             it.isClickable = false
 
             val duration = resources.configShortAnimTime.long
-            val rotationY = it.rotation.plus(DEGREE_180).rem(Float.MAX_VALUE)
+            val rotationY = it.rotationY.plus(DEGREE_180).rem(Float.MAX_VALUE)
             val x = dimen(R.dimen.layout_margin_16dp)
 
             it.rotateY(duration, rotationY)
