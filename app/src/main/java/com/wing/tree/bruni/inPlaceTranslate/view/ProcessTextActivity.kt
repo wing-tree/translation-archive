@@ -56,12 +56,12 @@ import kotlin.time.Duration.Companion.seconds
 class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAdLoaderImpl() {
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
-
-            if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
-                finish()
-            } else {
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            with(BottomSheetBehavior.from(binding.bottomSheet)) {
+                if (state == BottomSheetBehavior.STATE_HIDDEN) {
+                    finish()
+                } else {
+                    state = BottomSheetBehavior.STATE_HIDDEN
+                }
             }
         }
     }
