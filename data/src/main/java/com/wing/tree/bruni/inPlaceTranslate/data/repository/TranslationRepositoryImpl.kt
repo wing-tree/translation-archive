@@ -57,11 +57,7 @@ class TranslationRepositoryImpl @Inject constructor(
     ): List<Model> {
         return when(dataSource) {
             DataSource.DEFAULT -> with(localDataSource.all(sourceText, target)) {
-                filterNot {
-                    it.isExpired()
-                }.ifEmpty {
-                    translate(sourceText, source, target)
-                }
+                filterNotExpired().ifEmpty { translate(sourceText, source, target) }
             }
             else -> translate(sourceText, source, target)
         }
@@ -105,6 +101,8 @@ class TranslationRepositoryImpl @Inject constructor(
 
         return expiredAt < timeInMillis
     }
+
+    private fun List<Translation>.filterNotExpired() = filterNot { it.isExpired() }
 
     companion object {
         private const val FORMAT = "text"
