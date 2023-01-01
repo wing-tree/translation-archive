@@ -36,6 +36,7 @@ import com.wing.tree.bruni.inPlaceTranslate.extension.clear
 import com.wing.tree.bruni.inPlaceTranslate.extension.letIsViewGroup
 import com.wing.tree.bruni.inPlaceTranslate.regular.findDisplayLanguageByLanguage
 import com.wing.tree.bruni.inPlaceTranslate.regular.findLanguageTagByLanguage
+import com.wing.tree.bruni.inPlaceTranslate.regular.findLocaleByLanguage
 import com.wing.tree.bruni.inPlaceTranslate.viewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
@@ -260,7 +261,10 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
         }
 
         speakSourceText.setOnIconClickListener {
-            speak(Locale.ENGLISH, sourceText.text)
+            val language = viewModel.source.value
+            val loc = findLocaleByLanguage(language) ?: Locale.getDefault()
+
+            speak(loc, sourceText.text)
         }
 
         copyToClipboard.setOnIconClickListener {
@@ -271,7 +275,10 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
         }
 
         speakTranslatedText.setOnIconClickListener {
-            speak(Locale.KOREA, translatedText.text)
+            val language = viewModel.target.value
+            val loc = findLocaleByLanguage(language) ?: Locale.getDefault()
+
+            speak(loc, translatedText.text)
         }
     }
 
