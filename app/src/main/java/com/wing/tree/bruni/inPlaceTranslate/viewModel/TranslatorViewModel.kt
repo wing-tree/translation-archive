@@ -75,6 +75,7 @@ abstract class TranslatorViewModel(
         _source.value = target
         _target.value = source
 
+        sourceText.value = EMPTY
         sourceText.value = translations.translatedText
 
         viewModelScope.launch {
