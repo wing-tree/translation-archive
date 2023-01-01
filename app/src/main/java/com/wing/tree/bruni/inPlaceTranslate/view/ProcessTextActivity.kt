@@ -22,10 +22,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.gms.ads.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.wing.tree.bruni.core.constant.EMPTY
-import com.wing.tree.bruni.core.constant.NEWLINE
-import com.wing.tree.bruni.core.constant.ONE
-import com.wing.tree.bruni.core.constant.ZERO
+import com.wing.tree.bruni.core.constant.*
 import com.wing.tree.bruni.core.extension.*
 import com.wing.tree.bruni.core.regular.then
 import com.wing.tree.bruni.core.useCase.Result
@@ -385,7 +382,6 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 sourceText
-                    .filterNotBlank()
                     .debounce(ONE.seconds)
                     .onStart { viewModel.translate(sourceText.value) }
                     .collect { viewModel.translate(it) }
