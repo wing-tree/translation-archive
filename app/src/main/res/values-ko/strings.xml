@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">In Place Translate</string>
+    <string name="close_drawer">서랍 닫기</string>
     <string name="copied_to_clipboard">클립보드에 복사되었습니다</string>
     <string name="language_data_is_missing">언어 데이터가 없습니다</string>
     <string name="language_is_not_supported">언어가 지원되지 않습니다</string>
+    <string name="open_drawer">서랍 열기</string>
     <string name="translate">번역</string>
 </resources>
