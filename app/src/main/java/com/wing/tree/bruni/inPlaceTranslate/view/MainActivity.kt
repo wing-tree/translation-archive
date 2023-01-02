@@ -14,7 +14,9 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -42,6 +44,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 import java.util.*
@@ -87,8 +90,8 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
         override fun onResults(results: Bundle?) {
             val stringArrayList = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
 
-            stringArrayList?.firstOrNull()?.let {
-                viewModel.sourceText.value = it
+            stringArrayList?.firstOrNull()?.let { string ->
+                viewModel.sourceText.update { string }
             }
 
             with(binding.recognizeSpeech) {
@@ -181,7 +184,7 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
         val processText = intent?.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)
         val sourceText = processText?.string ?: EMPTY
 
-        viewModel.sourceText.value = sourceText
+        viewModel.sourceText.update { sourceText }
     }
 
     private fun speak(loc: Locale, text: CharSequence) = textToSpeech?.let {
@@ -199,9 +202,42 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
     }
 
     private fun ActivityMainBinding.bind() {
+        drawerLayout()
         textView()
         iconButton()
         adView()
+    }
+
+    private fun ActivityMainBinding.drawerLayout() {
+        toolbar()
+
+        val actionBarDrawerToggle = ActionBarDrawerToggle(
+            this@MainActivity,
+            drawerLayout,
+            toolbar,
+            R.string.open_drawer,
+            R.string.close_drawer
+        )
+
+        drawerLayout.addDrawerListener(actionBarDrawerToggle)
+
+        actionBarDrawerToggle.syncState()
+    }
+
+    private fun ActivityMainBinding.toolbar() {
+        setSupportActionBar(
+            toolbar.apply {
+                setNavigationOnClickListener {
+                    if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                        drawerLayout.closeDrawer(GravityCompat.START)
+                    } else {
+                        drawerLayout.openDrawer(GravityCompat.START)
+                    }
+                }
+            }
+        )
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun ActivityMainBinding.textView() {
@@ -222,11 +258,11 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
 
             with(source) {
                 translateRight(duration.half, x) {
-                    viewModel.swap()
-
-                    translateLeft(duration.half, ZERO.float) {
-                        it.isClickable = true
-                    }.alpha(ONE.float)
+                    viewModel.swap().then {
+                        translateLeft(duration.half, ZERO.float) {
+                            it.isClickable = true
+                        }.alpha(ONE.float)
+                    }
                 }.alpha(ZERO.float)
             }
 
@@ -246,7 +282,7 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
                 val item = primaryClip?.getItemAt(ZERO)
                 val text = item?.coerceToText(it.context)
 
-                viewModel.sourceText.value = text?.string ?: EMPTY
+                viewModel.sourceText.update { text?.string ?: EMPTY }
             }
         }
 
@@ -310,7 +346,6 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
         }.loadAd(adRequest)
     }
 
-    @OptIn(FlowPreview::class)
     private fun MainViewModel.collect() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -349,17 +384,6 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
                 target.collect { target ->
                     binding.target.text = findDisplayLanguageByLanguage(target)
                 }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sourceText
-                    .debounce(ONE.seconds)
-                    .onStart { viewModel.translate(sourceText.value) }
-                    .collect {
-                        viewModel.translate(it)
-                    }
             }
         }
 

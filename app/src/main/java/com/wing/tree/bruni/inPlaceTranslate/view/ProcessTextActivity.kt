@@ -40,15 +40,13 @@ import com.wing.tree.bruni.inPlaceTranslate.extension.clear
 import com.wing.tree.bruni.inPlaceTranslate.extension.letIsViewGroup
 import com.wing.tree.bruni.inPlaceTranslate.regular.findDisplayLanguageByLanguage
 import com.wing.tree.bruni.inPlaceTranslate.regular.findLanguageTagByLanguage
+import com.wing.tree.bruni.inPlaceTranslate.regular.findLocaleByLanguage
 import com.wing.tree.bruni.inPlaceTranslate.viewModel.ProcessTextViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.time.Duration.Companion.seconds
 
 @AndroidEntryPoint
 class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAdLoaderImpl() {
@@ -102,8 +100,8 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
         override fun onResults(results: Bundle?) {
             val stringArrayList = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
 
-            stringArrayList?.firstOrNull()?.let {
-                viewModel.sourceText.value = it
+            stringArrayList?.firstOrNull()?.let { string ->
+                viewModel.sourceText.update { string }
             }
 
             with(binding.recognizeSpeech) {
@@ -204,7 +202,7 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
         val processText = intent?.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)
         val sourceText = processText?.string ?: EMPTY
 
-        viewModel.sourceText.value = sourceText
+        viewModel.sourceText.update { sourceText }
     }
 
     private fun speak(loc: Locale, text: CharSequence) = textToSpeech?.let {
@@ -296,7 +294,10 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
         }
 
         speakSourceText.setOnIconClickListener {
-            speak(Locale.ENGLISH, sourceText.text)
+            val language = viewModel.source.value
+            val loc = findLocaleByLanguage(language) ?: Locale.getDefault()
+
+            speak(loc, sourceText.text)
         }
 
         copyToClipboard.setOnIconClickListener {
@@ -307,7 +308,10 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
         }
 
         speakTranslatedText.setOnIconClickListener {
-            speak(Locale.KOREA, translatedText.text)
+            val language = viewModel.target.value
+            val loc = findLocaleByLanguage(language) ?: Locale.getDefault()
+
+            speak(loc, translatedText.text)
         }
     }
 
@@ -339,7 +343,6 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
         }.loadAd(adRequest)
     }
 
-    @OptIn(FlowPreview::class)
     private fun ProcessTextViewModel.collect() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -378,15 +381,6 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
                 target.collect { target ->
                     binding.target.text = findDisplayLanguageByLanguage(target)
                 }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                sourceText
-                    .debounce(ONE.seconds)
-                    .onStart { viewModel.translate(sourceText.value) }
-                    .collect { viewModel.translate(it) }
             }
         }
 

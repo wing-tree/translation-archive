@@ -10,213 +10,241 @@
             type="kotlinx.coroutines.flow.MutableStateFlow&lt;String>" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bottom_sheet"
-        style="@style/Widget.Material3.BottomSheet"
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:behavior_hideable="true"
-        app:layout_behavior="com.wing.tree.bruni.core.bottomSheetBehavior.BottomSheetBehavior">
+        android:fitsSystemWindows="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraint_layout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/layout_height_48dp"
-            android:paddingHorizontal="@dimen/padding_horizontal_16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/source"
-                android:layout_width="@dimen/layout_width_72dp"
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/app_bar_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="한국어" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <ImageButton
-                android:id="@+id/swap"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/layout_margin_start_16dp"
-                android:background="@null"
-                android:src="@drawable/ic_round_swap_horiz_20"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/source"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="?attr/colorOnSurface"
-                tools:ignore="ContentDescription" />
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/target"
-                android:layout_width="56dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/layout_margin_start_16dp"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/constraint_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/layout_height_48dp"
+                        android:paddingHorizontal="@dimen/padding_horizontal_16dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/source"
+                            android:layout_width="@dimen/layout_width_72dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="한국어" />
+
+                        <ImageButton
+                            android:id="@+id/swap"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/layout_margin_start_16dp"
+                            android:background="@null"
+                            android:src="@drawable/ic_round_swap_horiz_20"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/source"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="?attr/colorOnSurface"
+                            tools:ignore="ContentDescription" />
+
+                        <TextView
+                            android:id="@+id/target"
+                            android:layout_width="56dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/layout_margin_start_16dp"
+                            android:gravity="center"
+                            android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/swap"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="영어" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.appcompat.widget.Toolbar>
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="@dimen/layout_margin_bottom_16dp"
+                android:paddingHorizontal="@dimen/padding_horizontal_16dp"
+                app:layout_constraintBottom_toTopOf="@+id/ad_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/app_bar_layout">
+
+                <androidx.core.widget.NestedScrollView
+                    android:id="@+id/nested_scroll_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:fadingEdgeLength="6dp"
+                    android:fillViewport="true"
+                    android:requiresFadingEdge="vertical"
+                    app:layout_constraintBottom_toTopOf="@+id/nested_scroll_view2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed">
+
+                    <EditText
+                        android:id="@+id/source_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:gravity="start|top"
+                        android:inputType="textMultiLine"
+                        android:padding="@dimen/padding_12dp"
+                        android:text="@={sourceText}"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                        tools:ignore="Autofill,LabelFor" />
+
+                </androidx.core.widget.NestedScrollView>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/layout_height_48dp"
+                    android:alpha="0.62"
+                    android:gravity="center_vertical|end"
+                    app:layout_constraintBottom_toBottomOf="@+id/nested_scroll_view"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
+                        android:id="@+id/paste_from_clipboard"
+                        android:layout_width="@dimen/layout_width_48dp"
+                        android:layout_height="@dimen/layout_height_48dp"
+                        app:src="@drawable/ic_round_content_paste_24"
+                        app:tint="?attr/colorOnSurface"
+                        tools:ignore="ContentDescription" />
+
+                    <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
+                        android:id="@+id/recognize_speech"
+                        android:layout_width="@dimen/layout_width_48dp"
+                        android:layout_height="@dimen/layout_height_48dp"
+                        app:src="@drawable/ic_round_mic_24"
+                        app:tint="?attr/colorOnSurface"
+                        tools:ignore="ContentDescription" />
+
+                    <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
+                        android:id="@+id/speak_source_text"
+                        android:layout_width="@dimen/layout_width_48dp"
+                        android:layout_height="@dimen/layout_height_48dp"
+                        app:src="@drawable/ic_round_volume_up_24"
+                        app:tint="?attr/colorOnSurface"
+                        tools:ignore="ContentDescription" />
+
+                </LinearLayout>
+
+                <androidx.core.widget.NestedScrollView
+                    android:id="@+id/nested_scroll_view2"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/layout_margin_top_16dp"
+                    android:background="@drawable/shape_translated_text"
+                    android:backgroundTint="?attr/colorSurfaceVariant"
+                    android:fadingEdgeLength="6dp"
+                    android:fillViewport="true"
+                    android:requiresFadingEdge="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/nested_scroll_view">
+
+                    <TextView
+                        android:id="@+id/translated_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="start|top"
+                        android:padding="@dimen/padding_12dp"
+                        android:scrollbars="vertical"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+
+                </androidx.core.widget.NestedScrollView>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/layout_height_48dp"
+                    android:alpha="0.62"
+                    android:gravity="center_vertical|end"
+                    app:layout_constraintBottom_toBottomOf="@+id/nested_scroll_view2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
+                        android:id="@+id/copy_to_clipboard"
+                        android:layout_width="@dimen/layout_width_48dp"
+                        android:layout_height="@dimen/layout_height_48dp"
+                        app:src="@drawable/ic_round_content_copy_20"
+                        app:tint="?attr/colorOnSurface"
+                        tools:ignore="ContentDescription" />
+
+                    <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
+                        android:id="@+id/speak_translated_text"
+                        android:layout_width="@dimen/layout_width_48dp"
+                        android:layout_height="@dimen/layout_height_48dp"
+                        app:src="@drawable/ic_round_volume_up_24"
+                        app:tint="?attr/colorOnSurface"
+                        tools:ignore="ContentDescription" />
+
+                </LinearLayout>
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/circular_progress_indicator"
+                    style="@style/Widget.Material3.CircularProgressIndicator.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    app:showAnimationBehavior="outward"
+                    app:hideAnimationBehavior="outward"
+                    app:layout_constraintBottom_toBottomOf="@+id/nested_scroll_view2"
+                    app:layout_constraintEnd_toEndOf="@+id/nested_scroll_view2"
+                    app:layout_constraintStart_toStartOf="@+id/nested_scroll_view2"
+                    app:layout_constraintTop_toTopOf="@+id/nested_scroll_view2" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <FrameLayout
+                android:id="@+id/ad_view"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/layout_height_32dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/swap"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="영어" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="@dimen/layout_margin_bottom_16dp"
-            android:paddingHorizontal="@dimen/padding_horizontal_16dp"
-            app:layout_constraintBottom_toTopOf="@+id/ad_view"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraint_layout">
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigation_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true" />
 
-            <androidx.core.widget.NestedScrollView
-                android:id="@+id/nested_scroll_view"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:fadingEdgeLength="6dp"
-                android:fillViewport="true"
-                android:requiresFadingEdge="vertical"
-                app:layout_constraintBottom_toTopOf="@+id/nested_scroll_view2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_chainStyle="packed">
-
-                <EditText
-                    android:id="@+id/source_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:gravity="start|top"
-                    android:inputType="textMultiLine"
-                    android:padding="@dimen/padding_12dp"
-                    android:text="@={sourceText}"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                    tools:ignore="Autofill,LabelFor" />
-
-            </androidx.core.widget.NestedScrollView>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="@dimen/layout_height_48dp"
-                android:alpha="0.62"
-                android:gravity="center_vertical|end"
-                app:layout_constraintBottom_toBottomOf="@+id/nested_scroll_view"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
-                    android:id="@+id/paste_from_clipboard"
-                    android:layout_width="@dimen/layout_width_48dp"
-                    android:layout_height="@dimen/layout_height_48dp"
-                    app:src="@drawable/ic_round_content_paste_24"
-                    app:tint="?attr/colorOnSurface"
-                    tools:ignore="ContentDescription" />
-
-                <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
-                    android:id="@+id/recognize_speech"
-                    android:layout_width="@dimen/layout_width_48dp"
-                    android:layout_height="@dimen/layout_height_48dp"
-                    app:src="@drawable/ic_round_mic_24"
-                    app:tint="?attr/colorOnSurface"
-                    tools:ignore="ContentDescription" />
-
-                <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
-                    android:id="@+id/speak_source_text"
-                    android:layout_width="@dimen/layout_width_48dp"
-                    android:layout_height="@dimen/layout_height_48dp"
-                    app:src="@drawable/ic_round_volume_up_24"
-                    app:tint="?attr/colorOnSurface"
-                    tools:ignore="ContentDescription" />
-
-            </LinearLayout>
-
-            <androidx.core.widget.NestedScrollView
-                android:id="@+id/nested_scroll_view2"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="@dimen/layout_margin_top_16dp"
-                android:background="@drawable/shape_translated_text"
-                android:backgroundTint="?attr/colorSurfaceVariant"
-                android:fadingEdgeLength="6dp"
-                android:fillViewport="true"
-                android:requiresFadingEdge="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/nested_scroll_view">
-
-                <TextView
-                    android:id="@+id/translated_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="start|top"
-                    android:padding="@dimen/padding_12dp"
-                    android:scrollbars="vertical"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
-
-            </androidx.core.widget.NestedScrollView>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="@dimen/layout_height_48dp"
-                android:alpha="0.62"
-                android:gravity="center_vertical|end"
-                app:layout_constraintBottom_toBottomOf="@+id/nested_scroll_view2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
-                    android:id="@+id/copy_to_clipboard"
-                    android:layout_width="@dimen/layout_width_48dp"
-                    android:layout_height="@dimen/layout_height_48dp"
-                    app:src="@drawable/ic_round_content_copy_20"
-                    app:tint="?attr/colorOnSurface"
-                    tools:ignore="ContentDescription" />
-
-                <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
-                    android:id="@+id/speak_translated_text"
-                    android:layout_width="@dimen/layout_width_48dp"
-                    android:layout_height="@dimen/layout_height_48dp"
-                    app:src="@drawable/ic_round_volume_up_24"
-                    app:tint="?attr/colorOnSurface"
-                    tools:ignore="ContentDescription" />
-
-            </LinearLayout>
-
-            <com.google.android.material.progressindicator.CircularProgressIndicator
-                android:id="@+id/circular_progress_indicator"
-                style="@style/Widget.Material3.CircularProgressIndicator.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:indeterminate="true"
-                app:showAnimationBehavior="outward"
-                app:hideAnimationBehavior="outward"
-                app:layout_constraintBottom_toBottomOf="@+id/nested_scroll_view2"
-                app:layout_constraintEnd_toEndOf="@+id/nested_scroll_view2"
-                app:layout_constraintStart_toStartOf="@+id/nested_scroll_view2"
-                app:layout_constraintTop_toTopOf="@+id/nested_scroll_view2" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <FrameLayout
-            android:id="@+id/ad_view"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/layout_height_32dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>
 
 </layout>
