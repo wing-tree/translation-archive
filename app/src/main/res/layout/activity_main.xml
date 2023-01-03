@@ -123,13 +123,21 @@
                 </androidx.core.widget.NestedScrollView>
 
                 <LinearLayout
+                    android:id="@+id/linear_layout1"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/layout_height_48dp"
-                    android:alpha="0.62"
                     android:gravity="center_vertical|end"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
+
+                    <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
+                        android:id="@+id/copy_to_clipboard1"
+                        android:layout_width="@dimen/layout_width_48dp"
+                        android:layout_height="@dimen/layout_height_48dp"
+                        app:src="@drawable/ic_round_content_copy_24"
+                        app:tint="?attr/colorOnSurface"
+                        tools:ignore="ContentDescription" />
 
                     <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
                         android:id="@+id/paste_from_clipboard"
@@ -187,16 +195,24 @@
                 </androidx.core.widget.NestedScrollView>
 
                 <LinearLayout
+                    android:id="@+id/linear_layout2"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/layout_height_48dp"
-                    android:alpha="0.62"
                     android:gravity="center_vertical|end"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/nested_scroll_view2">
 
                     <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
-                        android:id="@+id/copy_to_clipboard"
+                        android:id="@+id/share"
+                        android:layout_width="@dimen/layout_width_48dp"
+                        android:layout_height="@dimen/layout_height_48dp"
+                        app:src="@drawable/ic_round_share_24"
+                        app:tint="?attr/colorOnSurface"
+                        tools:ignore="ContentDescription" />
+
+                    <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
+                        android:id="@+id/copy_to_clipboard2"
                         android:layout_width="@dimen/layout_width_48dp"
                         android:layout_height="@dimen/layout_height_48dp"
                         app:src="@drawable/ic_round_content_copy_24"

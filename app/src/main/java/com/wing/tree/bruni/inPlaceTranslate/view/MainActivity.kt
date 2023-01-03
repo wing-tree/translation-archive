@@ -272,6 +272,13 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
             }
         }
 
+        copyToClipboard1.setOnIconClickListener {
+            copyPlainTextToClipboard(sourceText.text)
+                .then {
+                    showToast(R.string.copied_to_clipboard)
+                }
+        }
+
         pasteFromClipboard.setOnIconClickListener {
             val clipboardManager = getSystemService(ClipboardManager::class.java)
             val hasPrimaryClip = clipboardManager.hasPrimaryClip()
@@ -302,7 +309,11 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
             speak(loc, sourceText.text)
         }
 
-        copyToClipboard.setOnIconClickListener {
+        share.setOnIconClickListener {
+
+        }
+
+        copyToClipboard2.setOnIconClickListener {
             copyPlainTextToClipboard(translatedText.text)
                 .then {
                     showToast(R.string.copied_to_clipboard)
