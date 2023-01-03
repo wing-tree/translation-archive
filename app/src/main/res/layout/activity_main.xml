@@ -101,12 +101,10 @@
                     android:fadingEdgeLength="6dp"
                     android:fillViewport="true"
                     android:requiresFadingEdge="vertical"
-                    app:layout_constraintBottom_toTopOf="@+id/nested_scroll_view2"
+                    app:layout_constraintDimensionRatio="3:2"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_chainStyle="packed">
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <EditText
                         android:id="@+id/source_text"
@@ -115,9 +113,11 @@
                         android:background="@null"
                         android:gravity="start|top"
                         android:inputType="textMultiLine"
-                        android:padding="@dimen/padding_12dp"
+                        android:paddingHorizontal="@dimen/padding_horizontal_12dp"
+                        android:paddingTop="@dimen/padding_top_48dp"
+                        android:paddingBottom="@dimen/padding_bottom_12dp"
                         android:text="@={sourceText}"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
                         tools:ignore="Autofill,LabelFor" />
 
                 </androidx.core.widget.NestedScrollView>
@@ -127,9 +127,9 @@
                     android:layout_height="@dimen/layout_height_48dp"
                     android:alpha="0.62"
                     android:gravity="center_vertical|end"
-                    app:layout_constraintBottom_toBottomOf="@+id/nested_scroll_view"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
                         android:id="@+id/paste_from_clipboard"
@@ -178,9 +178,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="start|top"
-                        android:padding="@dimen/padding_12dp"
+                        android:paddingHorizontal="@dimen/padding_horizontal_12dp"
+                        android:paddingTop="@dimen/padding_top_48dp"
+                        android:paddingBottom="@dimen/padding_bottom_12dp"
                         android:scrollbars="vertical"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+                        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall" />
 
                 </androidx.core.widget.NestedScrollView>
 
@@ -189,9 +191,9 @@
                     android:layout_height="@dimen/layout_height_48dp"
                     android:alpha="0.62"
                     android:gravity="center_vertical|end"
-                    app:layout_constraintBottom_toBottomOf="@+id/nested_scroll_view2"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/nested_scroll_view2">
 
                     <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
                         android:id="@+id/copy_to_clipboard"
@@ -217,12 +219,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:indeterminate="true"
-                    app:showAnimationBehavior="outward"
                     app:hideAnimationBehavior="outward"
                     app:layout_constraintBottom_toBottomOf="@+id/nested_scroll_view2"
                     app:layout_constraintEnd_toEndOf="@+id/nested_scroll_view2"
                     app:layout_constraintStart_toStartOf="@+id/nested_scroll_view2"
-                    app:layout_constraintTop_toTopOf="@+id/nested_scroll_view2" />
+                    app:layout_constraintTop_toTopOf="@+id/nested_scroll_view2"
+                    app:showAnimationBehavior="outward" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -245,7 +247,7 @@
             android:layout_gravity="start"
             android:fitsSystemWindows="true"
             app:headerLayout="@layout/header_navigation"
-            app:menu="@menu/menu_navigation"  />
+            app:menu="@menu/menu_navigation" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
 
