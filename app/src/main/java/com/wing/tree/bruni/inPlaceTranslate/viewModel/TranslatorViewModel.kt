@@ -86,9 +86,6 @@ abstract class TranslatorViewModel(
 
             sourceUseCase.put(target)
             targetUseCase.put(source)
-
-            sourceText.update { null }
-            sourceText.update { translations.translatedText }
         }
     }
 
