@@ -12,6 +12,7 @@
     <dimen name="layout_height_40dp">40dp</dimen>
     <dimen name="layout_height_44dp">44dp</dimen>
     <dimen name="layout_height_48dp">48dp</dimen>
+    <dimen name="layout_height_50dp">50dp</dimen>
     <dimen name="layout_height_52dp">52dp</dimen>
     <dimen name="layout_height_56dp">56dp</dimen>
     <dimen name="layout_height_60dp">60dp</dimen>
