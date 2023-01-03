@@ -3,6 +3,7 @@ package com.wing.tree.bruni.inPlaceTranslate.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wing.tree.bruni.core.constant.*
+import com.wing.tree.bruni.core.extension.hundreds
 import com.wing.tree.bruni.core.extension.string
 import com.wing.tree.bruni.core.useCase.Result
 import com.wing.tree.bruni.core.useCase.firstOrNull
@@ -58,8 +59,7 @@ abstract class TranslatorViewModel(
     val sourceText = MutableStateFlow<String?>(null)
 
     init {
-        val twoHundred = ONE_HUNDRED.times(TWO)
-        val timeout = twoHundred.milliseconds
+        val timeout = FIVE.hundreds.milliseconds
 
         @OptIn(FlowPreview::class)
         viewModelScope.launch {
