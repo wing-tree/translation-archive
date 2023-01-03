@@ -21,9 +21,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.gms.ads.*
-import com.wing.tree.bruni.core.constant.*
+import com.wing.tree.bruni.core.constant.EMPTY
+import com.wing.tree.bruni.core.constant.NEWLINE
+import com.wing.tree.bruni.core.constant.ONE
+import com.wing.tree.bruni.core.constant.ZERO
 import com.wing.tree.bruni.core.extension.*
-import com.wing.tree.bruni.core.fluidContentResizer.FluidContentResizer
 import com.wing.tree.bruni.core.regular.then
 import com.wing.tree.bruni.core.useCase.Result
 import com.wing.tree.bruni.inPlaceTranslate.BuildConfig
@@ -42,14 +44,10 @@ import com.wing.tree.bruni.inPlaceTranslate.regular.findLanguageTagByLanguage
 import com.wing.tree.bruni.inPlaceTranslate.regular.findLocaleByLanguage
 import com.wing.tree.bruni.inPlaceTranslate.viewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.time.Duration.Companion.seconds
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAdLoaderImpl() {
@@ -139,8 +137,6 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
         binding.bind()
         viewModel.collect()
         processText(intent)
-
-        FluidContentResizer.registerActivity(this)
 
         textToSpeech = TextToSpeech(this) { status ->
             if (status == TextToSpeech.SUCCESS) {
@@ -345,7 +341,7 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
                 }
             }
 
-            setAdSize(AdSize.LARGE_BANNER)
+            setAdSize(AdSize.BANNER)
         }.loadAd(adRequest)
     }
 
@@ -411,10 +407,5 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
                 }
             }
         }
-    }
-
-    companion object {
-        private const val AD_HEIGHT = 32
-        private const val AD_WIDTH = 320
     }
 }
