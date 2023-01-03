@@ -23,6 +23,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.gms.ads.*
 import com.wing.tree.bruni.core.constant.*
 import com.wing.tree.bruni.core.extension.*
+import com.wing.tree.bruni.core.fluidContentResizer.FluidContentResizer
 import com.wing.tree.bruni.core.regular.then
 import com.wing.tree.bruni.core.useCase.Result
 import com.wing.tree.bruni.inPlaceTranslate.BuildConfig
@@ -138,6 +139,8 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
         binding.bind()
         viewModel.collect()
         processText(intent)
+
+        FluidContentResizer.registerActivity(this)
 
         textToSpeech = TextToSpeech(this) { status ->
             if (status == TextToSpeech.SUCCESS) {
