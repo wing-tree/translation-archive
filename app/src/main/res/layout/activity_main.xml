@@ -72,7 +72,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/layout_margin_start_16dp"
                             android:gravity="center"
-                            android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/swap"
                             app:layout_constraintTop_toTopOf="parent"
@@ -197,7 +197,7 @@
                         android:id="@+id/copy_to_clipboard"
                         android:layout_width="@dimen/layout_width_48dp"
                         android:layout_height="@dimen/layout_height_48dp"
-                        app:src="@drawable/ic_round_content_copy_20"
+                        app:src="@drawable/ic_round_content_copy_24"
                         app:tint="?attr/colorOnSurface"
                         tools:ignore="ContentDescription" />
 
@@ -229,7 +229,7 @@
             <FrameLayout
                 android:id="@+id/ad_view"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/layout_height_32dp"
+                android:layout_height="@dimen/layout_height_100dp"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 app:layout_constraintBottom_toBottomOf="parent"

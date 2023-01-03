@@ -345,7 +345,7 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
                 }
             }
 
-            setAdSize(AdSize(AD_WIDTH, AD_HEIGHT))
+            setAdSize(AdSize.LARGE_BANNER)
         }.loadAd(adRequest)
     }
 
