@@ -101,10 +101,12 @@
                     android:fadingEdgeLength="6dp"
                     android:fillViewport="true"
                     android:requiresFadingEdge="vertical"
-                    app:layout_constraintDimensionRatio="3:2"
+                    app:layout_constraintBottom_toTopOf="@+id/nested_scroll_view2"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_weight="2">
 
                     <EditText
                         android:id="@+id/source_text"
@@ -123,7 +125,7 @@
                 </androidx.core.widget.NestedScrollView>
 
                 <LinearLayout
-                    android:id="@+id/linear_layout1"
+                    android:id="@+id/linear_layout"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/layout_height_48dp"
                     android:gravity="center_vertical|end"
@@ -132,7 +134,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
-                        android:id="@+id/copy_to_clipboard1"
+                        android:id="@+id/copy_to_clipboard"
                         android:layout_width="@dimen/layout_width_48dp"
                         android:layout_height="@dimen/layout_height_48dp"
                         app:src="@drawable/ic_round_content_copy_24"
@@ -179,7 +181,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/nested_scroll_view">
+                    app:layout_constraintTop_toBottomOf="@+id/nested_scroll_view"
+                    app:layout_constraintVertical_weight="3">
 
                     <TextView
                         android:id="@+id/translated_text"
