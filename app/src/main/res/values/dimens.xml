@@ -1505,4 +1505,5 @@
     <dimen name="radius_180dp">180dp</dimen>
 
     <item name="alpha_0.20" format="float" type="dimen">0.20</item>
+    <item name="alpha_0.38" format="float" type="dimen">0.38</item>
 </resources>
