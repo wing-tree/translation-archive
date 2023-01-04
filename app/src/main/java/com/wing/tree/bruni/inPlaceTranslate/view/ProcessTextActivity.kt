@@ -23,7 +23,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.gms.ads.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.wing.tree.bruni.core.constant.EMPTY
-import com.wing.tree.bruni.core.constant.NEWLINE
 import com.wing.tree.bruni.core.constant.ONE
 import com.wing.tree.bruni.core.constant.ZERO
 import com.wing.tree.bruni.core.extension.*
@@ -301,10 +300,14 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
         }
 
         copyToClipboard.setOnIconClickListener {
-            copyPlainTextToClipboard(translatedText.text)
-                .then {
-                    showToast(R.string.copied_to_clipboard)
+            translatedText.text?.let { text ->
+                if (text.isNotBlank()) {
+                    copyPlainTextToClipboard(text)
+                        .then {
+                            showToast(R.string.copied_to_clipboard)
+                        }
                 }
+            }
         }
 
         speakTranslatedText.setOnIconClickListener {
@@ -395,7 +398,7 @@ class ProcessTextActivity : AppCompatActivity(), InterstitialAdLoader by Interst
                             val data = it.data.ifEmpty { return@label }
                             val translation = data.first()
 
-                            translatedText.text = translation.translatedText.plus(NEWLINE)
+                            translatedText.text = translation.translatedText
                         }
                         is Result.Failure -> {
                             binding.circularProgressIndicator.hide()
