@@ -1502,4 +1502,6 @@
     <dimen name="radius_172dp">172dp</dimen>
     <dimen name="radius_176dp">176dp</dimen>
     <dimen name="radius_180dp">180dp</dimen>
+
+    <item name="alpha_0.20" format="float" type="dimen">0.20</item>
 </resources>
