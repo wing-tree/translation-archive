@@ -23,7 +23,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.gms.ads.*
 import com.wing.tree.bruni.core.constant.EMPTY
-import com.wing.tree.bruni.core.constant.NEWLINE
 import com.wing.tree.bruni.core.constant.ONE
 import com.wing.tree.bruni.core.constant.ZERO
 import com.wing.tree.bruni.core.extension.*
@@ -271,10 +270,10 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
             it.isClickable = false
 
             val duration = resources.configShortAnimTime.long
-            val rotationY = it.rotationY.plus(DEGREE_180).rem(Float.MAX_VALUE)
+            val rotation = it.rotation.plus(DEGREE_180).rem(Float.MAX_VALUE)
             val x = dimen(R.dimen.layout_margin_16dp)
 
-            it.rotateY(duration, rotationY)
+            it.rotate(duration, rotation, decelerateQuadInterpolator)
 
             with(source) {
                 translateRight(duration.half, x) {
@@ -311,9 +310,11 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
             if (hasPrimaryClip) {
                 val primaryClip = clipboardManager.primaryClip
                 val item = primaryClip?.getItemAt(ZERO)
-                val text = item?.coerceToText(it.context)
+                val text = item?.coerceToText(it.context) ?: EMPTY
 
-                viewModel.sourceText.update { text?.string ?: EMPTY }
+                if (text.isNotBlank()) {
+                    viewModel.sourceText.update { text.string }
+                }
             }
         }
 
@@ -337,8 +338,7 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
         share.setOnIconClickListener {
             translatedText.text?.let { text ->
                 if (text.isNotBlank()) {
-                    val intent = Intent().apply {
-                        action = Intent.ACTION_SEND
+                    val intent = Intent(Intent.ACTION_SEND).apply {
                         putExtra(Intent.EXTRA_TEXT, text)
                         type = MIMETYPE_TEXT_PLAIN
                     }
@@ -447,7 +447,7 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
                             val data = it.data.ifEmpty { return@label }
                             val translation = data.first()
 
-                            translatedText.text = translation.translatedText.plus(NEWLINE)
+                            translatedText.text = translation.translatedText
                         }
                         is Result.Failure -> {
                             binding.circularProgressIndicator.hide()
