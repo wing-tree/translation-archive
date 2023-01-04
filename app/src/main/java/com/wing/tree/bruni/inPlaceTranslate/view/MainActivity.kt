@@ -1,6 +1,7 @@
 package com.wing.tree.bruni.inPlaceTranslate.view
 
 import android.Manifest
+import android.content.ClipDescription.MIMETYPE_TEXT_PLAIN
 import android.content.ClipboardManager
 import android.content.Intent
 import android.graphics.Color
@@ -38,6 +39,7 @@ import com.wing.tree.bruni.inPlaceTranslate.constant.PITCH
 import com.wing.tree.bruni.inPlaceTranslate.constant.SPEECH_RATE
 import com.wing.tree.bruni.inPlaceTranslate.databinding.ActivityMainBinding
 import com.wing.tree.bruni.inPlaceTranslate.extension.clear
+import com.wing.tree.bruni.inPlaceTranslate.extension.getFloat
 import com.wing.tree.bruni.inPlaceTranslate.extension.letIsViewGroup
 import com.wing.tree.bruni.inPlaceTranslate.regular.findDisplayLanguageByLanguage
 import com.wing.tree.bruni.inPlaceTranslate.regular.findLanguageTagByLanguage
@@ -202,6 +204,7 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
 
     private fun ActivityMainBinding.bind() {
         drawerLayout()
+        nestedScrollView()
         textView()
         iconButton()
         adView()
@@ -239,6 +242,24 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
+    private fun ActivityMainBinding.nestedScrollView() {
+        val y = dimen(R.dimen.layout_height_56dp)
+        val minimumValue = getFloat(R.dimen.alpha_0_20)
+        val other = ONE.float.minus(minimumValue)
+
+        nestedScrollView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
+            val alpha = ONE.minus(scrollY.div(y.times(other)))
+
+            linearLayout.alpha = alpha.coerceAtLeast(minimumValue)
+        }
+
+        nestedScrollView2.setOnScrollChangeListener { _, _, scrollY, _, _ ->
+            val alpha = ONE.minus(scrollY.div(y.times(other)))
+
+            linearLayout2.alpha = alpha.coerceAtLeast(minimumValue)
+        }
+    }
+
     private fun ActivityMainBinding.textView() {
         source.text = Locale.getDefault().getDisplayLanguage(Locale.ENGLISH)
         target.text = Locale.getDefault().getDisplayLanguage(Locale.KOREAN)
@@ -272,11 +293,15 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
             }
         }
 
-        copyToClipboard1.setOnIconClickListener {
-            copyPlainTextToClipboard(sourceText.text)
-                .then {
-                    showToast(R.string.copied_to_clipboard)
+        copyToClipboard.setOnIconClickListener {
+            sourceText.text?.let { text ->
+                if (text.isNotBlank()) {
+                    copyPlainTextToClipboard(text)
+                        .then {
+                            showToast(R.string.copied_to_clipboard)
+                        }
                 }
+            }
         }
 
         pasteFromClipboard.setOnIconClickListener {
@@ -310,14 +335,28 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
         }
 
         share.setOnIconClickListener {
+            translatedText.text?.let { text ->
+                if (text.isNotBlank()) {
+                    val intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT, text)
+                        type = MIMETYPE_TEXT_PLAIN
+                    }
 
+                    startActivity(Intent.createChooser(intent, null))
+                }
+            }
         }
 
         copyToClipboard2.setOnIconClickListener {
-            copyPlainTextToClipboard(translatedText.text)
-                .then {
-                    showToast(R.string.copied_to_clipboard)
+            translatedText.text?.let { text ->
+                if (text.isNotBlank()) {
+                    copyPlainTextToClipboard(text)
+                        .then {
+                            showToast(R.string.copied_to_clipboard)
+                        }
                 }
+            }
         }
 
         speakTranslatedText.setOnIconClickListener {
