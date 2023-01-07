@@ -3,15 +3,18 @@ package com.wing.tree.bruni.inPlaceTranslate.data.database
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.wing.tree.bruni.inPlaceTranslate.data.dao.HistoryDao
 import com.wing.tree.bruni.inPlaceTranslate.data.dao.TranslationDao
+import com.wing.tree.bruni.inPlaceTranslate.data.entity.History
 import com.wing.tree.bruni.inPlaceTranslate.data.entity.Translation
 
 @androidx.room.Database(
-    entities = [Translation::class],
+    entities = [History::class, Translation::class],
     exportSchema = false,
     version = 1
 )
 abstract class Database : RoomDatabase() {
+    abstract val historyDao: HistoryDao
     abstract val translationDao: TranslationDao
 
     companion object {
