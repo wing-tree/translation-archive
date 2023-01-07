@@ -1,8 +1,10 @@
 package com.wing.tree.bruni.inPlaceTranslate.data.repository
 
 import android.icu.util.Calendar
+import android.util.Log
 import com.wing.tree.bruni.core.constant.EMPTY
 import com.wing.tree.bruni.core.constant.ONE
+import com.wing.tree.bruni.core.extension.string
 import com.wing.tree.bruni.inPlaceTranslate.data.BuildConfig
 import com.wing.tree.bruni.inPlaceTranslate.data.entity.Request
 import com.wing.tree.bruni.inPlaceTranslate.data.entity.Request.Body
@@ -32,6 +34,7 @@ class TranslationRepositoryImpl @Inject constructor(
 
     private val ioDispatcher = Dispatchers.IO
     private val coroutineScope = CoroutineScope(SupervisorJob() + ioDispatcher)
+    private val tag = "TranslationRepositoryImpl"
     private val translationMapper = TranslationMapper()
 
     override suspend fun all(
@@ -56,8 +59,17 @@ class TranslationRepositoryImpl @Inject constructor(
         target: String
     ): List<Model> {
         return when(dataSource) {
-            DataSource.DEFAULT -> with(localDataSource.all(sourceText, target)) {
-                filterNotExpired().ifEmpty { translate(sourceText, source, target) }
+            DataSource.DEFAULT -> {
+                val translations = try {
+                    localDataSource.all(sourceText, target)
+                } catch (illegalStateException: IllegalStateException) {
+                    Log.e(tag, illegalStateException.message ?: illegalStateException.string)
+                    emptyList()
+                }
+
+                with(translations) {
+                    filterNotExpired().ifEmpty { translate(sourceText, source, target) }
+                }
             }
             else -> translate(sourceText, source, target)
         }
@@ -88,7 +100,11 @@ class TranslationRepositoryImpl @Inject constructor(
             )
         }.also {
             coroutineScope.launch(ioDispatcher) {
-                insertAll(it)
+                try {
+                    insertAll(it)
+                } catch (illegalStateException: IllegalStateException) {
+                    Log.e(tag, illegalStateException.message ?: illegalStateException.string)
+                }
             }
         }
     }
