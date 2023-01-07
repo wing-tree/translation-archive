@@ -54,6 +54,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp-urlconnection:4.9.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    api "androidx.paging:paging-runtime-ktx:3.1.1"
     api 'androidx.room:room-ktx:2.4.3'
     api 'androidx.room:room-runtime:2.4.3'
     annotationProcessor 'androidx.hilt:hilt-compiler:1.0.0'
