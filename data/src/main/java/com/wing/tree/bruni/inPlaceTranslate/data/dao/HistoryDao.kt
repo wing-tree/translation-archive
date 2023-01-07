@@ -21,6 +21,12 @@ interface HistoryDao {
     @Query("DELETE FROM history")
     suspend fun clearAll()
 
-    @Query("UPDATE history SET is_favorite = :isFavorite WHERE `rowid` = :rowid")
+    @Query("SELECT *, rowid FROM history ORDER BY translated_at ASC LIMIT :loadSize OFFSET :key * :loadSize")
+    suspend fun load(key: Int, loadSize: Int): List<History>
+
+    @Query("SELECT is_favorite FROM history WHERE rowid = :rowid")
+    suspend fun isFavorite(rowid: Int): Boolean?
+
+    @Query("UPDATE history SET is_favorite = :isFavorite WHERE rowid = :rowid")
     suspend fun updateFavorite(rowid: Int, isFavorite: Boolean)
 }
