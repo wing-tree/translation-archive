@@ -1,12 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="blue_200">#FF90CAF9</color>
-    <color name="blue_500">#FF2196F3</color>
-    <color name="blue_700">#FF1976D2</color>
-    <color name="lime_200">#FFE3ED9B</color>
-    <color name="lime_700">#FFAFB42B</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="ripple">@color/ripple_material_light</color>
+    <color name="surface_tint">#006399</color>
+    <color name="surface_tint_color">#006399</color>
+    <color name="on_error_container">#410002</color>
+    <color name="on_error">#FFFFFF</color>
+    <color name="error_container">#FFDAD6</color>
+    <color name="on_tertiary_container">#221534</color>
+    <color name="on_tertiary">#FFFFFF</color>
+    <color name="tertiary_container">#EDDCFF</color>
+    <color name="tertiary">#67587B</color>
+    <color name="shadow">#000000</color>
+    <color name="error">#BA1A1A</color>
+    <color name="outline">#72787E</color>
+    <color name="on_background">#1A1C1E</color>
+    <color name="background">#FCFCFF</color>
+    <color name="inverse_on_surface">#F0F0F4</color>
+    <color name="inverse_surface">#2F3033</color>
+    <color name="on_surface_variant">#42474E</color>
+    <color name="on_surface">#1A1C1E</color>
+    <color name="surface_variant">#DEE3EB</color>
+    <color name="surface">#FCFCFF</color>
+    <color name="on_secondary_container">#0D1D2A</color>
+    <color name="on_secondary">#FFFFFF</color>
+    <color name="secondary_container">#D4E4F7</color>
+    <color name="secondary">#516070</color>
+    <color name="inverse_primary">#94CCFF</color>
+    <color name="on_primary_container">#001D32</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="primary_container">#CDE5FF</color>
+    <color name="primary">#006399</color>
+    <color name="seed">#358FCF</color>
+
+    <color name="ripple_material">@color/ripple_material_light</color>
 </resources>
