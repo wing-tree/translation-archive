@@ -15,6 +15,7 @@ import com.wing.tree.bruni.inPlaceTranslate.domain.useCase.CharactersUseCase
 import com.wing.tree.bruni.inPlaceTranslate.domain.useCase.SourceUseCase
 import com.wing.tree.bruni.inPlaceTranslate.domain.useCase.TargetUseCase
 import com.wing.tree.bruni.inPlaceTranslate.domain.useCase.TranslateUseCase
+import com.wing.tree.bruni.inPlaceTranslate.regular.findDisplayLanguageByLanguage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
@@ -42,6 +43,17 @@ abstract class TranslatorViewModel(
         initialValue = BuildConfig.SOURCE
     )
 
+    val sourceLanguage: String
+        get() = source.value
+
+    val displaySourceLanguage = source.map {
+        findDisplayLanguageByLanguage(it)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(stopTimeout),
+        initialValue = findDisplayLanguageByLanguage(sourceLanguage)
+    )
+
     val target = targetUseCase.get().map { result ->
         result.getOrNull() ?: BuildConfig.TARGET.also {
             targetUseCase.put(it)
@@ -50,6 +62,17 @@ abstract class TranslatorViewModel(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeout),
         initialValue = BuildConfig.TARGET
+    )
+
+    val targetLanguage: String
+        get() = target.value
+
+    val displayTargetLanguage = target.map {
+        findDisplayLanguageByLanguage(it)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(stopTimeout),
+        initialValue = findDisplayLanguageByLanguage(targetLanguage)
     )
 
     private val _translations = MutableStateFlow<Result<List<Translation>>>(Result.Loading)
