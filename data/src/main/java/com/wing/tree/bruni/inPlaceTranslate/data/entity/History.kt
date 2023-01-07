@@ -14,6 +14,8 @@ data class History(
     val rowid: Int = ZERO,
     @ColumnInfo(name = "detected_source_language")
     override val detectedSourceLanguage: String,
+    @ColumnInfo(name = "is_favorite")
+    override val isFavorite: Boolean,
     override val source: String,
     @ColumnInfo(name = "source_text")
     override val sourceText: String,
