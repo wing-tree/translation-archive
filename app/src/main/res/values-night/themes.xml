@@ -19,6 +19,7 @@
         <item name="colorOnTertiaryContainer">@color/on_tertiary_container</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
         <!-- Customize your theme here. -->
         <item name="colorError">@color/error</item>
         <item name="colorOnError">@color/on_error</item>
