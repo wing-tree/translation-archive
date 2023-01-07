@@ -4,14 +4,13 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Fts4
 import androidx.room.PrimaryKey
-import com.wing.tree.bruni.core.constant.ZERO
 import com.wing.tree.bruni.inPlaceTranslate.domain.model.Translation as Model
 
 @Fts4
 @Entity(tableName = "translation")
 data class Translation(
     @PrimaryKey
-    val rowid: Int = ZERO,
+    override val rowid: Int,
     @ColumnInfo(name = "detected_source_language")
     override val detectedSourceLanguage: String,
     @ColumnInfo(name = "expired_at")
