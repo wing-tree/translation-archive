@@ -8,6 +8,15 @@
         <variable
             name="sourceText"
             type="kotlinx.coroutines.flow.MutableStateFlow&lt;String>" />
+
+        <variable
+            name="displaySourceLanguage"
+            type="kotlinx.coroutines.flow.StateFlow&lt;String>" />
+
+        <variable
+            name="displayTargetLanguage"
+            type="kotlinx.coroutines.flow.StateFlow&lt;String>" />
+
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout
@@ -20,93 +29,29 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.google.android.material.appbar.AppBarLayout
-                android:id="@+id/app_bar_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/constraint_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/layout_height_48dp"
-                        android:paddingHorizontal="@dimen/padding_horizontal_16dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <TextView
-                            android:id="@+id/source"
-                            android:layout_width="@dimen/layout_width_72dp"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:text="한국어" />
-
-                        <ImageButton
-                            android:id="@+id/swap"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/layout_margin_start_16dp"
-                            android:background="@null"
-                            android:src="@drawable/ic_round_swap_horiz_20"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/source"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:tint="?attr/colorOnSurface"
-                            tools:ignore="ContentDescription" />
-
-                        <TextView
-                            android:id="@+id/target"
-                            android:layout_width="56dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/layout_margin_start_16dp"
-                            android:gravity="center"
-                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/swap"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:text="영어" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                </androidx.appcompat.widget.Toolbar>
-
-            </com.google.android.material.appbar.AppBarLayout>
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginBottom="@dimen/layout_margin_bottom_16dp"
+                android:layout_marginVertical="@dimen/layout_margin_vertical_16dp"
                 android:paddingHorizontal="@dimen/padding_horizontal_16dp"
-                app:layout_constraintBottom_toTopOf="@+id/ad_view"
+                app:layout_constraintBottom_toTopOf="@+id/constraint_layout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/app_bar_layout">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.core.widget.NestedScrollView
                     android:id="@+id/nested_scroll_view"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:fadingEdgeLength="6dp"
+                    android:fadingEdgeLength="@dimen/fading_edge_length_12dp"
                     android:fillViewport="true"
+                    android:paddingVertical="@dimen/padding_vertical_12dp"
                     android:requiresFadingEdge="vertical"
                     app:layout_constraintBottom_toTopOf="@+id/nested_scroll_view2"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_weight="2">
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <EditText
                         android:id="@+id/source_text"
@@ -114,32 +59,25 @@
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:gravity="start|top"
+                        android:hint="@string/enter_your_text"
                         android:inputType="textMultiLine"
                         android:paddingHorizontal="@dimen/padding_horizontal_12dp"
-                        android:paddingTop="@dimen/padding_top_48dp"
-                        android:paddingBottom="@dimen/padding_bottom_12dp"
+                        android:paddingTop="@dimen/padding_top_36dp"
                         android:text="@={sourceText}"
                         android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-                        tools:ignore="Autofill,LabelFor" />
+                        tools:ignore="Autofill,LabelFor"
+                        tools:text="Source Text" />
 
                 </androidx.core.widget.NestedScrollView>
 
                 <LinearLayout
                     android:id="@+id/linear_layout"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="@dimen/layout_height_48dp"
                     android:gravity="center_vertical|end"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
-
-                    <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
-                        android:id="@+id/copy_to_clipboard"
-                        android:layout_width="@dimen/layout_width_48dp"
-                        android:layout_height="@dimen/layout_height_48dp"
-                        app:src="@drawable/ic_round_content_copy_24"
-                        app:tint="?attr/colorOnSurface"
-                        tools:ignore="ContentDescription" />
 
                     <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
                         android:id="@+id/paste_from_clipboard"
@@ -150,7 +88,7 @@
                         tools:ignore="ContentDescription" />
 
                     <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
-                        android:id="@+id/recognize_speech"
+                        android:id="@+id/mic"
                         android:layout_width="@dimen/layout_width_48dp"
                         android:layout_height="@dimen/layout_height_48dp"
                         app:src="@drawable/ic_round_mic_24"
@@ -171,18 +109,17 @@
                     android:id="@+id/nested_scroll_view2"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_marginTop="@dimen/layout_margin_top_16dp"
+                    android:layout_marginTop="@dimen/layout_margin_top_8dp"
                     android:background="@drawable/shape_translated_text"
-                    android:backgroundTint="?attr/colorSurfaceVariant"
-                    android:fadingEdgeLength="6dp"
+                    android:fadingEdgeLength="@dimen/fading_edge_length_12dp"
                     android:fillViewport="true"
+                    android:paddingVertical="@dimen/padding_vertical_12dp"
                     android:requiresFadingEdge="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/nested_scroll_view"
-                    app:layout_constraintVertical_weight="3">
+                    app:layout_constraintTop_toBottomOf="@+id/nested_scroll_view">
 
                     <TextView
                         android:id="@+id/translated_text"
@@ -190,10 +127,11 @@
                         android:layout_height="wrap_content"
                         android:gravity="start|top"
                         android:paddingHorizontal="@dimen/padding_horizontal_12dp"
-                        android:paddingTop="@dimen/padding_top_48dp"
-                        android:paddingBottom="@dimen/padding_bottom_12dp"
+                        android:paddingTop="@dimen/padding_top_36dp"
                         android:scrollbars="vertical"
-                        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall" />
+                        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+                        android:textColor="?attr/colorOnPrimaryContainer"
+                        tools:text="Translated Text" />
 
                 </androidx.core.widget.NestedScrollView>
 
@@ -211,15 +149,15 @@
                         android:layout_width="@dimen/layout_width_48dp"
                         android:layout_height="@dimen/layout_height_48dp"
                         app:src="@drawable/ic_round_share_24"
-                        app:tint="?attr/colorOnSurface"
+                        app:tint="?attr/colorOnPrimaryContainer"
                         tools:ignore="ContentDescription" />
 
                     <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
-                        android:id="@+id/copy_to_clipboard2"
+                        android:id="@+id/copy_to_clipboard"
                         android:layout_width="@dimen/layout_width_48dp"
                         android:layout_height="@dimen/layout_height_48dp"
                         app:src="@drawable/ic_round_content_copy_24"
-                        app:tint="?attr/colorOnSurface"
+                        app:tint="?attr/colorOnPrimaryContainer"
                         tools:ignore="ContentDescription" />
 
                     <com.wing.tree.bruni.inPlaceTranslate.widget.IconButton
@@ -227,14 +165,14 @@
                         android:layout_width="@dimen/layout_width_48dp"
                         android:layout_height="@dimen/layout_height_48dp"
                         app:src="@drawable/ic_round_volume_up_24"
-                        app:tint="?attr/colorOnSurface"
+                        app:tint="?attr/colorOnPrimaryContainer"
                         tools:ignore="ContentDescription" />
 
                 </LinearLayout>
 
                 <com.google.android.material.progressindicator.CircularProgressIndicator
                     android:id="@+id/circular_progress_indicator"
-                    style="@style/Widget.Material3.CircularProgressIndicator.Small"
+                    style="@style/Widget.Material3.CircularProgressIndicator.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:indeterminate="true"
@@ -246,6 +184,116 @@
                     app:showAnimationBehavior="outward" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraint_layout"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/layout_height_48dp"
+                android:layout_marginBottom="@dimen/layout_margin_bottom_16dp"
+                android:paddingHorizontal="@dimen/padding_horizontal_16dp"
+                app:layout_constraintBottom_toTopOf="@+id/coordinator_layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/material_card"
+                    style="@style/Widget.Material3.CardView.Filled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/layout_height_40dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/swap"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/source"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:paddingHorizontal="@dimen/padding_horizontal_24dp"
+                        android:text="@{displaySourceLanguage}"
+                        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                        android:textColor="@color/on_surface_variant"
+                        tools:text="한국어" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <ImageButton
+                    android:id="@+id/swap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:src="@drawable/ic_round_swap_horiz_20"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="?attr/colorOnSurface"
+                    tools:ignore="ContentDescription" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/material_card2"
+                    style="@style/Widget.Material3.CardView.Filled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/layout_height_40dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/swap"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/target"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:paddingHorizontal="@dimen/padding_horizontal_24dp"
+                        android:text="@{displayTargetLanguage}"
+                        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                        android:textColor="@color/on_surface_variant"
+                        tools:text="영어" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:id="@+id/coordinator_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/ad_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <com.google.android.material.bottomappbar.BottomAppBar
+                    android:id="@+id/bottom_app_bar"
+                    style="@style/Widget.Material3.BottomAppBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    app:fabAlignmentMode="center"
+                    app:layout_behavior="com.google.android.material.bottomappbar.BottomAppBar$Behavior"
+                    app:layout_constraintBottom_toTopOf="@+id/ad_view"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <com.google.android.material.appbar.MaterialToolbar
+                        android:id="@+id/material_toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    </com.google.android.material.appbar.MaterialToolbar>
+
+                </com.google.android.material.bottomappbar.BottomAppBar>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/recognize_speech"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_round_mic_24"
+                    app:layout_anchor="@id/bottom_app_bar"
+                    tools:ignore="ContentDescription" />
+
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
             <FrameLayout
                 android:id="@+id/ad_view"

@@ -4,31 +4,26 @@ import android.Manifest
 import android.content.ClipDescription.MIMETYPE_TEXT_PLAIN
 import android.content.ClipboardManager
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
-import android.speech.RecognitionListener
-import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
 import android.text.method.ScrollingMovementMethod
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.annotation.StringRes
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.google.android.gms.ads.*
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.FullScreenContentCallback
 import com.wing.tree.bruni.core.constant.EMPTY
 import com.wing.tree.bruni.core.constant.ONE
 import com.wing.tree.bruni.core.constant.ZERO
 import com.wing.tree.bruni.core.extension.*
 import com.wing.tree.bruni.core.regular.then
 import com.wing.tree.bruni.core.useCase.Result
-import com.wing.tree.bruni.inPlaceTranslate.BuildConfig
 import com.wing.tree.bruni.inPlaceTranslate.R
 import com.wing.tree.bruni.inPlaceTranslate.ad.InterstitialAdLoader
 import com.wing.tree.bruni.inPlaceTranslate.ad.InterstitialAdLoaderImpl
@@ -37,11 +32,9 @@ import com.wing.tree.bruni.inPlaceTranslate.constant.LIMIT_CHARACTERS
 import com.wing.tree.bruni.inPlaceTranslate.constant.PITCH
 import com.wing.tree.bruni.inPlaceTranslate.constant.SPEECH_RATE
 import com.wing.tree.bruni.inPlaceTranslate.databinding.ActivityMainBinding
+import com.wing.tree.bruni.inPlaceTranslate.extension.bannerAd
 import com.wing.tree.bruni.inPlaceTranslate.extension.clear
 import com.wing.tree.bruni.inPlaceTranslate.extension.getFloat
-import com.wing.tree.bruni.inPlaceTranslate.extension.letIsViewGroup
-import com.wing.tree.bruni.inPlaceTranslate.regular.findDisplayLanguageByLanguage
-import com.wing.tree.bruni.inPlaceTranslate.regular.findLanguageTagByLanguage
 import com.wing.tree.bruni.inPlaceTranslate.regular.findLocaleByLanguage
 import com.wing.tree.bruni.inPlaceTranslate.viewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,72 +44,14 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAdLoaderImpl() {
-    private val recognitionListener = object : RecognitionListener {
-        override fun onReadyForSpeech(params: Bundle?) {
-            with(binding.recognizeSpeech) {
-                val configLongAnimTime = resources.configLongAnimTime
-                val duration = configLongAnimTime.quarter.long
-                val interpolator = context.decelerateQuadInterpolator
-
-                tintFade(
-                    duration,
-                    interpolator,
-                    imageTintList?.defaultColor ?: colorOnSurface,
-                    Color.RED
-                )
-            }
-        }
-
-        override fun onBeginningOfSpeech() = Unit
-        override fun onRmsChanged(rmsdB: Float) = Unit
-        override fun onBufferReceived(buffer: ByteArray?) = Unit
-        override fun onEndOfSpeech() = Unit
-        override fun onError(error: Int) {
-            with(binding.recognizeSpeech) {
-                val configMediumAnimTime = resources.configMediumAnimTime
-                val duration = configMediumAnimTime.quarter.long
-                val interpolator = context.accelerateQuadInterpolator
-
-                tintFade(
-                    duration,
-                    interpolator,
-                    imageTintList?.defaultColor ?: Color.RED,
-                    colorOnSurface
-                )
-            }
-        }
-
-        override fun onResults(results: Bundle?) {
-            val stringArrayList = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-
-            stringArrayList?.firstOrNull()?.let { string ->
-                viewModel.sourceText.update { string }
-            }
-
-            with(binding.recognizeSpeech) {
-                val configMediumAnimTime = resources.configMediumAnimTime
-                val duration = configMediumAnimTime.quarter.long
-                val interpolator = context.accelerateQuadInterpolator
-
-                tintFade(
-                    duration,
-                    interpolator,
-                    imageTintList?.defaultColor ?: Color.RED,
-                    colorOnSurface
-                )
-            }
-        }
-
-        override fun onPartialResults(partialResults: Bundle?) = Unit
-        override fun onEvent(eventType: Int, params: Bundle?) = Unit
-    }
-
+class MainActivity : SpeechRecognizerActivity(), InterstitialAdLoader by InterstitialAdLoaderImpl() {
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
             .apply {
                 lifecycleOwner = this@MainActivity
                 setSourceText(viewModel.sourceText)
+                displaySourceLanguage = viewModel.displaySourceLanguage
+                displayTargetLanguage = viewModel.displayTargetLanguage
             }
     }
 
@@ -124,7 +59,7 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
     private val requestRecordAudioPermissionsLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()) { result ->
         if (result) {
-            recognizeSpeech()
+            recognizeSpeech(viewModel.sourceLanguage)
         }
     }
 
@@ -164,21 +99,63 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
         super.onDestroy()
     }
 
-    private fun recognizeSpeech() {
-        val source = viewModel.source.value
-        val languageTag = findLanguageTagByLanguage(source) ?: Locale.getDefault().toLanguageTag()
-        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE, languageTag)
+    override fun onReadyForSpeech(params: Bundle?) {
+        with(binding.mic) {
+            val configLongAnimTime = resources.configLongAnimTime
+            val duration = configLongAnimTime.quarter.long
+            val interpolator = context.decelerateQuadInterpolator
+
+            tintFade(
+                duration,
+                interpolator,
+                imageTintList?.defaultColor ?: colorOnSurface,
+                colorPrimary
+            )
+        }
+    }
+
+    override fun onBeginningOfSpeech() = Unit
+    override fun onRmsChanged(rmsdB: Float) = Unit
+    override fun onBufferReceived(buffer: ByteArray?) = Unit
+    override fun onEndOfSpeech() = Unit
+    override fun onError(error: Int) {
+        with(binding.mic) {
+            val configMediumAnimTime = resources.configMediumAnimTime
+            val duration = configMediumAnimTime.quarter.long
+            val interpolator = context.accelerateQuadInterpolator
+
+            tintFade(
+                duration,
+                interpolator,
+                imageTintList?.defaultColor ?: colorPrimary,
+                colorOnSurface
+            )
+        }
+    }
+
+    override fun onResults(results: Bundle?) {
+        val stringArrayList = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+
+        stringArrayList?.firstOrNull()?.let { string ->
+            viewModel.sourceText.update { string }
         }
 
-        val speechRecognizer = speechRecognizer ?: SpeechRecognizer
-            .createSpeechRecognizer(this)
-            .apply { setRecognitionListener(recognitionListener) }
-            .also { speechRecognizer = it }
+        with(binding.mic) {
+            val configMediumAnimTime = resources.configMediumAnimTime
+            val duration = configMediumAnimTime.quarter.long
+            val interpolator = context.accelerateQuadInterpolator
 
-        speechRecognizer.startListening(intent)
+            tintFade(
+                duration,
+                interpolator,
+                imageTintList?.defaultColor ?: colorPrimary,
+                colorOnSurface
+            )
+        }
     }
+
+    override fun onPartialResults(partialResults: Bundle?) = Unit
+    override fun onEvent(eventType: Int, params: Bundle?) = Unit
 
     private fun processText(intent: Intent?) {
         val processText = intent?.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)
@@ -206,16 +183,17 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
         nestedScrollView()
         textView()
         iconButton()
-        adView()
+        materialButton()
+        bannerAd(adView, AdSize.BANNER)
     }
 
     private fun ActivityMainBinding.drawerLayout() {
-        toolbar()
+        bottomAppBar()
 
         val actionBarDrawerToggle = ActionBarDrawerToggle(
             this@MainActivity,
             drawerLayout,
-            toolbar,
+            bottomAppBar,
             R.string.open_drawer,
             R.string.close_drawer
         )
@@ -225,9 +203,9 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
         actionBarDrawerToggle.syncState()
     }
 
-    private fun ActivityMainBinding.toolbar() {
+    private fun ActivityMainBinding.bottomAppBar() {
         setSupportActionBar(
-            toolbar.apply {
+            bottomAppBar.apply {
                 setNavigationOnClickListener {
                     if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
                         drawerLayout.closeDrawer(GravityCompat.START)
@@ -242,26 +220,27 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
     }
 
     private fun ActivityMainBinding.nestedScrollView() {
-        val y = dimen(R.dimen.layout_height_56dp)
-        val minimumValue = getFloat(R.dimen.alpha_0_20)
-        val other = ONE.float.minus(minimumValue)
+        val layoutHeight = dimen(R.dimen.layout_height_60dp)
+        val maximumValue = getFloat(R.dimen.alpha_0_87)
+        val minimumValue = getFloat(R.dimen.alpha_0_60)
+        val constantOfProportionality = maximumValue
+            .minus(minimumValue)
+            .div(layoutHeight)
 
         nestedScrollView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
-            val alpha = ONE.minus(scrollY.div(y.times(other)))
+            val alpha = maximumValue.minus(scrollY.times(constantOfProportionality))
 
             linearLayout.alpha = alpha.coerceAtLeast(minimumValue)
         }
 
         nestedScrollView2.setOnScrollChangeListener { _, _, scrollY, _, _ ->
-            val alpha = ONE.minus(scrollY.div(y.times(other)))
+            val alpha = maximumValue.minus(scrollY.times(constantOfProportionality))
 
             linearLayout2.alpha = alpha.coerceAtLeast(minimumValue)
         }
     }
 
     private fun ActivityMainBinding.textView() {
-        source.text = Locale.getDefault().getDisplayLanguage(Locale.ENGLISH)
-        target.text = Locale.getDefault().getDisplayLanguage(Locale.KOREAN)
         translatedText.movementMethod = ScrollingMovementMethod()
     }
 
@@ -275,7 +254,7 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
 
             it.rotate(duration, rotation, decelerateQuadInterpolator)
 
-            with(source) {
+            with(materialCard) {
                 translateRight(duration.half, x) {
                     viewModel.swap().then {
                         translateLeft(duration.half, ZERO.float) {
@@ -285,21 +264,10 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
                 }.alpha(ZERO.float)
             }
 
-            with(target) {
+            with(materialCard2) {
                 translateLeft(duration.half, x) {
                     translateRight(duration.half, ZERO.float).alpha(ONE.float)
                 }.alpha(ZERO.float)
-            }
-        }
-
-        copyToClipboard.setOnIconClickListener {
-            sourceText.text?.let { text ->
-                if (text.isNotBlank()) {
-                    copyPlainTextToClipboard(text)
-                        .then {
-                            showToast(R.string.copied_to_clipboard)
-                        }
-                }
             }
         }
 
@@ -310,7 +278,7 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
             if (hasPrimaryClip) {
                 val primaryClip = clipboardManager.primaryClip
                 val item = primaryClip?.getItemAt(ZERO)
-                val text = item?.coerceToText(it.context) ?: EMPTY
+                val text = item?.coerceToText(it.context) ?: return@setOnIconClickListener
 
                 if (text.isNotBlank()) {
                     viewModel.sourceText.update { text.string }
@@ -318,19 +286,12 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
             }
         }
 
-        recognizeSpeech.setOnIconClickListener {
-            when {
-                checkPermission(Manifest.permission.RECORD_AUDIO) -> recognizeSpeech()
-                shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO) -> {
-                    // todo 어쩔래/
-                }
-                else -> requestRecordAudioPermissionsLauncher.launch(Manifest.permission.RECORD_AUDIO)
-            }
+        mic.setOnIconClickListener {
+
         }
 
         speakSourceText.setOnIconClickListener {
-            val language = viewModel.source.value
-            val loc = findLocaleByLanguage(language) ?: Locale.getDefault()
+            val loc = findLocaleByLanguage(viewModel.sourceLanguage) ?: Locale.getDefault()
 
             speak(loc, sourceText.text)
         }
@@ -338,6 +299,7 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
         share.setOnIconClickListener {
             translatedText.text?.let { text ->
                 if (text.isNotBlank()) {
+                    // TODO core lib.
                     val intent = Intent(Intent.ACTION_SEND).apply {
                         putExtra(Intent.EXTRA_TEXT, text)
                         type = MIMETYPE_TEXT_PLAIN
@@ -348,51 +310,32 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
             }
         }
 
-        copyToClipboard2.setOnIconClickListener {
+        copyToClipboard.setOnIconClickListener {
             translatedText.text?.let { text ->
                 if (text.isNotBlank()) {
                     copyPlainTextToClipboard(text)
-                        .then {
-                            showToast(R.string.copied_to_clipboard)
-                        }
+                    showToast(R.string.copied_to_clipboard)
                 }
             }
         }
 
         speakTranslatedText.setOnIconClickListener {
-            val language = viewModel.target.value
-            val loc = findLocaleByLanguage(language) ?: Locale.getDefault()
+            val loc = findLocaleByLanguage(viewModel.targetLanguage) ?: Locale.getDefault()
 
             speak(loc, translatedText.text)
         }
     }
 
-    private fun ActivityMainBinding.adView() {
-        val adRequest = AdRequest.Builder().build()
-
-        @StringRes
-        val resId = if (BuildConfig.DEBUG) {
-            R.string.sample_banner_ad_unit_id
-        } else {
-            R.string.banner_ad_unit_id
-        }
-
-        AdView(context).apply {
-            adUnitId = getString(resId)
-            adListener = object : AdListener() {
-                override fun onAdLoaded() {
-                    super.onAdLoaded()
-
-                    parent?.letIsViewGroup {
-                        it.removeView(this@apply)
-                    }
-
-                    adView.addView(this@apply)
+    private fun ActivityMainBinding.materialButton() {
+        recognizeSpeech.setOnClickListener {
+            when {
+                checkPermission(Manifest.permission.RECORD_AUDIO) -> recognizeSpeech(viewModel.sourceLanguage)
+                shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO) -> {
+                    // todo 어쩔래/
                 }
+                else -> requestRecordAudioPermissionsLauncher.launch(Manifest.permission.RECORD_AUDIO)
             }
-
-            setAdSize(AdSize.BANNER)
-        }.loadAd(adRequest)
+        }
     }
 
     private fun MainViewModel.collect() {
@@ -416,22 +359,6 @@ class MainActivity : AppCompatActivity(), InterstitialAdLoader by InterstitialAd
 
                         clearCharacters()
                     }
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                source.collect { source ->
-                    binding.source.text = findDisplayLanguageByLanguage(source)
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                target.collect { target ->
-                    binding.target.text = findDisplayLanguageByLanguage(target)
                 }
             }
         }
