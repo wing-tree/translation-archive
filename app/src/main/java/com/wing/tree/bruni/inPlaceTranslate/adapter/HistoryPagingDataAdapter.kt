@@ -5,15 +5,15 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.wing.tree.bruni.inPlaceTranslate.databinding.TranslationBinding
+import com.wing.tree.bruni.inPlaceTranslate.databinding.HistoryBinding
 import com.wing.tree.bruni.inPlaceTranslate.model.History
 
 class HistoryPagingDataAdapter : PagingDataAdapter<History, HistoryPagingDataAdapter.ViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val viewBinding = TranslationBinding.inflate(inflater, parent, false)
+        val binding = HistoryBinding.inflate(inflater, parent, false)
 
-        return ViewHolder(viewBinding)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -21,9 +21,9 @@ class HistoryPagingDataAdapter : PagingDataAdapter<History, HistoryPagingDataAda
     }
 
     inner class ViewHolder(
-        private val viewBinding: TranslationBinding
-    ) : RecyclerView.ViewHolder(viewBinding.root) {
-        fun bind(item: History?) = with(viewBinding) {
+        private val binding: HistoryBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: History?) = with(binding) {
             sourceText.text = item?.sourceText
             translatedText.text = item?.translatedText
         }
