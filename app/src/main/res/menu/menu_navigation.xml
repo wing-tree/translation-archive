@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group
-        android:checkableBehavior="single">
-        <item
-            android:id="@+id/history"
-            android:icon="@drawable/ic_round_history_24"
-            android:title="@string/history" />
-        <item
-            android:id="@+id/clear_all"
-            android:icon="@drawable/ic_round_clear_all_24"
-            android:title="@string/clear_all" />
-    </group>
+    <item android:title="@string/history">
+        <menu>
+            <item
+                android:id="@+id/history"
+                android:icon="@drawable/ic_round_history_24"
+                android:title="@string/history" />
+            <item
+                android:id="@+id/clear_all"
+                android:icon="@drawable/ic_round_clear_all_24"
+                android:title="@string/clear_all" />
+        </menu>
+    </item>
 </menu>
