@@ -7,6 +7,7 @@ import com.wing.tree.bruni.inPlaceTranslate.domain.model.Translation as Model
 internal class TranslationMapper : Mapper<Entity, Model> {
     override fun toEntity(model: Model): Entity {
         return Entity(
+            rowid = model.rowid,
             detectedSourceLanguage = model.detectedSourceLanguage ?: EMPTY,
             expiredAt = model.expiredAt,
             source = model.source,
@@ -18,6 +19,7 @@ internal class TranslationMapper : Mapper<Entity, Model> {
 
     override fun toModel(entity: Entity): Model {
         return object : Model {
+            override val rowid = entity.rowid
             override val detectedSourceLanguage = entity.detectedSourceLanguage
             override val expiredAt: Long = entity.expiredAt
             override val source: String = entity.source
