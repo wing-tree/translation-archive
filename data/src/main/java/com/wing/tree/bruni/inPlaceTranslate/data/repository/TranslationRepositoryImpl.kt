@@ -6,10 +6,12 @@ import com.wing.tree.bruni.core.constant.EMPTY
 import com.wing.tree.bruni.core.constant.ONE
 import com.wing.tree.bruni.core.extension.string
 import com.wing.tree.bruni.inPlaceTranslate.data.BuildConfig
+import com.wing.tree.bruni.inPlaceTranslate.data.entity.History
 import com.wing.tree.bruni.inPlaceTranslate.data.entity.Request
 import com.wing.tree.bruni.inPlaceTranslate.data.entity.Request.Body
 import com.wing.tree.bruni.inPlaceTranslate.data.entity.Translation
 import com.wing.tree.bruni.inPlaceTranslate.data.mapper.TranslationMapper
+import com.wing.tree.bruni.inPlaceTranslate.data.source.local.HistoryDataSource
 import com.wing.tree.bruni.inPlaceTranslate.domain.enum.DataSource
 import com.wing.tree.bruni.inPlaceTranslate.domain.repository.TranslationRepository
 import com.wing.tree.bruni.inPlaceTranslate.domain.useCase.IncrementCharactersUseCase
@@ -24,11 +26,14 @@ import com.wing.tree.bruni.inPlaceTranslate.data.source.remote.TranslationDataSo
 import com.wing.tree.bruni.inPlaceTranslate.domain.model.Translation as Model
 
 class TranslationRepositoryImpl @Inject constructor(
+    private val historyDataSource: HistoryDataSource,
     private val localDataSource: LocalDataSource,
     private val remoteDataSource: RemoteDataSource,
     private val incrementCharactersUseCase: IncrementCharactersUseCase
 ) : TranslationRepository {
-    private val expiredAt: Long get() = Calendar.getInstance().apply {
+    private val calendar: Calendar get() = Calendar.getInstance()
+    private val translatedAt: Long get() = calendar.timeInMillis
+    private val expiredAt: Long get() = calendar.apply {
         add(Calendar.MONTH, expirationPeriod.months)
     }.timeInMillis
 
@@ -45,10 +50,22 @@ class TranslationRepositoryImpl @Inject constructor(
     }
 
     override suspend fun insert(translation: Model) {
+        val isFavorite = historyDataSource.isFavorite(translation.rowid) ?: false
+        val history = translation.toHistory(isFavorite)
+
+        historyDataSource.insert(history)
         localDataSource.insert(translation.toEntity())
     }
 
     override suspend fun insertAll(list: List<Model>) {
+        historyDataSource.insertAll(
+            list.map {
+                val isFavorite = historyDataSource.isFavorite(it.rowid) ?: false
+
+                it.toHistory(isFavorite)
+            }
+        )
+
         localDataSource.insertAll(list.map { it.toEntity() })
     }
 
@@ -99,7 +116,7 @@ class TranslationRepositoryImpl @Inject constructor(
                 translatedText = translatedText
             )
         }.also {
-            coroutineScope.launch(ioDispatcher) {
+            coroutineScope.launch {
                 try {
                     insertAll(it)
                 } catch (illegalStateException: IllegalStateException) {
@@ -110,6 +127,16 @@ class TranslationRepositoryImpl @Inject constructor(
     }
 
     private fun Model.toEntity() = translationMapper.toEntity(this)
+    private fun Model.toHistory(isFavorite: Boolean) = History(
+        rowid = rowid,
+        detectedSourceLanguage = detectedSourceLanguage,
+        isFavorite = isFavorite,
+        source = source,
+        sourceText = sourceText,
+        target = target,
+        translatedAt = translatedAt,
+        translatedText = translatedText
+    )
 
     private fun Translation.isExpired(): Boolean {
         val calendar = Calendar.getInstance()
