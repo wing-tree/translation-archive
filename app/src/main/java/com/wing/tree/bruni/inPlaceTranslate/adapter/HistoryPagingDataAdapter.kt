@@ -2,13 +2,13 @@ package com.wing.tree.bruni.inPlaceTranslate.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.wing.tree.bruni.inPlaceTranslate.databinding.TranslationBinding
-import com.wing.tree.bruni.inPlaceTranslate.model.Translation
+import com.wing.tree.bruni.inPlaceTranslate.model.History
 
-class TranslationListAdapter : ListAdapter<Translation, TranslationListAdapter.ViewHolder>(DiffCallback()) {
+class HistoryPagingDataAdapter : PagingDataAdapter<History, HistoryPagingDataAdapter.ViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val viewBinding = TranslationBinding.inflate(inflater, parent, false)
@@ -23,18 +23,18 @@ class TranslationListAdapter : ListAdapter<Translation, TranslationListAdapter.V
     inner class ViewHolder(
         private val viewBinding: TranslationBinding
     ) : RecyclerView.ViewHolder(viewBinding.root) {
-        fun bind(item: Translation) = with(viewBinding) {
-            sourceText.text = item.sourceText
-            translatedText.text = item.translatedText
+        fun bind(item: History?) = with(viewBinding) {
+            sourceText.text = item?.sourceText
+            translatedText.text = item?.translatedText
         }
     }
 
-    class DiffCallback: DiffUtil.ItemCallback<Translation>() {
-        override fun areItemsTheSame(oldItem: Translation, newItem: Translation): Boolean {
+    class DiffCallback: DiffUtil.ItemCallback<History>() {
+        override fun areItemsTheSame(oldItem: History, newItem: History): Boolean {
             return oldItem == newItem
         }
 
-        override fun areContentsTheSame(oldItem: Translation, newItem: Translation): Boolean {
+        override fun areContentsTheSame(oldItem: History, newItem: History): Boolean {
             return oldItem == newItem
         }
     }
