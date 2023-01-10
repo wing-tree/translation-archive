@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="fading_edge_length_6dp">6dp</dimen>
+    <dimen name="divider_inset_end_16dp">16dp</dimen>
+
+    <dimen name="divider_inset_start_16dp">16dp</dimen>
+
     <dimen name="fading_edge_length_12dp">12dp</dimen>
 
     <dimen name="icon_size_20dp">20dp</dimen>
     <dimen name="icon_size_24dp">24dp</dimen>
+    <dimen name="icon_size_36dp">36dp</dimen>
+    <dimen name="icon_size_40dp">40dp</dimen>
+    <dimen name="icon_size_48dp">48dp</dimen>
 
     <dimen name="layout_height_4dp">4dp</dimen>
     <dimen name="layout_height_8dp">8dp</dimen>
@@ -1509,6 +1515,16 @@
     <dimen name="radius_172dp">172dp</dimen>
     <dimen name="radius_176dp">176dp</dimen>
     <dimen name="radius_180dp">180dp</dimen>
+
+    <dimen name="text_size_10dp">10dp</dimen>
+    <dimen name="text_size_11dp">11dp</dimen>
+    <dimen name="text_size_12dp">12dp</dimen>
+    <dimen name="text_size_14dp">14dp</dimen>
+    <dimen name="text_size_16dp">16dp</dimen>
+    <dimen name="text_size_18dp">18dp</dimen>
+    <dimen name="text_size_20dp">20dp</dimen>
+    <dimen name="text_size_22dp">22dp</dimen>
+    <dimen name="text_size_24dp">24dp</dimen>
 
     <item name="alpha_0_13" format="float" type="dimen">0.13</item>
     <item name="alpha_0_20" format="float" type="dimen">0.20</item>
