@@ -29,7 +29,7 @@ class SpeechRecognizerDelegateImpl : SpeechRecognizerDelegate {
         speechRecognizer = null
     }
 
-    override fun recognizeSpeech(language: String) {
+    override fun startSpeechRecognition(language: String) {
         val languageTag = findLanguageTagByLanguage(language) ?: Locale.getDefault().toLanguageTag()
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
@@ -37,5 +37,12 @@ class SpeechRecognizerDelegateImpl : SpeechRecognizerDelegate {
         }
 
         speechRecognizer?.startListening(intent)
+    }
+
+    override fun stopSpeechRecognition() {
+        speechRecognizer?.let {
+            it.stopListening()
+            it.cancel()
+        }
     }
 }
