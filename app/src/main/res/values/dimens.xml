@@ -8,7 +8,6 @@
 
     <dimen name="icon_size_20dp">20dp</dimen>
     <dimen name="icon_size_24dp">24dp</dimen>
-    <dimen name="icon_size_36dp">36dp</dimen>
     <dimen name="icon_size_40dp">40dp</dimen>
     <dimen name="icon_size_48dp">48dp</dimen>
 
@@ -1529,10 +1528,7 @@
     <item name="alpha_0_13" format="float" type="dimen">0.13</item>
     <item name="alpha_0_20" format="float" type="dimen">0.20</item>
     <item name="alpha_0_38" format="float" type="dimen">0.38</item>
-    <item name="alpha_0_40" format="float" type="dimen">0.40</item>
     <item name="alpha_0_60" format="float" type="dimen">0.60</item>
-    <item name="alpha_0_62" format="float" type="dimen">0.62</item>
-    <item name="alpha_0_80" format="float" type="dimen">0.80</item>
     <item name="alpha_0_87" format="float" type="dimen">0.87</item>
 
 </resources>
