@@ -10,4 +10,6 @@ data class History(
     override val target: String,
     override val translatedAt: Long,
     override val translatedText: String
-) : History
+) : History {
+    var isStarred = isFavorite
+}
