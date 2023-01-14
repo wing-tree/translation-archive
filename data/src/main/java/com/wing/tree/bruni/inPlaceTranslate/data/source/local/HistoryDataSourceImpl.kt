@@ -7,6 +7,10 @@ import javax.inject.Inject
 class HistoryDataSourceImpl @Inject constructor(database: Database) : HistoryDataSource {
     private val historyDao = database.historyDao
 
+    override suspend fun clearAll() {
+        historyDao.clearAll()
+    }
+
     override suspend fun insert(history: History) {
         historyDao.insert(history)
     }
@@ -21,5 +25,9 @@ class HistoryDataSourceImpl @Inject constructor(database: Database) : HistoryDat
 
     override suspend fun load(key: Int, loadSize: Int): List<History> {
         return historyDao.load(key, loadSize)
+    }
+
+    override suspend fun updateFavorite(rowid: Int, isFavorite: Boolean) {
+        historyDao.updateFavorite(rowid, isFavorite)
     }
 }
