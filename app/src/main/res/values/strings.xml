@@ -1,12 +1,14 @@
 <resources>
     <string name="app_name">In Place Translate</string>
+    <string name="cancel">Cancel</string>
     <string name="clear_all">Clear all</string>
-    <string name="close_drawer">close drawer</string>
+    <string name="clear_all_records">Clear all records.</string>
+    <string name="close_drawer" translatable="false">close drawer</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="enter_your_text">Enter your text.</string>
     <string name="history">History</string>
     <string name="language_data_is_missing">Language data is missing</string>
     <string name="language_is_not_supported">Language is not supported</string>
-    <string name="open_drawer">open drawer</string>
+    <string name="open_drawer" translatable="false">open drawer</string>
     <string name="translate">Translate</string>
 </resources>
