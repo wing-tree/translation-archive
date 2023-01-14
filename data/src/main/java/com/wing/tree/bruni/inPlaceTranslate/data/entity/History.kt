@@ -11,7 +11,7 @@ import com.wing.tree.bruni.inPlaceTranslate.domain.model.History as Model
 @Entity(tableName = "history")
 data class History(
     @PrimaryKey
-    val rowid: Int = ZERO,
+    override val rowid: Int = ZERO,
     @ColumnInfo(name = "detected_source_language")
     override val detectedSourceLanguage: String?,
     @ColumnInfo(name = "is_favorite")

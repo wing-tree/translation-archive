@@ -7,6 +7,7 @@ import com.wing.tree.bruni.inPlaceTranslate.model.History as Model
 class HistoryMapper : EntityMapper<Entity, Model> {
     override fun toModel(entity: Entity): Model {
         return Model(
+            rowid = entity.rowid,
             detectedSourceLanguage = entity.detectedSourceLanguage,
             isFavorite = entity.isFavorite,
             source = entity.source,
