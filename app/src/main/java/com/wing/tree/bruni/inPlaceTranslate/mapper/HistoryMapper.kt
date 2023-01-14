@@ -1,8 +1,8 @@
 package com.wing.tree.bruni.inPlaceTranslate.mapper
 
 import com.wing.tree.bruni.inPlaceTranslate.data.mapper.EntityMapper
+import com.wing.tree.bruni.inPlaceTranslate.adapter.HistoryPagingDataAdapter.Item.History as Model
 import com.wing.tree.bruni.inPlaceTranslate.data.entity.History as Entity
-import com.wing.tree.bruni.inPlaceTranslate.model.History as Model
 
 class HistoryMapper : EntityMapper<Entity, Model> {
     override fun toModel(entity: Entity): Model {
