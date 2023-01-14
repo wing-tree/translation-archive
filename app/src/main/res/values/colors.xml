@@ -34,5 +34,7 @@
     <color name="primary">#2C53D0</color>
     <color name="seed">#1543C1</color>
 
-    <color name="ripple_material">@color/ripple_material_light</color>
+    <color name="on_primary_ripple">#29FFFFFF</color>
+    <color name="on_surface_ripple">#291B1B1F</color>
+    <color name="primary_ripple">#292C53D0</color>
 </resources>

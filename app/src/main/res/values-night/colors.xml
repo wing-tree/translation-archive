@@ -30,5 +30,7 @@
     <color name="primary_container">#0038B6</color>
     <color name="primary">#B7C4FF</color>
 
-    <color name="ripple_material">@color/ripple_material_dark</color>
+    <color name="on_primary_ripple">#29002682</color>
+    <color name="on_surface_ripple">#29E4E1E6</color>
+    <color name="primary_ripple">#29B7C4FF</color>
 </resources>
