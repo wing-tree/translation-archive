@@ -28,7 +28,7 @@ class TextToSpeechDelegateImpl : TextToSpeechDelegate {
     private var appCompatActivity: WeakReference<AppCompatActivity>? = null
     private var textToSpeech: TextToSpeech? = null
 
-    override fun initializeTextToSpeech(appCompatActivity: AppCompatActivity, listener: TextToSpeech.OnInitListener) {
+    override fun initTextToSpeech(appCompatActivity: AppCompatActivity, listener: TextToSpeech.OnInitListener) {
         textToSpeech = TextToSpeech(appCompatActivity, listener)
 
         this.appCompatActivity?.get()?.lifecycle?.removeObserver(defaultLifecycleObserver)
