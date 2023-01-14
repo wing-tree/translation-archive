@@ -21,7 +21,7 @@ interface HistoryDao {
     @Query("DELETE FROM history")
     suspend fun clearAll()
 
-    @Query("SELECT *, rowid FROM history ORDER BY translated_at ASC LIMIT :loadSize OFFSET :key * :loadSize")
+    @Query("SELECT *, rowid FROM history ORDER BY translated_at DESC LIMIT :loadSize OFFSET :key * :loadSize")
     suspend fun load(key: Int, loadSize: Int): List<History>
 
     @Query("SELECT is_favorite FROM history WHERE rowid = :rowid")
