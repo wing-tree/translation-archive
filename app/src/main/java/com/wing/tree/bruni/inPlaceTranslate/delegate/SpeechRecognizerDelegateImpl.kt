@@ -6,7 +6,6 @@ import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.speech.SpeechRecognizer.createSpeechRecognizer
-import com.wing.tree.bruni.inPlaceTranslate.regular.findLanguageTagByLanguage
 import java.util.*
 
 class SpeechRecognizerDelegateImpl : SpeechRecognizerDelegate {
@@ -30,13 +29,13 @@ class SpeechRecognizerDelegateImpl : SpeechRecognizerDelegate {
     }
 
     override fun startSpeechRecognition(language: String) {
-        val languageTag = findLanguageTagByLanguage(language) ?: Locale.getDefault().toLanguageTag()
-        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+        val languageTag = Locale(language).toLanguageTag()
+        val recognizerIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
             putExtra(RecognizerIntent.EXTRA_LANGUAGE, languageTag)
         }
 
-        speechRecognizer?.startListening(intent)
+        speechRecognizer?.startListening(recognizerIntent)
     }
 
     override fun stopSpeechRecognition() {
