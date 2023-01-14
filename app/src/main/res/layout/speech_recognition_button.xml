@@ -1,0 +1,26 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:parentTag="android.widget.FrameLayout">
+
+    <com.wing.tree.bruni.inPlaceTranslate.widget.Ripple
+        android:id="@+id/ripple"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/layout_margin_4dp"
+        android:clickable="false"
+        android:focusable="false" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/material_button"
+        style="@style/Widget.Material3.Button.IconButton.Filled"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        app:icon="@drawable/ic_round_mic_24"
+        app:iconGravity="textStart" />
+
+</merge>
