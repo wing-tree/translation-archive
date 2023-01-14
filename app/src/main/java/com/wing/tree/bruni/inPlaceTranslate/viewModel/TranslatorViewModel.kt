@@ -5,22 +5,19 @@ import androidx.lifecycle.viewModelScope
 import com.wing.tree.bruni.core.constant.*
 import com.wing.tree.bruni.core.extension.hundreds
 import com.wing.tree.bruni.core.extension.string
-import com.wing.tree.bruni.core.useCase.Result
-import com.wing.tree.bruni.core.useCase.firstOrNull
-import com.wing.tree.bruni.core.useCase.getOrDefault
-import com.wing.tree.bruni.core.useCase.getOrNull
+import com.wing.tree.bruni.core.useCase.*
 import com.wing.tree.bruni.inPlaceTranslate.BuildConfig
 import com.wing.tree.bruni.inPlaceTranslate.domain.model.Translation
 import com.wing.tree.bruni.inPlaceTranslate.domain.useCase.CharactersUseCase
 import com.wing.tree.bruni.inPlaceTranslate.domain.useCase.SourceUseCase
 import com.wing.tree.bruni.inPlaceTranslate.domain.useCase.TargetUseCase
 import com.wing.tree.bruni.inPlaceTranslate.domain.useCase.TranslateUseCase
-import com.wing.tree.bruni.inPlaceTranslate.regular.findDisplayLanguageByLanguage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Locale
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
@@ -32,6 +29,11 @@ abstract class TranslatorViewModel(
 ) : ViewModel() {
     private val ioDispatcher = Dispatchers.IO
     private val stopTimeout = FIVE.seconds
+
+    private val _translations = MutableStateFlow<Result<List<Translation>>>(Result.Loading)
+    val translations: StateFlow<Result<List<Translation>>> get() = _translations
+
+    val isListening = MutableStateFlow(false)
 
     val source = sourceUseCase.get().map { result ->
         result.getOrNull() ?: BuildConfig.SOURCE.also {
@@ -46,12 +48,15 @@ abstract class TranslatorViewModel(
     val sourceLanguage: String
         get() = source.value
 
+    val sourceLocale: Locale
+        get() = Locale(sourceLanguage)
+
     val displaySourceLanguage = source.map {
-        findDisplayLanguageByLanguage(it)
+        Locale(it).displayLanguage
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeout),
-        initialValue = findDisplayLanguageByLanguage(sourceLanguage)
+        initialValue = Locale(sourceLanguage).displayLanguage
     )
 
     val target = targetUseCase.get().map { result ->
@@ -64,22 +69,29 @@ abstract class TranslatorViewModel(
         initialValue = BuildConfig.TARGET
     )
 
-    val targetLanguage: String
-        get() = target.value
+    @Suppress("MemberVisibilityCanBePrivate")
+    val targetLanguage: String get() = target.value
+
+    val targetLocale: Locale
+        get() = Locale(targetLanguage)
 
     val displayTargetLanguage = target.map {
-        findDisplayLanguageByLanguage(it)
+        Locale(it).displayLanguage
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeout),
-        initialValue = findDisplayLanguageByLanguage(targetLanguage)
+        initialValue = Locale(targetLanguage).displayLanguage
     )
-
-    private val _translations = MutableStateFlow<Result<List<Translation>>>(Result.Loading)
-    val translations: StateFlow<Result<List<Translation>>> get() = _translations
 
     val characters = charactersUseCase.get().map { it.getOrDefault(ZERO) }
     val sourceText = MutableStateFlow<String?>(null)
+    val translatedText: StateFlow<String?> = translations.map {
+        it.firstOrNull()?.translatedText
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(stopTimeout),
+        initialValue = null
+    )
 
     init {
         val timeout = FIVE.hundreds.milliseconds
@@ -98,20 +110,6 @@ abstract class TranslatorViewModel(
         }
     }
 
-    fun clearCharacters() = viewModelScope.launch(ioDispatcher) {
-        charactersUseCase.clear()
-    }
-
-    fun swap() {
-        viewModelScope.launch {
-            val source = source.value
-            val target = target.value
-
-            sourceUseCase.put(target)
-            targetUseCase.put(source)
-        }
-    }
-
     private fun translate(source: String, target: String, sourceText: CharSequence) = viewModelScope.launch {
         val result = withContext(ioDispatcher) {
             val parameter = TranslateUseCase.Parameter(
@@ -126,9 +124,20 @@ abstract class TranslatorViewModel(
         _translations.update { result }
     }
 
+    fun clearCharacters() = viewModelScope.launch(ioDispatcher) {
+        charactersUseCase.clear()
+    }
+
+    fun swapLanguages() {
+        viewModelScope.launch {
+            val source = source.value
+            val target = target.value
+
+            sourceUseCase.put(target)
+            targetUseCase.put(source)
+        }
+    }
+
     private val StateFlow<Result<List<Translation>>>.firstOrNull: Translation?
         get() = value.firstOrNull()
-
-    private val StateFlow<Result<List<Translation>>>.translatedText: String
-        get() = firstOrNull?.translatedText ?: EMPTY
 }
