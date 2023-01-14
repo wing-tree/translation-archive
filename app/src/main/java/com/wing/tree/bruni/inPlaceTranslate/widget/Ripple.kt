@@ -9,17 +9,13 @@ import com.wing.tree.bruni.core.extension.float
 import com.wing.tree.bruni.core.extension.half
 import com.wing.tree.bruni.inPlaceTranslate.R
 
-class RippleView(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
-    private val paint = Paint()
+class Ripple(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
+    private val paint = Paint().apply {
+        isAntiAlias = true
+        style = Paint.Style.FILL
 
-    init {
-        paint.apply {
-            isAntiAlias = true
-            style = Paint.Style.FILL
-
-            context?.let {
-                color = it.getColor(R.color.ripple_material)
-            }
+        context?.let {
+            color = it.getColor(R.color.primary_ripple)
         }
     }
 
