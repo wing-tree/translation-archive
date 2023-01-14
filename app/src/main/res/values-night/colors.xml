@@ -31,6 +31,8 @@
     <color name="primary">#B7C4FF</color>
 
     <color name="on_primary_ripple">#29002682</color>
+    <color name="on_secondary_container_ripple">#29DCE1FF</color>
     <color name="on_surface_ripple">#29E4E1E6</color>
     <color name="primary_ripple">#29B7C4FF</color>
+    <color name="secondary_container_ripple">#293F4561</color>
 </resources>
