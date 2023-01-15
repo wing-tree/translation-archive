@@ -60,7 +60,7 @@ abstract class TranslatorActivity : SpeechRecognizerActivity(), TextToSpeechDele
         sourceText.update { text.string }
     }
 
-    protected fun processText(intent: Intent?) {
+    protected fun translateProcessText(intent: Intent?) {
         val processText = intent?.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)
         val sourceText = processText?.string ?: EMPTY
 
