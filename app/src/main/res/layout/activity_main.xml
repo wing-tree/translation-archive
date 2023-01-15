@@ -30,8 +30,6 @@
                 android:id="@+id/material_toolbar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/layout_margin_start_12dp"
-                android:layout_marginEnd="@dimen/layout_margin_end_16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -44,7 +42,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginBottom="@dimen/layout_margin_bottom_16dp"
+                android:layout_marginBottom="@dimen/layout_margin_bottom_24dp"
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 android:paddingHorizontal="@dimen/padding_horizontal_16dp"
@@ -76,9 +74,9 @@
                         android:hint="@string/enter_your_text"
                         android:inputType="textMultiLine"
                         android:paddingHorizontal="@dimen/padding_horizontal_12dp"
-                        android:paddingTop="@dimen/padding_top_36dp"
+                        android:paddingTop="@dimen/padding_top_40dp"
                         android:text="@={viewModel.sourceText}"
-                        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+                        android:textAppearance="@style/TextAppearance.HeadlineLarge"
                         tools:ignore="Autofill,LabelFor"
                         tools:text="Source Text" />
 
@@ -108,7 +106,7 @@
                             android:gravity="center_vertical"
                             android:paddingHorizontal="@dimen/padding_horizontal_12dp"
                             android:text="@{viewModel.displaySourceLanguage}"
-                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                            android:textAppearance="@style/TextAppearance.TitleLarge"
                             android:textColor="?colorOnSurface"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/swap"
@@ -187,10 +185,10 @@
                         android:layout_height="wrap_content"
                         android:gravity="start|top"
                         android:paddingHorizontal="@dimen/padding_horizontal_12dp"
-                        android:paddingTop="@dimen/padding_top_36dp"
+                        android:paddingTop="@dimen/padding_top_40dp"
                         android:scrollbars="vertical"
                         android:text="@{viewModel.translatedText}"
-                        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+                        android:textAppearance="@style/TextAppearance.HeadlineLarge"
                         android:textColor="?colorPrimary"
                         tools:text="Translated Text" />
 
@@ -217,7 +215,7 @@
                             android:gravity="center_vertical"
                             android:paddingHorizontal="@dimen/padding_horizontal_12dp"
                             android:text="@{viewModel.displayTargetLanguage}"
-                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                            android:textAppearance="@style/TextAppearance.TitleLarge"
                             android:textColor="?colorPrimary"
                             tools:text="영어" />
 
@@ -231,7 +229,8 @@
                         android:onClick="@{() -> activity.shareTranslatedText()}"
                         app:icon="@drawable/ic_round_share_24"
                         app:iconGravity="textStart"
-                        app:iconSize="@dimen/icon_size_24dp" />
+                        app:iconSize="@dimen/icon_size_24dp"
+                        app:rippleColor="@color/primary_ripple" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/copy_translated_text_to_clipboard"
@@ -241,7 +240,8 @@
                         android:onClick="@{() -> activity.copyTranslatedTextToClipboard()}"
                         app:icon="@drawable/ic_round_content_copy_24"
                         app:iconGravity="textStart"
-                        app:iconSize="@dimen/icon_size_24dp" />
+                        app:iconSize="@dimen/icon_size_24dp"
+                        app:rippleColor="@color/primary_ripple" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/speak_translated_text"
@@ -251,7 +251,8 @@
                         android:onClick="@{() -> activity.speakTranslatedText()}"
                         app:icon="@drawable/ic_round_volume_up_24"
                         app:iconGravity="textStart"
-                        app:iconSize="@dimen/icon_size_24dp" />
+                        app:iconSize="@dimen/icon_size_24dp"
+                        app:rippleColor="@color/primary_ripple" />
 
                 </LinearLayout>
 
@@ -275,7 +276,7 @@
                 isListening="@{viewModel.isListening()}"
                 android:layout_width="@dimen/layout_width_72dp"
                 android:layout_height="@dimen/layout_height_72dp"
-                android:layout_marginBottom="@dimen/layout_margin_bottom_16dp"
+                android:layout_marginBottom="@dimen/layout_margin_bottom_24dp"
                 app:iconSize="@dimen/icon_size_36dp"
                 app:layout_constraintBottom_toTopOf="@+id/ad_view"
                 app:layout_constraintEnd_toEndOf="parent"
