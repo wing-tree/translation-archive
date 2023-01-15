@@ -5,6 +5,10 @@
         <attr name="tint" format="color" />
     </declare-styleable>
 
+    <declare-styleable name="Ripple">
+        <attr name="color" format="color"/>
+    </declare-styleable>
+
     <declare-styleable name="SpeechRecognitionButton">
         <attr name="iconSize" format="dimension"/>
     </declare-styleable>

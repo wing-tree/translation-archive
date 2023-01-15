@@ -13,9 +13,19 @@ class Ripple(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
     private val paint = Paint().apply {
         isAntiAlias = true
         style = Paint.Style.FILL
+    }
 
+    init {
         context?.let {
-            color = it.getColor(R.color.primary_ripple)
+            val typedArray = it.obtainStyledAttributes(attrs, R.styleable.Ripple)
+            val color = typedArray.getColor(
+                R.styleable.Ripple_color,
+                it.getColor(R.color.on_surface_ripple)
+            )
+
+            paint.color = color
+
+            typedArray.recycle()
         }
     }
 
