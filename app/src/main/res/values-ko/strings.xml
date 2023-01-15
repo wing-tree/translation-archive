@@ -3,7 +3,7 @@
     <string name="app_name">In Place Translate</string>
     <string name="cancel">취소</string>
     <string name="clear_all">모두 지우기</string>
-    <string name="clear_all_records">모든 기록을 지웁니다.</string>
+    <string name="clear_all_histories">모든 기록을 지웁니다.</string>
     <string name="copied_to_clipboard">클립보드에 복사되었습니다</string>
     <string name="enter_your_text">텍스트를 입력하십시오.</string>
     <string name="history">기록</string>
