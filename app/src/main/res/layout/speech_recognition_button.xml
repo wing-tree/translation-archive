@@ -16,7 +16,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/material_button"
-        style="@style/Widget.Material3.Button.IconButton.Filled"
+        style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
