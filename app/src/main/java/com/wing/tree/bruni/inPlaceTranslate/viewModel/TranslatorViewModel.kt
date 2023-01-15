@@ -27,8 +27,9 @@ abstract class TranslatorViewModel(
     private val sourceUseCase: SourceUseCase,
     private val targetUseCase: TargetUseCase
 ) : ViewModel() {
-    private val ioDispatcher = Dispatchers.IO
     private val stopTimeout = FIVE.seconds
+
+    protected val ioDispatcher = Dispatchers.IO
 
     private val _translations = MutableStateFlow<Result<List<Translation>>>(Result.Loading)
     val translations: StateFlow<Result<List<Translation>>> get() = _translations
@@ -137,7 +138,4 @@ abstract class TranslatorViewModel(
             targetUseCase.put(source)
         }
     }
-
-    private val StateFlow<Result<List<Translation>>>.firstOrNull: Translation?
-        get() = value.firstOrNull()
 }
