@@ -51,106 +51,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/material_toolbar">
 
-                <androidx.core.widget.NestedScrollView
-                    android:id="@+id/nested_scroll_view"
+                <include
+                    android:id="@+id/source_text"
+                    layout="@layout/source_text"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:fadingEdgeLength="@dimen/fading_edge_length_12dp"
-                    android:fillViewport="true"
-                    android:paddingVertical="@dimen/padding_vertical_12dp"
-                    android:requiresFadingEdge="vertical"
-                    app:layout_constraintBottom_toTopOf="@+id/nested_scroll_view2"
+                    app:activity="@{activity}"
+                    app:layout_constraintBottom_toTopOf="@+id/translated_text"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <EditText
-                        android:id="@+id/source_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:gravity="start|top"
-                        android:hint="@string/enter_your_text"
-                        android:inputType="textMultiLine"
-                        android:paddingHorizontal="@dimen/padding_horizontal_12dp"
-                        android:paddingTop="@dimen/padding_top_40dp"
-                        android:text="@={viewModel.sourceText}"
-                        android:textAppearance="@style/TextAppearance.HeadlineLarge"
-                        tools:ignore="Autofill,LabelFor"
-                        tools:text="Source Text" />
-
-                </androidx.core.widget.NestedScrollView>
-
-                <LinearLayout
-                    android:id="@+id/linear_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/layout_height_48dp"
-                    android:clipChildren="false"
-                    android:clipToPadding="false"
-                    android:gravity="center_vertical|end"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/nested_scroll_view">
-
-                    <FrameLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:id="@+id/display_source_language"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="@dimen/padding_horizontal_12dp"
-                            android:text="@{viewModel.displaySourceLanguage}"
-                            android:textAppearance="@style/TextAppearance.TitleLarge"
-                            android:textColor="?colorOnSurface"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/swap"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:text="한국어" />
-
-                    </FrameLayout>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/swap_languages"
-                        style="@style/Widget.Material3.Button.IconButton"
-                        android:layout_width="@dimen/layout_width_48dp"
-                        android:layout_height="@dimen/layout_height_48dp"
-                        app:icon="@drawable/ic_round_swap_vert_24"
-                        app:iconGravity="textStart"
-                        app:iconSize="@dimen/icon_size_24dp"
-                        app:iconTint="?attr/colorOnSurface"
-                        app:rippleColor="@color/on_surface_ripple" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/paste_source_text_from_clipboard"
-                        style="@style/Widget.Material3.Button.IconButton"
-                        android:layout_width="@dimen/layout_width_48dp"
-                        android:layout_height="@dimen/layout_height_48dp"
-                        android:onClick="@{() -> activity.pasteSourceTextFromClipboard()}"
-                        app:icon="@drawable/ic_round_content_paste_24"
-                        app:iconGravity="textStart"
-                        app:iconSize="@dimen/icon_size_24dp"
-                        app:iconTint="?attr/colorOnSurface"
-                        app:rippleColor="@color/on_surface_ripple" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/speak_source_text"
-                        style="@style/Widget.Material3.Button.IconButton"
-                        android:layout_width="@dimen/layout_width_48dp"
-                        android:layout_height="@dimen/layout_height_48dp"
-                        android:onClick="@{() -> activity.speakSourceText()}"
-                        app:icon="@drawable/ic_round_volume_up_24"
-                        app:iconGravity="textStart"
-                        app:iconSize="@dimen/icon_size_24dp"
-                        app:iconTint="?attr/colorOnSurface"
-                        app:rippleColor="@color/on_surface_ripple" />
-
-                </LinearLayout>
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:viewModel="@{viewModel}" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/material_divider"
@@ -162,99 +74,21 @@
                     app:dividerInsetStart="@dimen/divider_inset_start_16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/nested_scroll_view" />
+                    app:layout_constraintTop_toBottomOf="@+id/source_text" />
 
-                <androidx.core.widget.NestedScrollView
-                    android:id="@+id/nested_scroll_view2"
+                <include
+                    android:id="@+id/translated_text"
+                    layout="@layout/translated_text"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_marginTop="@dimen/layout_margin_top_32dp"
-                    android:fadingEdgeLength="@dimen/fading_edge_length_12dp"
-                    android:fillViewport="true"
-                    android:paddingVertical="@dimen/padding_vertical_12dp"
-                    android:requiresFadingEdge="vertical"
+                    app:activity="@{activity}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/nested_scroll_view">
-
-                    <TextView
-                        android:id="@+id/translated_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="start|top"
-                        android:paddingHorizontal="@dimen/padding_horizontal_12dp"
-                        android:paddingTop="@dimen/padding_top_40dp"
-                        android:scrollbars="vertical"
-                        android:text="@{viewModel.translatedText}"
-                        android:textAppearance="@style/TextAppearance.HeadlineLarge"
-                        android:textColor="?colorPrimary"
-                        tools:text="Translated Text" />
-
-                </androidx.core.widget.NestedScrollView>
-
-                <LinearLayout
-                    android:id="@+id/linear_layout2"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/layout_height_48dp"
-                    android:gravity="center_vertical|end"
-                    app:layout_constraintEnd_toEndOf="@+id/nested_scroll_view2"
-                    app:layout_constraintStart_toStartOf="@+id/nested_scroll_view2"
-                    app:layout_constraintTop_toTopOf="@+id/nested_scroll_view2">
-
-                    <FrameLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:id="@+id/display_target_language"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="@dimen/padding_horizontal_12dp"
-                            android:text="@{viewModel.displayTargetLanguage}"
-                            android:textAppearance="@style/TextAppearance.TitleLarge"
-                            android:textColor="?colorPrimary"
-                            tools:text="영어" />
-
-                    </FrameLayout>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/share_translated_text"
-                        style="@style/Widget.Material3.Button.IconButton"
-                        android:layout_width="@dimen/layout_width_48dp"
-                        android:layout_height="@dimen/layout_height_48dp"
-                        android:onClick="@{() -> activity.shareTranslatedText()}"
-                        app:icon="@drawable/ic_round_share_24"
-                        app:iconGravity="textStart"
-                        app:iconSize="@dimen/icon_size_24dp"
-                        app:rippleColor="@color/primary_ripple" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/copy_translated_text_to_clipboard"
-                        style="@style/Widget.Material3.Button.IconButton"
-                        android:layout_width="@dimen/layout_width_48dp"
-                        android:layout_height="@dimen/layout_height_48dp"
-                        android:onClick="@{() -> activity.copyTranslatedTextToClipboard()}"
-                        app:icon="@drawable/ic_round_content_copy_24"
-                        app:iconGravity="textStart"
-                        app:iconSize="@dimen/icon_size_24dp"
-                        app:rippleColor="@color/primary_ripple" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/speak_translated_text"
-                        style="@style/Widget.Material3.Button.IconButton"
-                        android:layout_width="@dimen/layout_width_48dp"
-                        android:layout_height="@dimen/layout_height_48dp"
-                        android:onClick="@{() -> activity.speakTranslatedText()}"
-                        app:icon="@drawable/ic_round_volume_up_24"
-                        app:iconGravity="textStart"
-                        app:iconSize="@dimen/icon_size_24dp"
-                        app:rippleColor="@color/primary_ripple" />
-
-                </LinearLayout>
+                    app:layout_constraintTop_toBottomOf="@+id/source_text"
+                    app:viewModel="@{viewModel}" />
 
                 <com.google.android.material.progressindicator.CircularProgressIndicator
                     android:id="@+id/circular_progress_indicator"
@@ -263,10 +97,10 @@
                     android:layout_height="wrap_content"
                     android:indeterminate="true"
                     app:hideAnimationBehavior="outward"
-                    app:layout_constraintBottom_toBottomOf="@+id/nested_scroll_view2"
-                    app:layout_constraintEnd_toEndOf="@+id/nested_scroll_view2"
-                    app:layout_constraintStart_toStartOf="@+id/nested_scroll_view2"
-                    app:layout_constraintTop_toTopOf="@+id/nested_scroll_view2"
+                    app:layout_constraintBottom_toBottomOf="@+id/translated_text"
+                    app:layout_constraintEnd_toEndOf="@+id/translated_text"
+                    app:layout_constraintStart_toStartOf="@+id/translated_text"
+                    app:layout_constraintTop_toTopOf="@+id/translated_text"
                     app:showAnimationBehavior="outward" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
