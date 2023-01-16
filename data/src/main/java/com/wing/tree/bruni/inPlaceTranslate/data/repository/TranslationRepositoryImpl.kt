@@ -50,22 +50,12 @@ class TranslationRepositoryImpl @Inject constructor(
     }
 
     override suspend fun insert(translation: Model) {
-        val isFavorite = historyDataSource.isFavorite(translation.rowid) ?: false
-        val history = translation.toHistory(isFavorite)
-
-        historyDataSource.insert(history)
+        historyDataSource.insert(translation.toHistory())
         localDataSource.insert(translation.toEntity())
     }
 
     override suspend fun insertAll(list: List<Model>) {
-        historyDataSource.insertAll(
-            list.map {
-                val isFavorite = historyDataSource.isFavorite(it.rowid) ?: false
-
-                it.toHistory(isFavorite)
-            }
-        )
-
+        historyDataSource.insertAll(list.map { it.toHistory() })
         localDataSource.insertAll(list.map { it.toEntity() })
     }
 
@@ -84,8 +74,12 @@ class TranslationRepositoryImpl @Inject constructor(
                     emptyList()
                 }
 
-                with(translations) {
-                    filterNotExpired().ifEmpty { translate(sourceText, source, target) }
+                with(translations.filterNotExpired()) {
+                    if (isNotEmpty()) {
+                        historyDataSource.insertAll(map { it.toHistory() })
+                    }
+
+                    ifEmpty { translate(sourceText, source, target) }
                 }
             }
             else -> translate(sourceText, source, target)
@@ -127,16 +121,20 @@ class TranslationRepositoryImpl @Inject constructor(
     }
 
     private fun Model.toEntity() = translationMapper.toEntity(this)
-    private fun Model.toHistory(isFavorite: Boolean) = History(
-        rowid = rowid,
-        detectedSourceLanguage = detectedSourceLanguage,
-        isFavorite = isFavorite,
-        source = source,
-        sourceText = sourceText,
-        target = target,
-        translatedAt = translatedAt,
-        translatedText = translatedText
-    )
+    private suspend fun Model.toHistory(): History {
+        val isFavorite = historyDataSource.isFavorite(rowid) ?: false
+
+        return History(
+            rowid = rowid,
+            detectedSourceLanguage = detectedSourceLanguage,
+            isFavorite = isFavorite,
+            source = source,
+            sourceText = sourceText,
+            target = target,
+            translatedAt = translatedAt,
+            translatedText = translatedText
+        )
+    }
 
     private fun Translation.isExpired(): Boolean {
         val calendar = Calendar.getInstance()
