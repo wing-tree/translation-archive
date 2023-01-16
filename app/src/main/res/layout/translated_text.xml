@@ -41,7 +41,7 @@
                 android:paddingTop="@dimen/padding_top_40dp"
                 android:scrollbars="vertical"
                 android:text="@{viewModel.translatedText}"
-                android:textAppearance="@style/TextAppearance.HeadlineLarge"
+                android:textAppearance="@style/TextAppearance.HeadlineMedium"
                 android:textColor="?colorPrimary"
                 tools:text="Translated Text" />
 
@@ -68,7 +68,7 @@
                     android:gravity="center_vertical"
                     android:paddingHorizontal="@dimen/padding_horizontal_12dp"
                     android:text="@{viewModel.displayTargetLanguage}"
-                    android:textAppearance="@style/TextAppearance.TitleLarge"
+                    android:textAppearance="@style/TextAppearance.TitleMedium"
                     android:textColor="?colorPrimary"
                     tools:text="영어" />
 

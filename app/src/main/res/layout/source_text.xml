@@ -12,6 +12,7 @@
         <variable
             name="viewModel"
             type="com.wing.tree.bruni.inPlaceTranslate.viewModel.TranslatorViewModel" />
+    
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -43,7 +44,7 @@
                 android:paddingHorizontal="@dimen/padding_horizontal_12dp"
                 android:paddingTop="@dimen/padding_top_40dp"
                 android:text="@={viewModel.sourceText}"
-                android:textAppearance="@style/TextAppearance.HeadlineLarge"
+                android:textAppearance="@style/TextAppearance.HeadlineMedium"
                 tools:ignore="Autofill,LabelFor"
                 tools:text="Source Text" />
 
@@ -73,7 +74,7 @@
                     android:gravity="center_vertical"
                     android:paddingHorizontal="@dimen/padding_horizontal_12dp"
                     android:text="@{viewModel.displaySourceLanguage}"
-                    android:textAppearance="@style/TextAppearance.TitleLarge"
+                    android:textAppearance="@style/TextAppearance.TitleMedium"
                     android:textColor="?colorOnSurface"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/swap"
