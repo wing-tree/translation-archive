@@ -4,27 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/padding_24dp">
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:paddingVertical="@dimen/padding_vertical_16dp"
+    android:paddingStart="@dimen/padding_start_16dp"
+    android:paddingEnd="@dimen/padding_end_0dp">
 
     <TextView
         android:id="@+id/source_text"
-        style="@style/TextAppearance.Material3.TitleMedium"
+        style="@style/TextAppearance.TitleMedium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:maxLines="2"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/star"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Source Text" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/star"
+        style="@style/Widget.Material3.Button.IconButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/layout_margin_end_12dp"
+        app:icon="@drawable/ic_round_star_24"
+        app:iconSize="@dimen/icon_size_24dp"
+        app:iconTint="@color/on_background"
+        app:layout_constraintBottom_toBottomOf="@+id/source_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/source_text"
+        app:rippleColor="@color/primary_ripple"
+        tools:ignore="ContentDescription" />
+
     <TextView
         android:id="@+id/translated_text"
-        style="@style/TextAppearance.Material3.BodyMedium"
+        style="@style/TextAppearance.TitleMedium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/layout_margin_top_4dp"
         android:maxLines="2"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="?colorPrimary"
+        app:layout_constraintEnd_toEndOf="@+id/source_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/source_text"
         tools:text="Translated Text" />
