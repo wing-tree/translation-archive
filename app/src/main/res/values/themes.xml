@@ -70,4 +70,11 @@
         <item name="lineHeight">@dimen/line_height_24dp</item>
         <item name="android:lineHeight" tools:targetApi="p">@dimen/line_height_24dp</item>
     </style>
+
+    <style name="TextAppearance.TitleSmall" parent="@style/TextAppearance.Material3.TitleSmall">
+        <item name="android:textSize">@dimen/text_size_14dp</item>
+        <item name="lineHeight">@dimen/line_height_20dp</item>
+        <item name="android:lineHeight" tools:targetApi="p">@dimen/line_height_20dp</item>
+    </style>
+
 </resources>
