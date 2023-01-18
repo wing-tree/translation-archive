@@ -4,8 +4,6 @@
 
     <dimen name="divider_inset_start_16dp">16dp</dimen>
 
-    <dimen name="fading_edge_length_12dp">12dp</dimen>
-
     <dimen name="icon_size_20dp">20dp</dimen>
     <dimen name="icon_size_24dp">24dp</dimen>
     <dimen name="icon_size_36dp">36dp</dimen>
