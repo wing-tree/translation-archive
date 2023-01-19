@@ -28,15 +28,7 @@ abstract class TranslatorViewModel(
     private val targetUseCase: TargetUseCase
 ) : ViewModel() {
     private val stopTimeout = FIVE.seconds
-
-    protected val ioDispatcher = Dispatchers.IO
-
-    private val _translations = MutableStateFlow<Result<List<Translation>>>(Result.Loading)
-    val translations: StateFlow<Result<List<Translation>>> get() = _translations
-
-    val isListening = MutableStateFlow(false)
-
-    val source = sourceUseCase.get().map { result ->
+    private val source = sourceUseCase.get().map { result ->
         result.getOrNull() ?: BuildConfig.SOURCE.also {
             sourceUseCase.put(it)
         }
@@ -45,6 +37,23 @@ abstract class TranslatorViewModel(
         started = SharingStarted.WhileSubscribed(stopTimeout),
         initialValue = BuildConfig.SOURCE
     )
+
+    private val target = targetUseCase.get().map { result ->
+        result.getOrNull() ?: BuildConfig.TARGET.also {
+            targetUseCase.put(it)
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(stopTimeout),
+        initialValue = BuildConfig.TARGET
+    )
+
+    private val translations = MutableStateFlow<Result<List<Translation>>>(Result.Loading)
+
+    protected val ioDispatcher = Dispatchers.IO
+
+    val isListening = MutableStateFlow(false)
+    val result: StateFlow<Result<*>> = translations
 
     val sourceLanguage: String
         get() = source.value
@@ -58,16 +67,6 @@ abstract class TranslatorViewModel(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeout),
         initialValue = Locale(sourceLanguage).displayLanguage
-    )
-
-    val target = targetUseCase.get().map { result ->
-        result.getOrNull() ?: BuildConfig.TARGET.also {
-            targetUseCase.put(it)
-        }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(stopTimeout),
-        initialValue = BuildConfig.TARGET
     )
 
     @Suppress("MemberVisibilityCanBePrivate")
@@ -122,7 +121,7 @@ abstract class TranslatorViewModel(
             translateUseCase(parameter)
         }
 
-        _translations.update { result }
+        translations.update { result }
     }
 
     fun clearCharacters() = viewModelScope.launch(ioDispatcher) {
