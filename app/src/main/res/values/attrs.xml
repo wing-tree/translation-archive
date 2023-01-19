@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="IconButton">
-        <attr name="src" format="reference" />
-        <attr name="tint" format="color" />
-    </declare-styleable>
-
     <declare-styleable name="Ripple">
         <attr name="color" format="color"/>
     </declare-styleable>
 
     <declare-styleable name="SpeechRecognitionButton">
-        <attr name="iconSize" format="dimension"/>
+        <attr name="iconSize" format="dimension" />
     </declare-styleable>
 </resources>
