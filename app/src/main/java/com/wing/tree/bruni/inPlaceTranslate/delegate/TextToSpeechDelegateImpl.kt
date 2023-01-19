@@ -16,12 +16,15 @@ import java.util.*
 class TextToSpeechDelegateImpl : TextToSpeechDelegate {
     private val defaultLifecycleObserver = object : DefaultLifecycleObserver {
         override fun onStop(owner: LifecycleOwner) {
-            textToSpeech?.let {
-                it.stop()
-                it.shutdown()
-            }
+            textToSpeech?.stop()
 
             super.onStop(owner)
+        }
+
+        override fun onDestroy(owner: LifecycleOwner) {
+            textToSpeech?.shutdown()
+
+            super.onDestroy(owner)
         }
     }
 
