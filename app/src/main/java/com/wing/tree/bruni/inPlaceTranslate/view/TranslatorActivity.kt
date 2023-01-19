@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.speech.SpeechRecognizer
+import android.widget.Toast
 import androidx.annotation.CallSuper
 import com.wing.tree.bruni.core.constant.EMPTY
 import com.wing.tree.bruni.core.extension.*
@@ -58,6 +59,10 @@ abstract class TranslatorActivity : SpeechRecognizerActivity(), TextToSpeechDele
 
     private fun updateSourceText(text: CharSequence) {
         sourceText.update { text.string }
+    }
+
+    protected fun showToast(throwable: Throwable) {
+        showToast(throwable.message ?: throwable.string, Toast.LENGTH_LONG)
     }
 
     protected fun translateProcessText(intent: Intent?) {
