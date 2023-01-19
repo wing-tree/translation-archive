@@ -45,7 +45,6 @@
                 android:layout_marginBottom="@dimen/layout_margin_bottom_24dp"
                 android:clipChildren="false"
                 android:clipToPadding="false"
-                android:paddingHorizontal="@dimen/padding_horizontal_16dp"
                 app:layout_constraintBottom_toTopOf="@+id/recognize_speech"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -64,24 +63,12 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:viewModel="@{viewModel}" />
 
-                <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/material_divider"
-                    style="@style/Widget.Material3.MaterialDivider"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/layout_margin_top_16dp"
-                    app:dividerInsetEnd="@dimen/divider_inset_end_16dp"
-                    app:dividerInsetStart="@dimen/divider_inset_start_16dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/source_text" />
-
                 <include
                     android:id="@+id/translated_text"
                     layout="@layout/translated_text"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_marginTop="@dimen/layout_margin_top_32dp"
+                    android:layout_marginTop="@dimen/layout_margin_top_24dp"
                     app:activity="@{activity}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -101,6 +88,7 @@
                     app:layout_constraintEnd_toEndOf="@+id/translated_text"
                     app:layout_constraintStart_toStartOf="@+id/translated_text"
                     app:layout_constraintTop_toTopOf="@+id/translated_text"
+                    app:result="@{viewModel.result}"
                     app:showAnimationBehavior="outward" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -114,7 +102,8 @@
                 app:iconSize="@dimen/icon_size_36dp"
                 app:layout_constraintBottom_toTopOf="@+id/ad_view"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="DuplicateClickableBoundsCheck" />
 
             <FrameLayout
                 android:id="@+id/ad_view"
