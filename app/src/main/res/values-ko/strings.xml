@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">In Place Translate</string>
+    <string name="app_name">번역기</string>
     <string name="cancel">취소</string>
     <string name="clear_all">모두 지우기</string>
-    <string name="clear_all_histories">모든 기록을 지웁니다.</string>
+    <string name="clear_all_histories">모든 기록을 지웁니다</string>
     <string name="copied_to_clipboard">클립보드에 복사되었습니다</string>
     <string name="enter_your_text">텍스트를 입력하십시오.</string>
     <string name="history">기록</string>
     <string name="language_data_is_missing">언어 데이터가 없습니다</string>
     <string name="language_is_not_supported">언어가 지원되지 않습니다</string>
+    <string name="pattern">M월 d, yyyy</string>
+    <string name="request_record_audio_permission_rationale_material_alert_dialog_message">음성 인식을 사용하려면 번역기에서 마이크에 액세스 할 수 있도록 허용하세요.</string>
+    <string name="request_record_audio_permission_rationale_material_alert_dialog_title">마이크 액세스 권한이 거부됨</string>
+    <string name="settings">설정</string>
     <string name="translate">번역</string>
 </resources>

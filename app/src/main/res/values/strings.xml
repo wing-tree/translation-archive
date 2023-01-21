@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">In Place Translate</string>
+    <string name="app_name">Translator</string>
     <string name="cancel">Cancel</string>
     <string name="clear_all">Clear all</string>
-    <string name="clear_all_histories">Clear all histories.</string>
+    <string name="clear_all_histories">Clear all histories</string>
     <string name="close_drawer" translatable="false">close drawer</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="enter_your_text">Enter your text.</string>
@@ -10,5 +10,9 @@
     <string name="language_data_is_missing">Language data is missing</string>
     <string name="language_is_not_supported">Language is not supported</string>
     <string name="open_drawer" translatable="false">open drawer</string>
+    <string name="pattern">M월 d, yyyy</string>
+    <string name="request_record_audio_permission_rationale_material_alert_dialog_message">Allow Translator to access your microphone so it can do speech recognition.</string>
+    <string name="request_record_audio_permission_rationale_material_alert_dialog_title">Permission for microphone was denied</string>
+    <string name="settings">Settings</string>
     <string name="translate">Translate</string>
 </resources>
