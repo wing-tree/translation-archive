@@ -7,11 +7,11 @@
 
         <variable
             name="activity"
-            type="com.wing.tree.bruni.inPlaceTranslate.view.ProcessTextActivity" />
+            type="com.wing.tree.bruni.translator.view.ProcessTextActivity" />
 
         <variable
             name="viewModel"
-            type="com.wing.tree.bruni.inPlaceTranslate.viewModel.ProcessTextViewModel" />
+            type="com.wing.tree.bruni.translator.viewModel.ProcessTextViewModel" />
 
     </data>
 
@@ -94,7 +94,7 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <com.wing.tree.bruni.inPlaceTranslate.widget.SpeechRecognitionButton
+            <com.wing.tree.bruni.translator.widget.SpeechRecognitionButton
                 android:id="@+id/recognize_speech"
                 isListening="@{viewModel.isListening()}"
                 android:layout_width="@dimen/layout_width_56dp"
