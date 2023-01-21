@@ -1,4 +1,4 @@
-package com.wing.tree.bruni.inPlaceTranslate.constant
+package com.wing.tree.bruni.translator.constant
 
 private const val PACKAGE_NAME = "com.wing.tree.bruni.inPlaceTranslate.constant"
 

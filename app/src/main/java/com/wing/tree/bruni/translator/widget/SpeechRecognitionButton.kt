@@ -1,4 +1,4 @@
-package com.wing.tree.bruni.inPlaceTranslate.widget
+package com.wing.tree.bruni.translator.widget
 
 import android.content.Context
 import android.util.AttributeSet
@@ -6,14 +6,15 @@ import android.widget.FrameLayout
 import com.wing.tree.bruni.core.constant.ONE
 import com.wing.tree.bruni.core.constant.TWO
 import com.wing.tree.bruni.core.extension.*
-import com.wing.tree.bruni.inPlaceTranslate.R
-import com.wing.tree.bruni.inPlaceTranslate.databinding.SpeechRecognitionButtonBinding
-import com.wing.tree.bruni.inPlaceTranslate.extension.scale
+import com.wing.tree.bruni.translator.R
+import com.wing.tree.bruni.translator.databinding.SpeechRecognitionButtonBinding
+import com.wing.tree.bruni.translator.extension.scale
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.sample
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -26,14 +27,13 @@ class SpeechRecognitionButton : FrameLayout {
     private val duration = configShortAnimTime
     private val materialButton = binding.materialButton
     private val ripple = binding.ripple
+    private val rmsdB = MutableStateFlow(MINIMUM_RMS_dB)
     private val periodMills = PERIOD_MILLS
     private val scaleFactor = MAXIMUM_SCALE
         .minus(MINIMUM_SCALE)
         .div(MAXIMUM_RMS_dB)
 
     private var job: Job? = null
-
-    val rmsdB = MutableStateFlow(MINIMUM_RMS_dB)
 
     var isListening: Boolean = false
         set(value) {
@@ -119,6 +119,10 @@ class SpeechRecognitionButton : FrameLayout {
                 job?.cancel()
             }
             .withLayer()
+    }
+
+    fun updateRmsdB(value: Float) {
+        rmsdB.update { value }
     }
 
     companion object {
