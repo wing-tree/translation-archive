@@ -13,7 +13,7 @@ dependencyResolutionManagement {
         maven { url 'https://jitpack.io' }
     }
 }
-rootProject.name = "In Place Translate"
+rootProject.name = "Translator"
 include ':app'
 include ':data'
 include ':domain'
