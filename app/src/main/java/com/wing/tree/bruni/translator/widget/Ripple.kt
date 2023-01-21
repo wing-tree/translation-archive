@@ -20,7 +20,7 @@ class Ripple(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
             val typedArray = it.obtainStyledAttributes(attrs, R.styleable.Ripple)
             val color = typedArray.getColor(
                 R.styleable.Ripple_color,
-                it.getColor(R.color.on_surface_ripple)
+                it.getColor(R.color.on_primary_ripple)
             )
 
             paint.color = color
