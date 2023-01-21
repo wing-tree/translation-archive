@@ -18,9 +18,8 @@ abstract class Database : RoomDatabase() {
     abstract val translationDao: TranslationDao
 
     companion object {
-        private const val PACKAGE_NAME = "com.wing.tree.bruni.inPlaceTranslate.data.database"
         private const val CLASS_NAME = "Database"
-        private const val NAME = "$PACKAGE_NAME.$CLASS_NAME"
+        private const val NAME = CLASS_NAME
         private const val VERSION = "1.0.0"
 
         @Volatile
@@ -31,7 +30,7 @@ abstract class Database : RoomDatabase() {
                 return instance ?: Room.databaseBuilder(
                     context.applicationContext,
                     Database::class.java,
-                    "$NAME.$VERSION"
+                    "${context.packageName}.$NAME.$VERSION"
                 )
                     .build()
                     .also {
