@@ -23,7 +23,6 @@
             android:id="@+id/nested_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="@dimen/layout_height_0dp"
-            android:layout_marginVertical="@dimen/layout_margin_vertical_12dp"
             android:fillViewport="true"
             android:requiresFadingEdge="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
