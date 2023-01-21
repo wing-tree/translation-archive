@@ -1,18 +1,22 @@
-package com.wing.tree.bruni.inPlaceTranslate.view
+package com.wing.tree.bruni.translator.view
 
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.speech.SpeechRecognizer
 import android.widget.Toast
 import androidx.annotation.CallSuper
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.wing.tree.bruni.core.constant.EMPTY
+import com.wing.tree.bruni.core.constant.SCHEME_PACKAGE
 import com.wing.tree.bruni.core.extension.*
-import com.wing.tree.bruni.inPlaceTranslate.R
-import com.wing.tree.bruni.inPlaceTranslate.delegate.TextToSpeechDelegate
-import com.wing.tree.bruni.inPlaceTranslate.delegate.TextToSpeechDelegateImpl
-import com.wing.tree.bruni.inPlaceTranslate.viewModel.TranslatorViewModel
+import com.wing.tree.bruni.translator.R
+import com.wing.tree.bruni.translator.delegate.TextToSpeechDelegate
+import com.wing.tree.bruni.translator.delegate.TextToSpeechDelegateImpl
+import com.wing.tree.bruni.translator.viewModel.TranslatorViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import java.util.*
@@ -59,6 +63,28 @@ abstract class TranslatorActivity : SpeechRecognizerActivity(), TextToSpeechDele
 
     private fun updateSourceText(text: CharSequence) {
         sourceText.update { text.string }
+    }
+
+    protected fun showRequestRecordAudioPermissionRationale() {
+        val titleId = R.string.request_record_audio_permission_rationale_material_alert_dialog_title
+        val messageId = R.string.request_record_audio_permission_rationale_material_alert_dialog_message
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle(titleId)
+            .setMessage(messageId)
+            .setPositiveButton(R.string.settings) { dialog, _ ->
+                val uri = Uri.fromParts(SCHEME_PACKAGE, packageName, null)
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                    data = uri
+                }
+
+                startActivity(intent)
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     protected fun showToast(throwable: Throwable) {
