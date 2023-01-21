@@ -7,11 +7,11 @@
 
         <variable
             name="activity"
-            type="com.wing.tree.bruni.inPlaceTranslate.view.TranslatorActivity" />
+            type="com.wing.tree.bruni.translator.view.TranslatorActivity" />
 
         <variable
             name="viewModel"
-            type="com.wing.tree.bruni.inPlaceTranslate.viewModel.TranslatorViewModel" />
+            type="com.wing.tree.bruni.translator.viewModel.TranslatorViewModel" />
 
     </data>
 
