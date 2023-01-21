@@ -10,7 +10,6 @@ import com.wing.tree.bruni.core.extension.*
 import com.wing.tree.bruni.translator.R
 import com.wing.tree.bruni.translator.databinding.ActivityProcessTextBinding
 import com.wing.tree.bruni.translator.view.*
-import com.wing.tree.bruni.translator.view.displayTargetLanguage
 
 internal fun ActivityProcessTextBinding.bottomSheet(processTextActivity: ProcessTextActivity) {
     val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)

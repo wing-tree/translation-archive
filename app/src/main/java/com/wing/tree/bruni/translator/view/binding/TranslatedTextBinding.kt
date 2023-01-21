@@ -1,4 +1,4 @@
-package com.wing.tree.bruni.translator.view
+package com.wing.tree.bruni.translator.view.binding
 
 import androidx.annotation.ColorInt
 import androidx.annotation.StyleRes
@@ -7,6 +7,7 @@ import com.wing.tree.bruni.core.constant.ONE
 import com.wing.tree.bruni.translator.R
 import com.wing.tree.bruni.translator.databinding.TranslatedTextBinding
 import com.wing.tree.bruni.translator.extension.getFloat
+import com.wing.tree.bruni.translator.view.TranslatorActivity
 
 internal fun TranslatedTextBinding.displayTargetLanguage(
     @StyleRes resId: Int,

@@ -15,7 +15,6 @@ import com.wing.tree.bruni.translator.R
 import com.wing.tree.bruni.translator.databinding.ActivityMainBinding
 import com.wing.tree.bruni.translator.view.HistoryActivity
 import com.wing.tree.bruni.translator.view.MainActivity
-import com.wing.tree.bruni.translator.view.nestedScrollView
 import java.util.concurrent.atomic.AtomicBoolean
 
 internal fun ActivityMainBinding.drawerLayout(mainActivity: MainActivity) = with(mainActivity) {
