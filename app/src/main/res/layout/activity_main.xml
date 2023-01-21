@@ -92,7 +92,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/communication"
-                style="@style/Widget.Material3.Button.IconButton.Filled"
+                style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
                 android:layout_width="@dimen/layout_width_56dp"
                 android:layout_height="@dimen/layout_height_56dp"
                 android:layout_gravity="center"
@@ -100,15 +100,14 @@
                 android:insetTop="@dimen/inset_top_0dp"
                 android:insetRight="@dimen/inset_right_0dp"
                 android:insetBottom="@dimen/inset_bottom_0dp"
-                app:icon="@drawable/ic_communication_48"
+                app:icon="@drawable/ic_communication_24"
                 app:iconGravity="textStart"
-                app:iconSize="@dimen/icon_size_28dp"
-                app:iconTint="?colorOnPrimary"
+                app:iconSize="@dimen/icon_size_24dp"
                 app:layout_constraintBottom_toTopOf="@+id/ad_view"
                 app:layout_constraintEnd_toStartOf="@+id/recognize_speech"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraint_layout"
-                app:rippleColor="@color/on_primary_ripple" />
+                app:rippleColor="@color/on_secondary_container_ripple" />
 
             <com.wing.tree.bruni.translator.widget.SpeechRecognitionButton
                 android:id="@+id/recognize_speech"
