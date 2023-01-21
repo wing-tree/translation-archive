@@ -133,6 +133,8 @@ internal fun ActivityMainBinding.navigationView(
 }
 
 internal fun ActivityMainBinding.nestedScrollView(mainActivity: MainActivity) {
-    sourceText.nestedScrollView(mainActivity)
-    translatedText.nestedScrollView(mainActivity)
+    val paddingTop = mainActivity.dimen(R.dimen.padding_top_56dp)
+
+    sourceText.nestedScrollView(mainActivity, paddingTop)
+    translatedText.nestedScrollView(mainActivity, paddingTop)
 }
