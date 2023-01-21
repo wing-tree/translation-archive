@@ -1,4 +1,4 @@
-package com.wing.tree.bruni.inPlaceTranslate.view
+package com.wing.tree.bruni.translator.view
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,11 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wing.tree.bruni.core.extension.launchWithLifecycle
 import com.wing.tree.bruni.core.regular.then
-import com.wing.tree.bruni.inPlaceTranslate.R
-import com.wing.tree.bruni.inPlaceTranslate.adapter.HistoryPagingDataAdapter
-import com.wing.tree.bruni.inPlaceTranslate.constant.EXTRA_HISTORY
-import com.wing.tree.bruni.inPlaceTranslate.databinding.ActivityHistoryBinding
-import com.wing.tree.bruni.inPlaceTranslate.viewModel.HistoryViewModel
+import com.wing.tree.bruni.translator.R
+import com.wing.tree.bruni.translator.adapter.HistoryPagingDataAdapter
+import com.wing.tree.bruni.translator.constant.EXTRA_HISTORY
+import com.wing.tree.bruni.translator.databinding.ActivityHistoryBinding
+import com.wing.tree.bruni.translator.viewModel.HistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
