@@ -3,6 +3,7 @@ package com.wing.tree.bruni.translator.widget
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
+import androidx.core.view.updateLayoutParams
 import com.wing.tree.bruni.core.constant.ONE
 import com.wing.tree.bruni.core.constant.TWO
 import com.wing.tree.bruni.core.extension.*
@@ -24,6 +25,7 @@ class SpeechRecognitionButton : FrameLayout {
     )
 
     private val configShortAnimTime = resources.configShortAnimTime.long
+    private val decelerateQuadInterpolator = context.decelerateQuadInterpolator
     private val duration = configShortAnimTime
     private val materialButton = binding.materialButton
     private val ripple = binding.ripple
@@ -32,6 +34,9 @@ class SpeechRecognitionButton : FrameLayout {
     private val scaleFactor = MAXIMUM_SCALE
         .minus(MINIMUM_SCALE)
         .div(MAXIMUM_RMS_dB)
+
+    private val start = binding.start
+    private val stop = binding.stop
 
     private var job: Job? = null
 
@@ -77,13 +82,24 @@ class SpeechRecognitionButton : FrameLayout {
             .getDimension(R.styleable.SpeechRecognitionButton_iconSize, context.dimen(R.dimen.icon_size_24dp))
             .roundToInt()
 
-        materialButton.iconSize = iconSize
+        start.updateLayoutParams {
+            width = iconSize
+            height = iconSize
+        }
+
+        stop.updateLayoutParams {
+            width = iconSize
+            height = iconSize
+        }
 
         typedArray.recycle()
     }
 
     private fun startListening() {
-        materialButton.icon = context.drawable(R.drawable.ic_round_stop_24)
+        start.crossFade(
+            target = stop,
+            duration = duration
+        )
 
         ripple.animate()
             .setDuration(duration)
@@ -100,6 +116,7 @@ class SpeechRecognitionButton : FrameLayout {
 
                             ripple.animate()
                                 .setDuration(duration)
+                                .setInterpolator(decelerateQuadInterpolator)
                                 .scale(scale)
                                 .withLayer()
                         }
@@ -110,10 +127,14 @@ class SpeechRecognitionButton : FrameLayout {
     }
 
     private fun stopListening() {
-        materialButton.icon = context.drawable(R.drawable.ic_round_mic_24)
+        stop.crossFade(
+            target = start,
+            duration = duration
+        )
 
         ripple.animate()
             .setDuration(duration)
+            .setInterpolator(decelerateQuadInterpolator)
             .scale(ONE.float)
             .withStartAction {
                 job?.cancel()

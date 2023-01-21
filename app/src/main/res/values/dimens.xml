@@ -11,6 +11,14 @@
     <dimen name="icon_size_40dp">40dp</dimen>
     <dimen name="icon_size_48dp">48dp</dimen>
 
+    <dimen name="inset_bottom_0dp">0dp</dimen>
+
+    <dimen name="inset_left_0dp">0dp</dimen>
+
+    <dimen name="inset_right_0dp">0dp</dimen>
+
+    <dimen name="inset_top_0dp">0dp</dimen>
+
     <dimen name="layout_height_0dp">0dp</dimen>
     <dimen name="layout_height_4dp">4dp</dimen>
     <dimen name="layout_height_8dp">8dp</dimen>

@@ -5,12 +5,11 @@
     android:layout_height="match_parent"
     tools:parentTag="android.widget.FrameLayout">
 
-    <com.wing.tree.bruni.inPlaceTranslate.widget.Ripple
+    <com.wing.tree.bruni.translator.widget.Ripple
         android:id="@+id/ripple"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_margin="@dimen/layout_margin_4dp"
         android:clickable="false"
         android:focusable="false"
         app:color="@color/on_secondary_container_ripple" />
@@ -21,7 +20,33 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        app:icon="@drawable/ic_round_mic_24"
-        app:iconGravity="textStart" />
+        android:insetLeft="@dimen/inset_left_0dp"
+        android:insetTop="@dimen/inset_top_0dp"
+        android:insetRight="@dimen/inset_right_0dp"
+        android:insetBottom="@dimen/inset_bottom_0dp"
+        app:rippleColor="@color/on_secondary_container_ripple" />
+
+    <ImageView
+        android:id="@+id/start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:clickable="false"
+        android:focusable="false"
+        android:src="@drawable/ic_round_mic_24"
+        app:tint="?colorOnSecondaryContainer"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:clickable="false"
+        android:focusable="false"
+        android:visibility="invisible"
+        android:src="@drawable/ic_round_stop_24"
+        app:tint="?colorOnSecondaryContainer"
+        tools:ignore="ContentDescription" />
 
 </merge>
