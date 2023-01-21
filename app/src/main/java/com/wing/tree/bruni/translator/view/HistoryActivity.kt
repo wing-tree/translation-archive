@@ -53,7 +53,6 @@ class HistoryActivity : AppCompatActivity() {
         setSupportActionBar(materialToolbar)
 
         supportActionBar?.let {
-            it.setTitle(R.string.history)
             it.setDisplayShowHomeEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
         }
