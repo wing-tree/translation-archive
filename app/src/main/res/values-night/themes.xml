@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.InPlaceTranslate" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.Translator" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryContainer">@color/primary_container</item>
@@ -37,7 +37,7 @@
         <item name="android:shadowColor">@color/shadow</item>
     </style>
 
-    <style name="Theme.InPlaceTranslate.ProcessText" parent="Theme.InPlaceTranslate">
+    <style name="Theme.InPlaceTranslate.ProcessText" parent="Theme.Translator">
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
