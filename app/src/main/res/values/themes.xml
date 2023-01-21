@@ -37,7 +37,7 @@
         <item name="android:shadowColor">@color/shadow</item>
     </style>
 
-    <style name="Theme.InPlaceTranslate.ProcessText" parent="Theme.Translator">
+    <style name="Theme.Translator.ProcessText" parent="Theme.Translator">
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>

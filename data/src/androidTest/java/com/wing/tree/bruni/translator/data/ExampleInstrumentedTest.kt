@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.wing.tree.bruni.inPlaceTranslate.data.test", appContext.packageName)
+        assertEquals("com.wing.tree.bruni.translator.data.test", appContext.packageName)
     }
 }
