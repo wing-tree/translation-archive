@@ -12,11 +12,11 @@
         android:layout_gravity="center"
         android:clickable="false"
         android:focusable="false"
-        app:color="@color/on_secondary_container_ripple" />
+        app:color="@color/primary_ripple" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/material_button"
-        style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+        style="@style/Widget.Material3.Button.IconButton.Filled"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
@@ -24,7 +24,7 @@
         android:insetTop="@dimen/inset_top_0dp"
         android:insetRight="@dimen/inset_right_0dp"
         android:insetBottom="@dimen/inset_bottom_0dp"
-        app:rippleColor="@color/on_secondary_container_ripple" />
+        app:rippleColor="@color/on_primary_ripple" />
 
     <ImageView
         android:id="@+id/start"
@@ -34,7 +34,7 @@
         android:clickable="false"
         android:focusable="false"
         android:src="@drawable/ic_round_mic_24"
-        app:tint="?colorOnSecondaryContainer"
+        app:tint="?colorOnPrimary"
         tools:ignore="ContentDescription" />
 
     <ImageView
@@ -46,7 +46,7 @@
         android:focusable="false"
         android:visibility="invisible"
         android:src="@drawable/ic_round_stop_24"
-        app:tint="?colorOnSecondaryContainer"
+        app:tint="?colorOnPrimary"
         tools:ignore="ContentDescription" />
 
 </merge>
