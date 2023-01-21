@@ -65,6 +65,10 @@ class TranslationRepositoryImpl @Inject constructor(
         sourceText: String,
         target: String
     ): List<Model> {
+        if (sourceText.isBlank()) {
+            return emptyList()
+        }
+
         return when(dataSource) {
             DataSource.DEFAULT -> {
                 val translations = try {
