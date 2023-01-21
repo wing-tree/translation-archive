@@ -19,6 +19,11 @@ import com.wing.tree.bruni.translator.adapter.HistoryPagingDataAdapter
 import com.wing.tree.bruni.translator.constant.EXTRA_HISTORY
 import com.wing.tree.bruni.translator.databinding.ActivityMainBinding
 import com.wing.tree.bruni.translator.extension.bannerAd
+import com.wing.tree.bruni.translator.view.binding.*
+import com.wing.tree.bruni.translator.view.binding.drawerLayout
+import com.wing.tree.bruni.translator.view.binding.materialButton
+import com.wing.tree.bruni.translator.view.binding.materialToolbar
+import com.wing.tree.bruni.translator.view.binding.navigationView
 import com.wing.tree.bruni.translator.viewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.zip

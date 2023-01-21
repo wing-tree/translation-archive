@@ -17,6 +17,11 @@ import com.wing.tree.bruni.translator.ad.InterstitialAdLoader
 import com.wing.tree.bruni.translator.ad.InterstitialAdLoaderImpl
 import com.wing.tree.bruni.translator.databinding.ActivityProcessTextBinding
 import com.wing.tree.bruni.translator.extension.bannerAd
+import com.wing.tree.bruni.translator.view.binding.*
+import com.wing.tree.bruni.translator.view.binding.bottomSheet
+import com.wing.tree.bruni.translator.view.binding.materialButton
+import com.wing.tree.bruni.translator.view.binding.nestedScrollView
+import com.wing.tree.bruni.translator.view.binding.sourceText
 import com.wing.tree.bruni.translator.viewModel.ProcessTextViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.zip

@@ -1,4 +1,4 @@
-package com.wing.tree.bruni.translator.view
+package com.wing.tree.bruni.translator.view.binding
 
 import androidx.annotation.StyleRes
 import androidx.core.view.updatePadding
@@ -6,6 +6,7 @@ import com.wing.tree.bruni.core.constant.ONE
 import com.wing.tree.bruni.translator.R
 import com.wing.tree.bruni.translator.databinding.SourceTextBinding
 import com.wing.tree.bruni.translator.extension.getFloat
+import com.wing.tree.bruni.translator.view.TranslatorActivity
 
 internal fun SourceTextBinding.displaySourceLanguage(@StyleRes resId: Int) {
     displaySourceLanguage.setTextAppearance(resId)
