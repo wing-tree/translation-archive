@@ -28,20 +28,16 @@
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/material_toolbar"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/layout_width_0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:navigationIcon="@drawable/ic_round_menu_24"
-                app:navigationIconTint="?attr/colorOnSurface"
-                app:titleMarginTop="0dp">
-
-            </com.google.android.material.appbar.MaterialToolbar>
+                app:navigationIcon="@drawable/ic_round_menu_24" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_width="@dimen/layout_width_0dp"
+                android:layout_height="@dimen/layout_height_0dp"
                 android:layout_marginBottom="@dimen/layout_margin_bottom_24dp"
                 android:clipChildren="false"
                 android:clipToPadding="false"
@@ -67,7 +63,7 @@
                     android:id="@+id/translated_text"
                     layout="@layout/translated_text"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="@dimen/layout_height_0dp"
                     android:layout_marginTop="@dimen/layout_margin_top_24dp"
                     app:activity="@{activity}"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -96,10 +92,10 @@
             <com.wing.tree.bruni.inPlaceTranslate.widget.SpeechRecognitionButton
                 android:id="@+id/recognize_speech"
                 isListening="@{viewModel.isListening()}"
-                android:layout_width="@dimen/layout_width_72dp"
-                android:layout_height="@dimen/layout_height_72dp"
+                android:layout_width="@dimen/layout_width_64dp"
+                android:layout_height="@dimen/layout_height_64dp"
                 android:layout_marginBottom="@dimen/layout_margin_bottom_24dp"
-                app:iconSize="@dimen/icon_size_36dp"
+                app:iconSize="@dimen/icon_size_28dp"
                 app:layout_constraintBottom_toTopOf="@+id/ad_view"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -107,7 +103,7 @@
 
             <FrameLayout
                 android:id="@+id/ad_view"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/layout_width_0dp"
                 android:layout_height="@dimen/layout_height_50dp"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"

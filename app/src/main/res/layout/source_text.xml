@@ -22,7 +22,7 @@
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nested_scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="@dimen/layout_height_0dp"
             android:fillViewport="true"
             android:requiresFadingEdge="vertical"
             app:layout_constraintEnd_toEndOf="parent"
@@ -40,7 +40,7 @@
                 android:inputType="textMultiLine"
                 android:maxLength="@integer/limit_characters"
                 android:paddingHorizontal="@dimen/padding_horizontal_24dp"
-                android:paddingTop="@dimen/padding_top_48dp"
+                android:paddingTop="@dimen/padding_top_56dp"
                 android:text="@={viewModel.sourceText}"
                 android:textAppearance="@style/TextAppearance.HeadlineMedium"
                 tools:ignore="Autofill,LabelFor"
