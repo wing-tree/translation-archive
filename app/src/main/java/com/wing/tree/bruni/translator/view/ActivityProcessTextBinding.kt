@@ -1,4 +1,4 @@
-package com.wing.tree.bruni.inPlaceTranslate.view
+package com.wing.tree.bruni.translator.view
 
 import android.os.Handler
 import android.os.Looper
@@ -7,8 +7,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.wing.tree.bruni.core.constant.ONE
 import com.wing.tree.bruni.core.constant.ZERO
 import com.wing.tree.bruni.core.extension.*
-import com.wing.tree.bruni.inPlaceTranslate.R
-import com.wing.tree.bruni.inPlaceTranslate.databinding.ActivityProcessTextBinding
+import com.wing.tree.bruni.translator.R
+import com.wing.tree.bruni.translator.databinding.ActivityProcessTextBinding
 
 internal fun ActivityProcessTextBinding.bottomSheet(processTextActivity: ProcessTextActivity) {
     val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)

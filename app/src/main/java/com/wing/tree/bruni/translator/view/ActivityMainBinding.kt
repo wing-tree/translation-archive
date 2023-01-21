@@ -1,4 +1,4 @@
-package com.wing.tree.bruni.inPlaceTranslate.view
+package com.wing.tree.bruni.translator.view
 
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
@@ -11,8 +11,8 @@ import com.wing.tree.bruni.core.constant.ONE
 import com.wing.tree.bruni.core.constant.ZERO
 import com.wing.tree.bruni.core.extension.*
 import com.wing.tree.bruni.core.regular.then
-import com.wing.tree.bruni.inPlaceTranslate.R
-import com.wing.tree.bruni.inPlaceTranslate.databinding.ActivityMainBinding
+import com.wing.tree.bruni.translator.R
+import com.wing.tree.bruni.translator.databinding.ActivityMainBinding
 import java.util.concurrent.atomic.AtomicBoolean
 
 internal fun ActivityMainBinding.drawerLayout(mainActivity: MainActivity) = with(mainActivity) {
