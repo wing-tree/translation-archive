@@ -1,8 +1,10 @@
-package com.wing.tree.bruni.inPlaceTranslate.view
+package com.wing.tree.bruni.translator.view
 
+import android.Manifest
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import com.google.android.gms.ads.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -10,12 +12,12 @@ import com.wing.tree.bruni.core.extension.*
 import com.wing.tree.bruni.core.regular.gone
 import com.wing.tree.bruni.core.regular.visible
 import com.wing.tree.bruni.core.useCase.Result
-import com.wing.tree.bruni.inPlaceTranslate.R
-import com.wing.tree.bruni.inPlaceTranslate.ad.InterstitialAdLoader
-import com.wing.tree.bruni.inPlaceTranslate.ad.InterstitialAdLoaderImpl
-import com.wing.tree.bruni.inPlaceTranslate.databinding.ActivityProcessTextBinding
-import com.wing.tree.bruni.inPlaceTranslate.extension.bannerAd
-import com.wing.tree.bruni.inPlaceTranslate.viewModel.ProcessTextViewModel
+import com.wing.tree.bruni.translator.R
+import com.wing.tree.bruni.translator.ad.InterstitialAdLoader
+import com.wing.tree.bruni.translator.ad.InterstitialAdLoaderImpl
+import com.wing.tree.bruni.translator.databinding.ActivityProcessTextBinding
+import com.wing.tree.bruni.translator.extension.bannerAd
+import com.wing.tree.bruni.translator.viewModel.ProcessTextViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.zip
 
@@ -43,6 +45,13 @@ class ProcessTextActivity : TranslatorActivity(), InterstitialAdLoader by Inters
                 it.viewModel = viewModel
             }
     }
+    private val requestRecordAudioPermissionsLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()) { result ->
+        if (result) {
+            startSpeechRecognition(sourceLanguage)
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +66,9 @@ class ProcessTextActivity : TranslatorActivity(), InterstitialAdLoader by Inters
         loadInterstitialAd(this)
     }
 
-    override fun onRmsChanged(rmsdB: Float) = Unit
+    override fun onRmsChanged(rmsdB: Float) {
+        updateRmsdB(rmsdB)
+    }
 
     private fun initTextToSpeech() {
         initTextToSpeech(this) { status ->
@@ -74,12 +85,39 @@ class ProcessTextActivity : TranslatorActivity(), InterstitialAdLoader by Inters
         }
     }
 
-    private fun ActivityProcessTextBinding.bind(processTextActivity: ProcessTextActivity) {
-        bottomSheet(processTextActivity)
-        materialButton(processTextActivity)
-        nestedScrollView(processTextActivity)
+    private fun updateRmsdB(rmsdB: Float) = with(binding) {
+        recognizeSpeech.updateRmsdB(rmsdB)
+    }
+
+    private fun ActivityProcessTextBinding.bind(
+        processTextActivity: ProcessTextActivity
+    ) = with(processTextActivity) {
+        bottomSheet(this)
+        materialButton(this)
+        nestedScrollView(this)
+        sourceText(this)
+        speechRecognitionButton()
+        translatedText(this)
 
         bannerAd(adView, AdSize(AD_WIDTH, AD_HEIGHT))
+    }
+
+    private fun ActivityProcessTextBinding.speechRecognitionButton() {
+        with(recognizeSpeech) {
+            setOnClickListener {
+                if (isListening)
+                    stopSpeechRecognition()
+                else {
+                    when {
+                        checkPermission(Manifest.permission.RECORD_AUDIO) ->
+                            startSpeechRecognition(sourceLanguage)
+                        shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO) ->
+                            showRequestRecordAudioPermissionRationale()
+                        else -> requestRecordAudioPermissionsLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                    }
+                }
+            }
+        }
     }
 
     private fun ProcessTextViewModel.collect() {

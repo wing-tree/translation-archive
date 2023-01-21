@@ -1,4 +1,4 @@
-package com.wing.tree.bruni.inPlaceTranslate.view
+package com.wing.tree.bruni.translator.view
 
 import android.Manifest
 import android.os.Build
@@ -12,16 +12,15 @@ import com.wing.tree.bruni.core.extension.*
 import com.wing.tree.bruni.core.regular.gone
 import com.wing.tree.bruni.core.regular.visible
 import com.wing.tree.bruni.core.useCase.Result
-import com.wing.tree.bruni.inPlaceTranslate.R
-import com.wing.tree.bruni.inPlaceTranslate.ad.InterstitialAdLoader
-import com.wing.tree.bruni.inPlaceTranslate.ad.InterstitialAdLoaderImpl
-import com.wing.tree.bruni.inPlaceTranslate.adapter.HistoryPagingDataAdapter
-import com.wing.tree.bruni.inPlaceTranslate.constant.EXTRA_HISTORY
-import com.wing.tree.bruni.inPlaceTranslate.databinding.ActivityMainBinding
-import com.wing.tree.bruni.inPlaceTranslate.extension.bannerAd
-import com.wing.tree.bruni.inPlaceTranslate.viewModel.MainViewModel
+import com.wing.tree.bruni.translator.R
+import com.wing.tree.bruni.translator.ad.InterstitialAdLoader
+import com.wing.tree.bruni.translator.ad.InterstitialAdLoaderImpl
+import com.wing.tree.bruni.translator.adapter.HistoryPagingDataAdapter
+import com.wing.tree.bruni.translator.constant.EXTRA_HISTORY
+import com.wing.tree.bruni.translator.databinding.ActivityMainBinding
+import com.wing.tree.bruni.translator.extension.bannerAd
+import com.wing.tree.bruni.translator.viewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.zip
 
 @AndroidEntryPoint
@@ -98,16 +97,16 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
     }
 
     private fun updateRmsdB(rmsdB: Float) = with(binding) {
-        recognizeSpeech.rmsdB.update { rmsdB }
+        recognizeSpeech.updateRmsdB(rmsdB)
     }
 
-    private fun ActivityMainBinding.bind(mainActivity: MainActivity) {
-        materialToolbar(mainActivity)
+    private fun ActivityMainBinding.bind(mainActivity: MainActivity) = with(mainActivity) {
+        materialToolbar(this)
 
-        drawerLayout(mainActivity)
-        materialButton(mainActivity)
-        navigationView(activityResultLauncher, mainActivity)
-        nestedScrollView(mainActivity)
+        drawerLayout(this)
+        materialButton(this)
+        navigationView(activityResultLauncher, this)
+        nestedScrollView(this)
         speechRecognitionButton()
 
         bannerAd(adView, AdSize.BANNER)
