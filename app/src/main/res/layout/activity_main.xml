@@ -26,17 +26,26 @@
             android:clipChildren="false"
             android:clipToPadding="false">
 
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/material_toolbar"
+                android:layout_width="@dimen/layout_width_0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:navigationIcon="@drawable/ic_round_menu_24" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraint_layout"
                 android:layout_width="@dimen/layout_width_0dp"
                 android:layout_height="@dimen/layout_height_0dp"
-                android:layout_marginVertical="@dimen/layout_margin_vertical_20dp"
+                android:layout_marginBottom="@dimen/layout_margin_bottom_20dp"
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 app:layout_constraintBottom_toTopOf="@+id/recognize_speech"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@+id/material_toolbar">
 
                 <include
                     android:id="@+id/source_text"
@@ -80,16 +89,6 @@
                     app:showAnimationBehavior="outward" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/material_toolbar"
-                android:layout_width="@dimen/layout_width_0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toTopOf="@+id/ad_view"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraint_layout"
-                app:navigationIcon="@drawable/ic_round_menu_24" />
 
             <com.wing.tree.bruni.translator.widget.SpeechRecognitionButton
                 android:id="@+id/recognize_speech"
