@@ -1,15 +1,31 @@
 package com.wing.tree.bruni.inPlaceTranslate.view
 
+import androidx.annotation.ColorInt
+import androidx.annotation.StyleRes
+import androidx.core.view.updatePadding
 import com.wing.tree.bruni.core.constant.ONE
-import com.wing.tree.bruni.core.extension.dimen
 import com.wing.tree.bruni.inPlaceTranslate.R
 import com.wing.tree.bruni.inPlaceTranslate.databinding.TranslatedTextBinding
 import com.wing.tree.bruni.inPlaceTranslate.extension.getFloat
 
+internal fun TranslatedTextBinding.displayTargetLanguage(
+    @StyleRes resId: Int,
+    @ColorInt color: Int
+) {
+    displayTargetLanguage.setTextAppearance(resId)
+    displayTargetLanguage.setTextColor(color)
+}
+
+internal fun TranslatedTextBinding.materialButton(iconSize: Int) {
+    copyTranslatedTextToClipboard.iconSize = iconSize
+    shareTranslatedText.iconSize = iconSize
+    speakTranslatedText.iconSize = iconSize
+}
+
 internal fun TranslatedTextBinding.nestedScrollView(
-    translatorActivity: TranslatorActivity
+    translatorActivity: TranslatorActivity,
+    paddingTop: Float
 ) = with(translatorActivity) {
-    val paddingTop = dimen(R.dimen.padding_top_48dp)
     val maximumValue = ONE
     val minimumValue = getFloat(R.dimen.alpha_0_20)
     val constantOfProportionality = maximumValue
@@ -21,4 +37,14 @@ internal fun TranslatedTextBinding.nestedScrollView(
 
         linearLayout.alpha = alpha.coerceAtLeast(minimumValue)
     }
+}
+
+internal fun TranslatedTextBinding.translatedText(
+    @StyleRes resId: Int,
+    @ColorInt color: Int,
+    paddingTop: Int
+) = with(translatedText) {
+    setTextAppearance(resId)
+    setTextColor(color)
+    updatePadding(top = paddingTop)
 }
