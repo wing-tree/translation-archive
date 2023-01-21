@@ -58,7 +58,7 @@ class HistoryViewModel @Inject constructor(
                     HistoryPagingDataAdapter.Item.TranslatedOn(it.translatedOn)
                 }
                 after.isNull() -> null
-                before.translatedOn.isAfter(after.translatedOn) ->
+                before.translatedOn.after(after.translatedOn) ->
                     HistoryPagingDataAdapter.Item.TranslatedOn(after.translatedOn)
                 else -> null
             }
