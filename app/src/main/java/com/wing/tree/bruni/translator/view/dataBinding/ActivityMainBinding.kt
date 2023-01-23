@@ -1,4 +1,4 @@
-package com.wing.tree.bruni.translator.view.binding
+package com.wing.tree.bruni.translator.view.dataBinding
 
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher

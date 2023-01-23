@@ -1,4 +1,4 @@
-package com.wing.tree.bruni.translator.view.binding
+package com.wing.tree.bruni.translator.view.dataBinding
 
 import androidx.annotation.ColorInt
 import androidx.annotation.StyleRes
