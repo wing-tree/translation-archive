@@ -6,6 +6,7 @@
     <string name="close_drawer" translatable="false">close drawer</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="enter_your_text">Enter your text.</string>
+    <string name="favorites">Favorites</string>
     <string name="history">History</string>
     <string name="language_data_is_missing">Language data is missing</string>
     <string name="language_is_not_supported">Language is not supported</string>
