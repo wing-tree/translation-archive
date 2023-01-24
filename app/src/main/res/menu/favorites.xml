@@ -6,6 +6,7 @@
         android:id="@+id/favorites"
         android:icon="@drawable/ic_round_star_24"
         android:title="@string/favorites"
+        app:iconTint="?colorOnSurfaceVariant"
         app:showAsAction="always" />
 
 </menu>
