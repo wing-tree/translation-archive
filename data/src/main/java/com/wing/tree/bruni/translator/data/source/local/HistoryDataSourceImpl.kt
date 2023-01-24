@@ -11,6 +11,10 @@ class HistoryDataSourceImpl @Inject constructor(database: Database) : HistoryDat
         historyDao.clearAll()
     }
 
+    override suspend fun delete(history: History) {
+        historyDao.delete(history)
+    }
+
     override suspend fun insert(history: History) {
         historyDao.insert(history)
     }
@@ -25,6 +29,10 @@ class HistoryDataSourceImpl @Inject constructor(database: Database) : HistoryDat
 
     override suspend fun load(key: Int, loadSize: Int): List<History> {
         return historyDao.load(key, loadSize)
+    }
+
+    override suspend fun loadFavorites(key: Int, loadSize: Int): List<History> {
+        return historyDao.loadFavorites(key, loadSize)
     }
 
     override suspend fun updateFavorite(rowid: Int, isFavorite: Boolean) {

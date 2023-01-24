@@ -9,7 +9,8 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class HistoryPagingSource @Inject constructor(
-    private val historyDataSource: HistoryDataSource
+    private val historyDataSource: HistoryDataSource,
+    private val loadFavorites: Boolean = false
 ) : PagingSource<Int, History>() {
     private val ioDispatcher = Dispatchers.IO
 
@@ -24,7 +25,11 @@ class HistoryPagingSource @Inject constructor(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, History> {
         val key = params.key ?: INITIAL_KEY
         val data = withContext(ioDispatcher) {
-            historyDataSource.load(key, params.loadSize)
+            if (loadFavorites) {
+                historyDataSource.loadFavorites(key, params.loadSize)
+            } else {
+                historyDataSource.load(key, params.loadSize)
+            }
         }
 
         return LoadResult.Page(
