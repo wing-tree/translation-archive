@@ -15,15 +15,11 @@ import com.wing.tree.bruni.core.useCase.Result
 import com.wing.tree.bruni.translator.R
 import com.wing.tree.bruni.translator.ad.InterstitialAdLoader
 import com.wing.tree.bruni.translator.ad.InterstitialAdLoaderImpl
-import com.wing.tree.bruni.translator.adapter.HistoryPagingDataAdapter
 import com.wing.tree.bruni.translator.constant.EXTRA_HISTORY
 import com.wing.tree.bruni.translator.databinding.ActivityMainBinding
 import com.wing.tree.bruni.translator.extension.bannerAd
-import com.wing.tree.bruni.translator.view.binding.*
-import com.wing.tree.bruni.translator.view.binding.drawerLayout
-import com.wing.tree.bruni.translator.view.binding.materialButton
-import com.wing.tree.bruni.translator.view.binding.materialToolbar
-import com.wing.tree.bruni.translator.view.binding.navigationView
+import com.wing.tree.bruni.translator.model.History
+import com.wing.tree.bruni.translator.view.dataBinding.*
 import com.wing.tree.bruni.translator.viewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.zip
@@ -39,9 +35,9 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
             val data = result.data
 
             data?.let {
-                val history: HistoryPagingDataAdapter.Item.History =
+                val history: History.Item =
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        val clazz = HistoryPagingDataAdapter.Item.History::class.java
+                        val clazz = History.Item::class.java
 
                         it.getParcelableExtra(EXTRA_HISTORY, clazz) ?: return@let
                     } else {
