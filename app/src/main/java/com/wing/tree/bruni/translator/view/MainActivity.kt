@@ -1,9 +1,12 @@
 package com.wing.tree.bruni.translator.view
 
 import android.Manifest
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import com.google.android.gms.ads.AdSize
@@ -16,6 +19,7 @@ import com.wing.tree.bruni.translator.R
 import com.wing.tree.bruni.translator.ad.InterstitialAdLoader
 import com.wing.tree.bruni.translator.ad.InterstitialAdLoaderImpl
 import com.wing.tree.bruni.translator.constant.EXTRA_HISTORY
+import com.wing.tree.bruni.translator.constant.EXTRA_LOAD_FAVORITES
 import com.wing.tree.bruni.translator.databinding.ActivityMainBinding
 import com.wing.tree.bruni.translator.extension.bannerAd
 import com.wing.tree.bruni.translator.model.History
@@ -76,6 +80,30 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
         translateProcessText(intent)
         initTextToSpeech()
         loadInterstitialAd(this)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.favorites, menu)
+
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.favorites -> {
+                val intent = Intent(this, HistoryActivity::class.java).apply {
+                    putExtra(EXTRA_LOAD_FAVORITES, true)
+                }
+
+                startActivity(intent)
+                overridePendingTransition(
+                    R.anim.slide_in_right,
+                    R.anim.slide_out_left
+                )
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onRmsChanged(rmsdB: Float) {
