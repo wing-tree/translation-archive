@@ -1,12 +1,12 @@
 package com.wing.tree.bruni.translator.mapper
 
+import com.wing.tree.bruni.translator.data.entity.History
 import com.wing.tree.bruni.translator.data.mapper.EntityMapper
-import com.wing.tree.bruni.translator.adapter.HistoryPagingDataAdapter.Item.History as Model
-import com.wing.tree.bruni.translator.data.entity.History as Entity
+import com.wing.tree.bruni.translator.model.History.Item
 
-class HistoryMapper : EntityMapper<Entity, Model> {
-    override fun toModel(entity: Entity): Model {
-        return Model(
+class HistoryMapper : EntityMapper<History, Item> {
+    override fun toModel(entity: History): Item {
+        return Item(
             rowid = entity.rowid,
             detectedSourceLanguage = entity.detectedSourceLanguage,
             isFavorite = entity.isFavorite,

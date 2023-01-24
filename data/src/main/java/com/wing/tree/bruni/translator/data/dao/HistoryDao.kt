@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.wing.tree.bruni.core.constant.ONE
 import com.wing.tree.bruni.translator.data.entity.History
 
 @Dao
@@ -23,6 +24,16 @@ interface HistoryDao {
 
     @Query("SELECT *, rowid FROM history ORDER BY translated_at DESC LIMIT :loadSize OFFSET :key * :loadSize")
     suspend fun load(key: Int, loadSize: Int): List<History>
+
+
+
+    @Query(
+        """
+            SELECT *, rowid FROM history WHERE is_favorite = $ONE 
+            ORDER BY translated_at DESC LIMIT :loadSize OFFSET :key * :loadSize
+        """
+    )
+    suspend fun loadFavorites(key: Int, loadSize: Int): List<History>
 
     @Query("SELECT is_favorite FROM history WHERE rowid = :rowid")
     suspend fun isFavorite(rowid: Int): Boolean?
