@@ -12,6 +12,7 @@
     <string name="language_is_not_supported">Language is not supported</string>
     <string name="open_drawer" translatable="false">open drawer</string>
     <string name="pattern">M월 d, yyyy</string>
+    <string name="remove_ads">Remove ads</string>
     <string name="request_record_audio_permission_rationale_material_alert_dialog_message">Allow Translator to access your microphone so it can do speech recognition.</string>
     <string name="request_record_audio_permission_rationale_material_alert_dialog_title">Permission for microphone was denied</string>
     <string name="settings">Settings</string>
