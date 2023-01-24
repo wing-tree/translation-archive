@@ -10,6 +10,11 @@
                 android:id="@+id/clear_all"
                 android:icon="@drawable/ic_round_clear_all_24"
                 android:title="@string/clear_all" />
+
+            <item
+                android:id="@+id/favorites"
+                android:icon="@drawable/ic_round_star_24"
+                android:title="@string/favorites" />
         </menu>
     </item>
 </menu>

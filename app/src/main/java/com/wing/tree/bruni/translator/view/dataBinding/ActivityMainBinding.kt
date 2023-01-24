@@ -12,6 +12,7 @@ import com.wing.tree.bruni.core.constant.ZERO
 import com.wing.tree.bruni.core.extension.*
 import com.wing.tree.bruni.core.regular.then
 import com.wing.tree.bruni.translator.R
+import com.wing.tree.bruni.translator.constant.EXTRA_LOAD_FAVORITES
 import com.wing.tree.bruni.translator.databinding.ActivityMainBinding
 import com.wing.tree.bruni.translator.view.HistoryActivity
 import com.wing.tree.bruni.translator.view.MainActivity
@@ -113,6 +114,7 @@ internal fun ActivityMainBinding.navigationView(
 
                         shouldCloseDrawer.set(true)
                     }
+
                 false
             }
             R.id.clear_all -> {
@@ -127,6 +129,22 @@ internal fun ActivityMainBinding.navigationView(
                         dialog.dismiss()
                     }
                     .show()
+
+                false
+            }
+            R.id.favorites -> {
+                val intent = Intent(this, HistoryActivity::class.java).apply {
+                    putExtra(EXTRA_LOAD_FAVORITES, true)
+                }
+
+                startActivity(intent)
+                overridePendingTransition(
+                    android.R.anim.slide_in_left,
+                    android.R.anim.slide_out_right
+                )
+
+                shouldCloseDrawer.set(true)
+
                 false
             }
             else -> true
