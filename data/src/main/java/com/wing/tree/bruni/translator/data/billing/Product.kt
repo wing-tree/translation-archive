@@ -5,7 +5,10 @@ import com.wing.tree.bruni.billing.model.Type
 import com.wing.tree.bruni.translator.data.billing.Product.RemoveAds
 
 object Product {
-    val RemoveAds = Product("remove_ads", Type.INAPP(consumable = false))
+    val RemoveAds = Product(
+        id = "remove_ads",
+        type = Type.INAPP(consumable = false)
+    )
 }
 
 val products = listOf(
