@@ -165,6 +165,14 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
 
     private fun MainViewModel.collect() {
         launchWithLifecycle {
+            result.collect {
+                if (it is Result.Failure) {
+                    showToast(it.throwable)
+                }
+            }
+        }
+
+        launchWithLifecycle {
             adsRemoved.zip(characters) { adsRemoved, characters ->
                 when {
                     adsRemoved -> false
@@ -186,14 +194,6 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
                     )
 
                     clearCharacters()
-                }
-            }
-        }
-
-        launchWithLifecycle {
-            result.collect {
-                if (it is Result.Failure) {
-                    showToast(it.throwable)
                 }
             }
         }
