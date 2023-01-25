@@ -17,4 +17,9 @@
                 android:title="@string/favorites" />
         </menu>
     </item>
+
+    <item
+        android:id="@+id/in_app_products"
+        android:icon="@drawable/ic_shopping_cart_24"
+        android:title="@string/in_app_products" />
 </menu>
