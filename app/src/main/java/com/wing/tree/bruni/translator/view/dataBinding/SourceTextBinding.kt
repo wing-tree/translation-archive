@@ -38,7 +38,7 @@ internal fun SourceTextBinding.nestedScrollView(
 internal fun SourceTextBinding.sourceText(
     @StyleRes resId: Int,
     paddingTop: Int
-) {
-    sourceText.setTextAppearance(resId)
-    sourceText.updatePadding(top = paddingTop)
+) = with(sourceText) {
+    setTextAppearance(resId)
+    updatePadding(top = paddingTop)
 }
