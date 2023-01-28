@@ -38,6 +38,10 @@
             android:exported="true" />
 
         <activity
+            android:name=".view.InAppProductsActivity"
+            android:exported="true" />
+
+        <activity
             android:name=".view.ProcessTextActivity"
             android:exported="true"
             android:label="@string/translate"
