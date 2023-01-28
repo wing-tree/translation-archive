@@ -43,7 +43,7 @@
                 android:paddingHorizontal="@dimen/padding_horizontal_20dp"
                 android:paddingTop="@dimen/padding_top_56dp"
                 android:text="@={viewModel.sourceText}"
-                android:textAppearance="@style/TextAppearance.HeadlineMedium"
+                android:textAppearance="@style/TextAppearance.HeadlineLarge"
                 tools:ignore="Autofill,LabelFor"
                 tools:text="Source Text" />
 
