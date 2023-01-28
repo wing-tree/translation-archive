@@ -34,7 +34,7 @@
             <TextView
                 android:id="@+id/translated_text"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:gravity="start|top"
                 android:paddingHorizontal="@dimen/padding_horizontal_20dp"
                 android:paddingTop="@dimen/padding_top_56dp"
@@ -62,7 +62,7 @@
 
                 <TextView
                     android:id="@+id/display_target_language"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:paddingHorizontal="@dimen/padding_horizontal_20dp"
