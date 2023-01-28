@@ -29,7 +29,7 @@
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/material_toolbar"
                 android:layout_width="@dimen/layout_width_0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="?attr/actionBarSize"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
