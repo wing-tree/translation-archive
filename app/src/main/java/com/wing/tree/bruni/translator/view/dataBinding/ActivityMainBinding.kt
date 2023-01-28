@@ -17,6 +17,7 @@ import com.wing.tree.bruni.translator.constant.EXTRA_LOAD_FAVORITES
 import com.wing.tree.bruni.translator.databinding.ActivityMainBinding
 import com.wing.tree.bruni.translator.extension.resizeText
 import com.wing.tree.bruni.translator.view.HistoryActivity
+import com.wing.tree.bruni.translator.view.InAppProductsActivity
 import com.wing.tree.bruni.translator.view.MainActivity
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -161,7 +162,17 @@ internal fun ActivityMainBinding.navigationView(
 
                 false
             }
-            R.id.in_app_products -> false
+            R.id.in_app_products -> {
+                startActivity<InAppProductsActivity>()
+                overridePendingTransition(
+                    android.R.anim.slide_in_left,
+                    android.R.anim.slide_out_right
+                )
+
+                shouldCloseDrawer.set(true)
+
+                false
+            }
             else -> true
         }
     }
