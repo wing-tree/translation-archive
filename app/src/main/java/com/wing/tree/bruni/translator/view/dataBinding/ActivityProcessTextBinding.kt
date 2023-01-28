@@ -3,12 +3,14 @@ package com.wing.tree.bruni.translator.view.dataBinding
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import androidx.core.widget.addTextChangedListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.wing.tree.bruni.core.constant.ONE
 import com.wing.tree.bruni.core.constant.ZERO
 import com.wing.tree.bruni.core.extension.*
 import com.wing.tree.bruni.translator.R
 import com.wing.tree.bruni.translator.databinding.ActivityProcessTextBinding
+import com.wing.tree.bruni.translator.extension.resizeText
 import com.wing.tree.bruni.translator.view.*
 
 internal fun ActivityProcessTextBinding.bottomSheet(processTextActivity: ProcessTextActivity) {
@@ -34,6 +36,18 @@ internal fun ActivityProcessTextBinding.bottomSheet(processTextActivity: Process
         },
         delayMillis
     )
+}
+
+internal fun ActivityProcessTextBinding.editText() = with(sourceText) {
+    with(sourceText) {
+        addTextChangedListener {
+            val textSize = resizeText()
+
+            with(translatedText) {
+                translatedText.textSize = textSize
+            }
+        }
+    }
 }
 
 internal fun ActivityProcessTextBinding.materialButton(

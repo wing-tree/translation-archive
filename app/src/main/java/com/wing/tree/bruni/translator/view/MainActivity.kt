@@ -9,9 +9,14 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
+import com.android.billingclient.api.BillingClient.BillingResponseCode
+import com.android.billingclient.api.BillingClient.ProductType
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.FullScreenContentCallback
+import com.wing.tree.bruni.billing.BillingService
 import com.wing.tree.bruni.core.extension.*
+import com.wing.tree.bruni.core.fluidContentResizer.FluidContentResizer
 import com.wing.tree.bruni.core.regular.gone
 import com.wing.tree.bruni.core.regular.visible
 import com.wing.tree.bruni.core.useCase.Result
@@ -29,10 +34,13 @@ import com.wing.tree.bruni.translator.view.dataBinding.*
 import com.wing.tree.bruni.translator.viewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.zip
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialAdLoaderImpl() {
     override val viewModel by viewModels<MainViewModel>()
+
+    @Inject lateinit var billingService: BillingService
 
     private val activityResultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -65,6 +73,7 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
             }
     }
 
+    private val fluidContentResizer = FluidContentResizer()
     private val requestRecordAudioPermissionsLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()) { result ->
         if (result) {
@@ -76,11 +85,20 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        fluidContentResizer.registerActivity(this)
+
         binding.bind(this)
         viewModel.collect()
 
         translateProcessText(intent)
         initTextToSpeech()
+
+        billingService.setup(this) {
+            if (it.responseCode == BillingResponseCode.OK) {
+                billingService.queryPurchases(ProductType.INAPP)
+            }
+        }
+
         loadInterstitialAd(this)
     }
 
@@ -104,6 +122,7 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
                     R.anim.slide_in_right,
                     R.anim.slide_out_left
                 )
+
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -137,6 +156,7 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
         materialToolbar(this)
 
         drawerLayout(this)
+        editText()
         materialButton(this)
         navigationView(activityResultLauncher, this)
         nestedScrollView(this)

@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -14,6 +15,7 @@ import com.wing.tree.bruni.core.regular.then
 import com.wing.tree.bruni.translator.R
 import com.wing.tree.bruni.translator.constant.EXTRA_LOAD_FAVORITES
 import com.wing.tree.bruni.translator.databinding.ActivityMainBinding
+import com.wing.tree.bruni.translator.extension.resizeText
 import com.wing.tree.bruni.translator.view.HistoryActivity
 import com.wing.tree.bruni.translator.view.MainActivity
 import java.util.concurrent.atomic.AtomicBoolean
@@ -30,6 +32,18 @@ internal fun ActivityMainBinding.drawerLayout(mainActivity: MainActivity) = with
     drawerLayout.addDrawerListener(actionBarDrawerToggle)
 
     actionBarDrawerToggle.syncState()
+}
+
+internal fun ActivityMainBinding.editText() = with(sourceText) {
+    with(sourceText) {
+        addTextChangedListener {
+            val textSize = resizeText()
+
+            with(translatedText) {
+                translatedText.textSize = textSize
+            }
+        }
+    }
 }
 
 internal fun ActivityMainBinding.materialButton(mainActivity: MainActivity) = with(mainActivity) {
@@ -147,6 +161,7 @@ internal fun ActivityMainBinding.navigationView(
 
                 false
             }
+            R.id.in_app_products -> false
             else -> true
         }
     }

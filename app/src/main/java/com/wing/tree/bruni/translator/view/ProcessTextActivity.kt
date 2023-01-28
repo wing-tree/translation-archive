@@ -97,6 +97,7 @@ class ProcessTextActivity : TranslatorActivity(), InterstitialAdLoader by Inters
         processTextActivity: ProcessTextActivity
     ) = with(processTextActivity) {
         bottomSheet(this)
+        editText()
         materialButton(this)
         nestedScrollView(this)
         sourceText(this)
