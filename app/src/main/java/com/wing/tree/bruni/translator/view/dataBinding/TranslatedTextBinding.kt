@@ -28,7 +28,7 @@ internal fun TranslatedTextBinding.nestedScrollView(
     paddingTop: Float
 ) = with(translatorActivity) {
     val maximumValue = ONE
-    val minimumValue = getFloat(R.dimen.alpha_0_20)
+    val minimumValue = getFloat(R.dimen.alpha_0_13)
     val constantOfProportionality = maximumValue
         .minus(minimumValue)
         .div(paddingTop)
