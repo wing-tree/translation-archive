@@ -9,11 +9,13 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.lifecycle.Lifecycle
+import androidx.core.view.*
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.android.billingclient.api.BillingClient.BillingResponseCode
 import com.android.billingclient.api.BillingClient.ProductType
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.material.appbar.MaterialToolbar
 import com.wing.tree.bruni.billing.BillingService
 import com.wing.tree.bruni.core.extension.*
 import com.wing.tree.bruni.core.fluidContentResizer.FluidContentResizer
@@ -74,6 +76,7 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
     }
 
     private val fluidContentResizer = FluidContentResizer()
+    private val materialToolbar: MaterialToolbar get() =binding.materialToolbar
     private val requestRecordAudioPermissionsLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()) { result ->
         if (result) {
@@ -85,7 +88,24 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        fluidContentResizer.registerActivity(this)
+        fluidContentResizer.registerActivity(this) {
+            with(materialToolbar) {
+                if (it.isVisible) {
+                    collapseVertically(
+                        duration = FluidContentResizer.DURATION,
+                        interpolator = FastOutSlowInInterpolator(),
+                        withAlpha = true
+                    )
+                } else {
+                    expandVertically(
+                        value = actionBarSize,
+                        duration = FluidContentResizer.DURATION,
+                        interpolator = FastOutSlowInInterpolator(),
+                        withAlpha = true
+                    )
+                }
+            }
+        }
 
         binding.bind(this)
         viewModel.collect()
