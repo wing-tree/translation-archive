@@ -1,10 +1,13 @@
 package com.wing.tree.bruni.translator.view.compose.composable
 
+import androidx.annotation.StringRes
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
@@ -24,8 +27,82 @@ import com.wing.tree.bruni.translator.R
 import com.wing.tree.bruni.translator.extension.*
 import com.wing.tree.bruni.translator.model.History
 import com.wing.tree.bruni.translator.view.compose.ui.theme.Typography
+import com.wing.tree.bruni.translator.viewModel.HistoryViewModel
 import java.time.format.DateTimeFormatter
 import java.util.*
+
+@Composable
+private fun Background(
+    horizontalArrangement: Arrangement.Horizontal,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .background(colorScheme.error)
+            .padding(24.dp),
+        horizontalArrangement = horizontalArrangement,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_round_delete_24),
+            contentDescription = null,
+            tint = colorScheme.onError
+        )
+    }
+}
+
+@Composable
+private fun DismissContent(
+    item: History.Item,
+    onIconClick: (rowid: Int, isFavorite: Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier = modifier.background(colorScheme.background)) {
+        val tint = if (item.isStarred) {
+            animateColorAsState(targetValue = colorScheme.primary)
+        } else {
+            animateColorAsState(targetValue = colorScheme.onBackground)
+        }
+
+        Column(
+            modifier = Modifier
+                .weight(ONE.float)
+                .paddingStart(24.dp)
+                .paddingVertical(12.dp)
+        ) {
+            Text(
+                text = item.sourceText,
+                color = colorScheme.onBackground,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = TWO,
+                style = Typography.titleMedium.copyAsDp()
+            )
+
+            Text(
+                text = item.translatedText,
+                color = colorScheme.primary,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = TWO,
+                style = Typography.titleMedium.copyAsDp()
+            )
+        }
+
+        IconButton(
+            onClick = {
+                item.isStarred = item.isStarred.not()
+
+                onIconClick(item.rowid, item.isFavorite.not())
+            },
+            modifier = Modifier.padding(8.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_round_star_24),
+                contentDescription = null,
+                tint = tint.value
+            )
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,71 +131,21 @@ private fun Item(
     SwipeToDismiss(
         state = dismissState,
         background = {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(colorScheme.error)
-                    .padding(24.dp),
+            Background(
                 horizontalArrangement = horizontalArrangement,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_round_delete_24),
-                    contentDescription = null,
-                    tint = colorScheme.onError
-                )
-            }
+                modifier = Modifier.fillMaxSize()
+            )
         },
         dismissContent = {
             AnimatedVisibility(
                 visible = dismissState.isNotDismissed(),
                 exit = shrinkVertically().plus(fadeOut())
             ) {
-                Row(modifier = modifier.background(colorScheme.background)) {
-                    val tint = if (item.isStarred) {
-                        animateColorAsState(targetValue = colorScheme.primary)
-                    } else {
-                        animateColorAsState(targetValue = colorScheme.onBackground)
-                    }
-
-                    Column(
-                        modifier = Modifier
-                            .weight(ONE.float)
-                            .paddingStart(24.dp)
-                            .paddingVertical(12.dp)
-                    ) {
-                        Text(
-                            text = item.sourceText,
-                            color = colorScheme.onBackground,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = TWO,
-                            style = Typography.titleMedium.copyAsDp()
-                        )
-
-                        Text(
-                            text = item.translatedText,
-                            color = colorScheme.primary,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = TWO,
-                            style = Typography.titleMedium.copyAsDp()
-                        )
-                    }
-
-                    IconButton(
-                        onClick = {
-                            item.isStarred = item.isStarred.not()
-
-                            onIconClick(item.rowid, item.isFavorite.not())
-                        },
-                        modifier = Modifier.padding(8.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_round_star_24),
-                            contentDescription = null,
-                            tint = tint.value
-                        )
-                    }
-                }
+                DismissContent(
+                    item = item,
+                    onIconClick = onIconClick,
+                    modifier = modifier
+                )
             }
         },
         modifier = Modifier.clickable {
@@ -174,6 +201,47 @@ internal fun HistoryScreen(
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun TopBar(
+    viewModel: HistoryViewModel,
+    navigationOnClick: () -> Unit,
+    actionOnClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    TopAppBar(
+        title = {
+            @StringRes
+            val id = if (viewModel.loadFavorites) {
+                R.string.favorites
+            } else {
+                R.string.history
+            }
+
+            Text(text = stringResource(id = id))
+        },
+        modifier = modifier,
+        navigationIcon = {
+            IconButton(onClick = navigationOnClick) {
+                Icon(
+                    imageVector = Icons.Rounded.ArrowBack,
+                    contentDescription = null
+                )
+            }
+        },
+        actions = {
+            if (viewModel.loadFavorites.not()) {
+                IconButton(onClick = actionOnClick) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_round_star_24),
+                        null
+                    )
+                }
+            }
+        }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
