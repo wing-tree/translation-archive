@@ -49,13 +49,13 @@ class ProcessTextActivity : TranslatorActivity(), InterstitialAdLoader by Inters
                 it.viewModel = viewModel
             }
     }
+
     private val requestRecordAudioPermissionsLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()) { result ->
         if (result) {
             startSpeechRecognition(sourceLanguage)
         }
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
