@@ -101,7 +101,7 @@
                 android:insetTop="@dimen/inset_top_0dp"
                 android:insetRight="@dimen/inset_right_0dp"
                 android:insetBottom="@dimen/inset_bottom_0dp"
-                app:icon="@drawable/ic_communication_24"
+                app:icon="@drawable/ic_round_communication_24"
                 app:iconGravity="textStart"
                 app:iconSize="@dimen/icon_size_24dp"
                 app:layout_constraintBottom_toBottomOf="@+id/recognize_speech"
