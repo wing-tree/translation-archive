@@ -150,7 +150,7 @@ class SpeechRecognitionButton : FrameLayout {
         private const val MAXIMUM_RMS_dB = 12F
         private const val MAXIMUM_SCALE = 1.625F
         private const val MINIMUM_RMS_dB = -2F
-        private const val MINIMUM_SCALE = 1.125F
-        private const val PERIOD_MILLS = 120L
+        private const val MINIMUM_SCALE = 1.0F
+        private const val PERIOD_MILLS = 150L
     }
 }
