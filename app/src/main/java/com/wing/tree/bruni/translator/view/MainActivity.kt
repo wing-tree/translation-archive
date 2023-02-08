@@ -7,18 +7,16 @@ import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.*
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.android.billingclient.api.BillingClient.BillingResponseCode
 import com.android.billingclient.api.BillingClient.ProductType
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.FullScreenContentCallback
-import com.google.android.material.appbar.MaterialToolbar
 import com.wing.tree.bruni.billing.BillingService
 import com.wing.tree.bruni.core.extension.*
-import com.wing.tree.bruni.core.fluidContentResizer.FluidContentResizer
 import com.wing.tree.bruni.core.regular.gone
 import com.wing.tree.bruni.core.regular.visible
 import com.wing.tree.bruni.core.useCase.Result
@@ -34,6 +32,7 @@ import com.wing.tree.bruni.translator.extension.bannerAd
 import com.wing.tree.bruni.translator.model.History
 import com.wing.tree.bruni.translator.view.dataBinding.*
 import com.wing.tree.bruni.translator.viewModel.MainViewModel
+import com.wing.tree.bruni.windowInsetsAnimation.DeferredWindowInsetsAnimationCallback
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.zip
 import javax.inject.Inject
@@ -66,8 +65,9 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
         }
     }
 
-    private val binding by lazy {
-        ActivityMainBinding.inflate(layoutInflater)
+    private val viewDataBinding by lazy {
+        ActivityMainBinding
+            .inflate(layoutInflater)
             .also {
                 it.activity = this
                 it.lifecycleOwner = this
@@ -75,8 +75,6 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
             }
     }
 
-    private val fluidContentResizer = FluidContentResizer()
-    private val materialToolbar: MaterialToolbar get() =binding.materialToolbar
     private val requestRecordAudioPermissionsLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()) { result ->
         if (result) {
@@ -84,30 +82,19 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
         }
     }
 
+    private val root: View get() = viewDataBinding.root
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+        setContentView(root)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        fluidContentResizer.registerActivity(this) {
-            with(materialToolbar) {
-                if (it.isVisible) {
-                    collapseVertically(
-                        duration = FluidContentResizer.DURATION,
-                        interpolator = FastOutSlowInInterpolator(),
-                        withAlpha = true
-                    )
-                } else {
-                    expandVertically(
-                        value = actionBarSize,
-                        duration = FluidContentResizer.DURATION,
-                        interpolator = FastOutSlowInInterpolator(),
-                        withAlpha = true
-                    )
-                }
-            }
+        with(DeferredWindowInsetsAnimationCallback()) {
+            ViewCompat.setOnApplyWindowInsetsListener(root, this)
+            ViewCompat.setWindowInsetsAnimationCallback(root, this)
         }
 
-        binding.bind(this)
+        viewDataBinding.bind(this)
         viewModel.collect()
 
         translateProcessText(intent)
@@ -155,7 +142,7 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
 
     private fun initTextToSpeech() {
         initTextToSpeech(this) { status ->
-            with(binding) {
+            with(viewDataBinding) {
                 val speakSourceText = sourceText.speakSourceText
                 val speakTranslatedText = translatedText.speakTranslatedText
 
@@ -168,7 +155,7 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
         }
     }
 
-    private fun updateRmsdB(rmsdB: Float) = with(binding) {
+    private fun updateRmsdB(rmsdB: Float) = with(viewDataBinding) {
         recognizeSpeech.updateRmsdB(rmsdB)
     }
 
@@ -180,6 +167,7 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
         materialButton(this)
         navigationView(activityResultLauncher, this)
         nestedScrollView(this)
+        setWindowInsetsAnimationCallback()
         speechRecognitionButton()
 
         bannerAd(adView, AdSize.BANNER)

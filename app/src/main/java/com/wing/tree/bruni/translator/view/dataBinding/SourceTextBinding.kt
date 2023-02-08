@@ -40,5 +40,6 @@ internal fun SourceTextBinding.sourceText(
     paddingTop: Int
 ) = with(sourceText) {
     setTextAppearance(resId)
+
     updatePadding(top = paddingTop)
 }

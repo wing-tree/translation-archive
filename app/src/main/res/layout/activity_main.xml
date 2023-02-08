@@ -15,144 +15,148 @@
 
     </data>
 
-    <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?backgroundColor">
+        android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.drawerlayout.widget.DrawerLayout
+            android:id="@+id/drawer_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/material_toolbar"
-                style="@style/Widget.Material3.Toolbar.Surface"
-                android:layout_width="@dimen/layout_width_0dp"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:navigationIcon="@drawable/ic_round_menu_24" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraint_layout"
-                android:layout_width="@dimen/layout_width_0dp"
-                android:layout_height="@dimen/layout_height_0dp"
-                android:clipChildren="false"
-                android:clipToPadding="false"
-                app:layout_constraintBottom_toTopOf="@+id/footer"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/material_toolbar">
-
-                <include
-                    android:id="@+id/source_text"
-                    layout="@layout/source_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    app:activity="@{activity}"
-                    app:layout_constraintBottom_toTopOf="@+id/translated_text"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:viewModel="@{viewModel}" />
-
-                <include
-                    android:id="@+id/translated_text"
-                    layout="@layout/translated_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/layout_height_0dp"
-                    android:layout_marginTop="@dimen/layout_margin_top_20dp"
-                    app:activity="@{activity}"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/source_text"
-                    app:viewModel="@{viewModel}" />
-
-                <com.google.android.material.progressindicator.CircularProgressIndicator
-                    android:id="@+id/circular_progress_indicator"
-                    style="@style/Widget.Material3.CircularProgressIndicator.Medium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:indeterminate="true"
-                    app:hideAnimationBehavior="outward"
-                    app:layout_constraintBottom_toBottomOf="@+id/translated_text"
-                    app:layout_constraintEnd_toEndOf="@+id/translated_text"
-                    app:layout_constraintStart_toStartOf="@+id/translated_text"
-                    app:layout_constraintTop_toTopOf="@+id/translated_text"
-                    app:result="@{viewModel.result}"
-                    app:showAnimationBehavior="outward" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/footer"
-                android:layout_width="@dimen/layout_width_0dp"
-                android:layout_height="@dimen/layout_height_120dp"
-                android:clipChildren="false"
-                android:clipToPadding="false"
-                app:layout_constraintBottom_toTopOf="@+id/ad_view"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/communication"
-                    style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
-                    android:layout_width="@dimen/layout_width_48dp"
-                    android:layout_height="@dimen/layout_height_48dp"
-                    android:layout_gravity="center"
-                    android:insetLeft="@dimen/inset_left_0dp"
-                    android:insetTop="@dimen/inset_top_0dp"
-                    android:insetRight="@dimen/inset_right_0dp"
-                    android:insetBottom="@dimen/inset_bottom_0dp"
-                    app:icon="@drawable/ic_round_communication_24"
-                    app:iconGravity="textStart"
-                    app:iconSize="@dimen/icon_size_24dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/recognize_speech"
-                    app:layout_constraintEnd_toStartOf="@+id/recognize_speech"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/recognize_speech"
-                    app:rippleColor="@color/on_secondary_container_ripple" />
-
-                <com.wing.tree.bruni.translator.widget.SpeechRecognitionButton
-                    android:id="@+id/recognize_speech"
-                    isListening="@{viewModel.isListening()}"
-                    android:layout_width="@dimen/layout_width_80dp"
-                    android:layout_height="@dimen/layout_height_80dp"
-                    app:iconSize="@dimen/icon_size_40dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="DuplicateClickableBoundsCheck" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <FrameLayout
-                android:id="@+id/ad_view"
-                android:layout_width="@dimen/layout_width_0dp"
-                android:layout_height="@dimen/layout_height_50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <com.google.android.material.navigation.NavigationView
-            android:id="@+id/navigation_view"
-            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:fitsSystemWindows="true"
-            app:headerLayout="@layout/header_navigation"
-            app:menu="@menu/menu_navigation" />
+            android:background="?backgroundColor">
 
-    </androidx.drawerlayout.widget.DrawerLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/material_toolbar"
+                    style="@style/Widget.Material3.Toolbar.Surface"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:navigationIcon="@drawable/ic_round_menu_24" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraint_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipChildren="false"
+                    android:clipToPadding="false">
+
+                    <include
+                        android:id="@+id/source_text"
+                        layout="@layout/source_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/layout_height_0dp"
+                        app:activity="@{activity}"
+                        app:layout_constraintBottom_toTopOf="@+id/translated_text"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:viewModel="@{viewModel}" />
+
+                    <include
+                        android:id="@+id/translated_text"
+                        layout="@layout/translated_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/layout_height_0dp"
+                        android:layout_marginTop="@dimen/layout_margin_top_20dp"
+                        app:activity="@{activity}"
+                        app:layout_constraintBottom_toTopOf="@+id/linear_layout"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/source_text"
+                        app:viewModel="@{viewModel}" />
+
+                    <com.google.android.material.progressindicator.CircularProgressIndicator
+                        android:id="@+id/circular_progress_indicator"
+                        style="@style/Widget.Material3.CircularProgressIndicator.Medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:indeterminate="true"
+                        app:hideAnimationBehavior="outward"
+                        app:layout_constraintBottom_toBottomOf="@+id/translated_text"
+                        app:layout_constraintEnd_toEndOf="@+id/translated_text"
+                        app:layout_constraintStart_toStartOf="@+id/translated_text"
+                        app:layout_constraintTop_toTopOf="@+id/translated_text"
+                        app:result="@{viewModel.result}"
+                        app:showAnimationBehavior="outward" />
+
+                    <LinearLayout
+                        android:id="@+id/linear_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipChildren="false"
+                        android:clipToPadding="false"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/communication"
+                                style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                                android:layout_width="@dimen/layout_width_48dp"
+                                android:layout_height="@dimen/layout_height_48dp"
+                                android:layout_gravity="center"
+                                android:insetLeft="@dimen/inset_left_0dp"
+                                android:insetTop="@dimen/inset_top_0dp"
+                                android:insetRight="@dimen/inset_right_0dp"
+                                android:insetBottom="@dimen/inset_bottom_0dp"
+                                app:icon="@drawable/ic_round_communication_24"
+                                app:iconGravity="textStart"
+                                app:iconSize="@dimen/icon_size_24dp"
+                                app:layout_constraintBottom_toBottomOf="@+id/recognize_speech"
+                                app:layout_constraintEnd_toStartOf="@+id/recognize_speech"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="@+id/recognize_speech"
+                                app:rippleColor="@color/on_secondary_container_ripple" />
+
+                            <com.wing.tree.bruni.translator.widget.SpeechRecognitionButton
+                                android:id="@+id/recognize_speech"
+                                isListening="@{viewModel.isListening()}"
+                                android:layout_width="@dimen/layout_width_80dp"
+                                android:layout_height="@dimen/layout_height_80dp"
+                                app:iconSize="@dimen/icon_size_40dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:ignore="DuplicateClickableBoundsCheck" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <FrameLayout
+                            android:id="@+id/ad_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/layout_height_50dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+            <com.google.android.material.navigation.NavigationView
+                android:id="@+id/navigation_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:fitsSystemWindows="true"
+                app:menu="@menu/navigation" />
+
+        </androidx.drawerlayout.widget.DrawerLayout>
+
+    </FrameLayout>
 
 </layout>
