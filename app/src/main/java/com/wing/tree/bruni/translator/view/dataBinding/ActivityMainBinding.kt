@@ -269,6 +269,24 @@ internal fun ActivityMainBinding.setWindowInsetsAnimationCallback() = post {
 
                 return insets
             }
+
+            override fun onEnd(animation: WindowInsetsAnimationCompat) {
+                if (animation.typeMask and WindowInsetsCompat.Type.ime() != 0) {
+                    val isVisible = ViewCompat.getRootWindowInsets(root)?.isVisible(ime) == true
+
+                    with(sourceText) {
+                        isCursorVisible = isVisible
+
+                        post {
+                            if (isVisible.and(rootView.findFocus().isNull())) {
+                                requestFocus()
+                            } else if (isVisible.not().and(isFocused)) {
+                                clearFocus()
+                            }
+                        }
+                    }
+                }
+            }
         }
     )
 }

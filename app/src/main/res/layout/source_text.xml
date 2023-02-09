@@ -36,6 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
+                android:cursorVisible="false"
                 android:gravity="start|top"
                 android:hint="@string/enter_your_text"
                 android:inputType="textMultiLine"
