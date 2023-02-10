@@ -21,6 +21,7 @@ import com.wing.tree.bruni.translator.extension.resizeText
 import com.wing.tree.bruni.translator.view.HistoryActivity
 import com.wing.tree.bruni.translator.view.InAppProductsActivity
 import com.wing.tree.bruni.translator.view.MainActivity
+import com.wing.tree.bruni.windowInsetsAnimation.extension.isTypeMasked
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.max
 
@@ -219,15 +220,17 @@ internal fun ActivityMainBinding.setWindowInsetsAnimationCallback() = post {
                 animation: WindowInsetsAnimationCompat,
                 bounds: WindowInsetsAnimationCompat.BoundsCompat
             ): WindowInsetsAnimationCompat.BoundsCompat {
-                ViewCompat.getRootWindowInsets(root)?.let { windowInsets ->
-                    Insets.subtract(
-                        windowInsets.getInsets(ime),
-                        windowInsets.getInsets(systemBars)
-                    ).let {
-                        mutableHeight.ime = max(
-                            mutableHeight.ime,
-                            Insets.max(it, Insets.NONE).bottom
-                        )
+                if (animation.isTypeMasked(ime)) {
+                    ViewCompat.getRootWindowInsets(root)?.let { windowInsets ->
+                        Insets.subtract(
+                            windowInsets.getInsets(ime),
+                            windowInsets.getInsets(systemBars)
+                        ).let {
+                            mutableHeight.ime = max(
+                                mutableHeight.ime,
+                                Insets.max(it, Insets.NONE).bottom
+                            )
+                        }
                     }
                 }
 
@@ -238,6 +241,10 @@ internal fun ActivityMainBinding.setWindowInsetsAnimationCallback() = post {
                 insets: WindowInsetsCompat,
                 runningAnimations: MutableList<WindowInsetsAnimationCompat>
             ): WindowInsetsCompat {
+                if (mutableHeight.ime.isZero) {
+                    return insets
+                }
+
                 val difference = Insets.subtract(
                     insets.getInsets(ime),
                     insets.getInsets(systemBars)
@@ -271,7 +278,7 @@ internal fun ActivityMainBinding.setWindowInsetsAnimationCallback() = post {
             }
 
             override fun onEnd(animation: WindowInsetsAnimationCompat) {
-                if (animation.typeMask and WindowInsetsCompat.Type.ime() != 0) {
+                if (animation.isTypeMasked(ime)) {
                     val isVisible = ViewCompat.getRootWindowInsets(root)?.isVisible(ime) == true
 
                     with(sourceText) {
