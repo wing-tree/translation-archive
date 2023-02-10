@@ -11,6 +11,7 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.*
+import androidx.window.layout.WindowInfoTracker
 import com.android.billingclient.api.BillingClient.BillingResponseCode
 import com.android.billingclient.api.BillingClient.ProductType
 import com.google.android.gms.ads.AdSize
@@ -167,7 +168,6 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
         materialButton(this)
         navigationView(activityResultLauncher, this)
         nestedScrollView(this)
-        setWindowInsetsAnimationCallback()
         speechRecognitionButton()
 
         bannerAd(adView, AdSize.BANNER)
@@ -192,6 +192,14 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
     }
 
     private fun MainViewModel.collect() {
+        launchWithLifecycle {
+            WindowInfoTracker.getOrCreate(context)
+                .windowLayoutInfo(activity)
+                .collect {
+                    viewDataBinding.setWindowInsetsAnimationCallback()
+                }
+        }
+
         launchWithLifecycle {
             result.collect {
                 if (it is Result.Failure) {
