@@ -1,5 +1,5 @@
 package com.wing.tree.bruni.translator.data.billing
 
-internal object ProductID {
+object ProductId {
     const val remove_ads = "remove_ads"
 }
