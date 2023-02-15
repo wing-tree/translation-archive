@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="ad_view_height">@dimen/layout_height_50dp</dimen>
+
     <dimen name="divider_inset_end_16dp">16dp</dimen>
 
     <dimen name="divider_inset_start_16dp">16dp</dimen>
