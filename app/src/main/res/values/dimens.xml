@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="ad_view_height">@dimen/layout_height_50dp</dimen>
-
     <dimen name="divider_inset_end_16dp">16dp</dimen>
 
     <dimen name="divider_inset_start_16dp">16dp</dimen>
@@ -67,6 +65,7 @@
     <dimen name="layout_height_168dp">168dp</dimen>
     <dimen name="layout_height_172dp">172dp</dimen>
     <dimen name="layout_height_176dp">176dp</dimen>
+    <dimen name="layout_height_178dp">178dp</dimen>
     <dimen name="layout_height_180dp">180dp</dimen>
     <dimen name="layout_height_184dp">184dp</dimen>
     <dimen name="layout_height_188dp">188dp</dimen>

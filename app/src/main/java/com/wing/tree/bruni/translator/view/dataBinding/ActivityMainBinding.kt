@@ -1,11 +1,15 @@
 package com.wing.tree.bruni.translator.view.dataBinding
 
 import android.content.Intent
-import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.graphics.Insets
-import androidx.core.view.*
+import androidx.core.view.GravityCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsAnimationCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsCompat.Type.ime
+import androidx.core.view.WindowInsetsCompat.Type.systemBars
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -23,7 +27,6 @@ import com.wing.tree.bruni.translator.view.InAppProductsActivity
 import com.wing.tree.bruni.translator.view.MainActivity
 import com.wing.tree.bruni.windowInsetsAnimation.extension.isTypeMasked
 import java.util.concurrent.atomic.AtomicBoolean
-import kotlin.math.max
 
 internal fun ActivityMainBinding.drawerLayout(mainActivity: MainActivity) = with(mainActivity) {
     val actionBarDrawerToggle = ActionBarDrawerToggle(
@@ -190,46 +193,45 @@ internal fun ActivityMainBinding.nestedScrollView(mainActivity: MainActivity) {
 }
 
 internal fun ActivityMainBinding.setWindowInsetsAnimationCallback() = post {
-    val ime = WindowInsetsCompat.Type.ime()
-    val systemBars = WindowInsetsCompat.Type.systemBars()
-
-    data class ImmutableHeight(
-        val constraintLayout: Float,
-        val linearLayout: Float,
-        val materialToolbar: Float
-    )
-
-    data class MutableHeight(
-        var ime: Int
-    )
-
     ViewCompat.setWindowInsetsAnimationCallback(
         constraintLayout,
         object : WindowInsetsAnimationCompat.Callback(DISPATCH_MODE_STOP) {
-            private val immutableHeight = ImmutableHeight(
-                constraintLayout = constraintLayout.height.float,
-                linearLayout = linearLayout.height.float,
-                materialToolbar = materialToolbar.height.float
-            )
+            private val rootWindowInsets: WindowInsetsCompat?
+                get() = ViewCompat.getRootWindowInsets(root)
 
-            private val mutableHeight = MutableHeight(
-                ime = ZERO
-            )
+            private var constraintLayoutHeight = ZERO
+            private var imeHeight = ZERO
+            private var topCoefficient: Float = ZERO.float
+            private var bottomCoefficient: Float = ZERO.float
 
             override fun onStart(
                 animation: WindowInsetsAnimationCompat,
                 bounds: WindowInsetsAnimationCompat.BoundsCompat
             ): WindowInsetsAnimationCompat.BoundsCompat {
-                if (animation.isTypeMasked(ime)) {
-                    ViewCompat.getRootWindowInsets(root)?.let { windowInsets ->
-                        Insets.subtract(
-                            windowInsets.getInsets(ime),
-                            windowInsets.getInsets(systemBars)
-                        ).let {
-                            mutableHeight.ime = max(
-                                mutableHeight.ime,
-                                Insets.max(it, Insets.NONE).bottom
-                            )
+                constraintLayoutHeight = displayHeight.minus(materialToolbar.height)
+
+                if (animation.isTypeMasked(ime())) {
+                    rootWindowInsets?.let { windowInsets ->
+                        if (windowInsets.isVisible(ime())) {
+                            Insets.subtract(
+                                windowInsets.getInsets(ime()),
+                                windowInsets.getInsets(systemBars())
+                            ).let {
+                                Insets.max(it, Insets.NONE).height
+                            }.let {
+                                imeHeight = it
+
+                                topCoefficient = materialToolbar
+                                    .height
+                                    .float
+                                    .safeDiv(it)
+
+                                bottomCoefficient = linearLayout
+                                    .height
+                                    .float
+                                    .safeDiv(it)
+                                    .complement
+                            }
                         }
                     }
                 }
@@ -241,45 +243,46 @@ internal fun ActivityMainBinding.setWindowInsetsAnimationCallback() = post {
                 insets: WindowInsetsCompat,
                 runningAnimations: MutableList<WindowInsetsAnimationCompat>
             ): WindowInsetsCompat {
-                if (mutableHeight.ime.isZero) {
-                    return insets
+                runningAnimations.notContains {
+                    it.isTypeMasked(ime())
+                }.let {
+                    if (it.or(imeHeight.isZero)) {
+                        return insets
+                    }
                 }
 
-                val difference = Insets.subtract(
-                    insets.getInsets(ime),
-                    insets.getInsets(systemBars)
+                Insets.subtract(
+                    insets.getInsets(ime()),
+                    insets.getInsets(systemBars())
                 ).let {
                     Insets.max(it, Insets.NONE)
                 }.let {
                     it.top.minus(it.bottom).float
+                }.let {
+                    val topTranslationY = topCoefficient.times(it)
+                    val bottomTranslationY = bottomCoefficient.times(it)
+
+                    materialToolbar.translationY = topTranslationY
+                    constraintLayout.translationY = topTranslationY
+
+                    with(constraintLayout) {
+                        val height = constraintLayoutHeight
+                            .minus(topTranslationY)
+                            .plus(bottomTranslationY)
+                            .int
+
+                        updateHeight(height)
+                    }
+
+                    linearLayout.translationY = bottomTranslationY.negative
                 }
-
-                val quotient = immutableHeight
-                    .linearLayout
-                    .div(mutableHeight.ime)
-
-                val translationY = immutableHeight
-                    .materialToolbar
-                    .times(difference.div(mutableHeight.ime))
-
-                constraintLayout.translationY = translationY
-                constraintLayout.updateLayoutParams<ViewGroup.LayoutParams> {
-                    height = immutableHeight
-                        .constraintLayout
-                        .minus(translationY)
-                        .plus(ONE.minus(quotient).times(difference))
-                        .int
-                }
-
-                linearLayout.translationY = quotient.times(difference).negative
-                materialToolbar.translationY = translationY
 
                 return insets
             }
 
             override fun onEnd(animation: WindowInsetsAnimationCompat) {
-                if (animation.isTypeMasked(ime)) {
-                    val isVisible = ViewCompat.getRootWindowInsets(root)?.isVisible(ime) == true
+                if (animation.isTypeMasked(ime())) {
+                    val isVisible = rootWindowInsets?.isVisible(ime()) == true
 
                     with(sourceText) {
                         isCursorVisible = isVisible
@@ -294,6 +297,8 @@ internal fun ActivityMainBinding.setWindowInsetsAnimationCallback() = post {
                     }
                 }
             }
+
+            private val Insets.height: Int get() = bottom
         }
     )
 }
