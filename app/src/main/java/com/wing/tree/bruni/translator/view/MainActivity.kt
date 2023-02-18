@@ -11,12 +11,12 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.*
-import androidx.window.layout.WindowInfoTracker
 import com.android.billingclient.api.BillingClient.BillingResponseCode
 import com.android.billingclient.api.BillingClient.ProductType
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.wing.tree.bruni.billing.BillingService
+import com.wing.tree.bruni.core.constant.ZERO
 import com.wing.tree.bruni.core.extension.*
 import com.wing.tree.bruni.core.regular.gone
 import com.wing.tree.bruni.core.regular.visible
@@ -106,8 +106,11 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
                 billingService.queryPurchases(ProductType.INAPP)
             }
         }
+    }
 
-        loadInterstitialAd(this)
+    override fun onResume() {
+        super.onResume()
+        viewModel.queryPurchases(ProductType.INAPP)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
@@ -168,6 +171,7 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
         materialButton(this)
         navigationView(activityResultLauncher, this)
         nestedScrollView(this)
+        setWindowInsetsAnimationCallback()
         speechRecognitionButton()
 
         bannerAd(adView, AdSize.BANNER)
@@ -193,17 +197,40 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
 
     private fun MainViewModel.collect() {
         launchWithLifecycle {
-            WindowInfoTracker.getOrCreate(context)
-                .windowLayoutInfo(activity)
-                .collect {
-                    viewDataBinding.setWindowInsetsAnimationCallback()
-                }
-        }
-
-        launchWithLifecycle {
             result.collect {
                 if (it is Result.Failure) {
                     showToast(it.throwable)
+                }
+            }
+        }
+
+        launchWithLifecycle {
+            adsRemoved.collect { adsRemoved ->
+                with(viewDataBinding.adView) {
+                    if (adsRemoved) {
+                        collapseVertically(
+                            duration = ZERO.long,
+                            onAnimationEnd = {
+                                gone()
+                            },
+                            onAnimationCancel = {
+                                gone()
+                            }
+                        )
+                    } else {
+                        loadInterstitialAd(context)
+
+                        val duration = configShortAnimTime.long
+                        val value = dimen(R.dimen.layout_height_50dp).int
+
+                        expandVertically(
+                            duration = duration,
+                            value = value,
+                            onAnimationStart = {
+                                visible()
+                            }
+                        )
+                    }
                 }
             }
         }
