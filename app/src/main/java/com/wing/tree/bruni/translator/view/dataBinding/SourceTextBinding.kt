@@ -44,7 +44,7 @@ internal fun SourceTextBinding.nestedScrollView(
     nestedScrollView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
         val alpha = maximumValue.minus(scrollY.times(constantOfProportionality))
 
-        linearLayout.alpha = alpha.coerceAtLeast(minimumValue)
+        constraintLayout.alpha = alpha.coerceAtLeast(minimumValue)
     }
 }
 

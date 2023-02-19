@@ -56,12 +56,21 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:viewModel="@{viewModel}" />
 
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/layout_margin_horizontal_24dp"
+                        android:layout_marginTop="@dimen/layout_margin_top_12dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/source_text" />
+
                     <include
                         android:id="@+id/translated_text"
                         layout="@layout/translated_text"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/layout_height_0dp"
-                        android:layout_marginTop="@dimen/layout_margin_top_20dp"
+                        android:layout_marginTop="@dimen/layout_margin_top_24dp"
                         app:activity="@{activity}"
                         app:layout_constraintBottom_toTopOf="@+id/linear_layout"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -88,8 +97,10 @@
                         android:id="@+id/linear_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@color/surface"
                         android:clipChildren="false"
                         android:clipToPadding="false"
+                        android:elevation="4dp"
                         android:orientation="vertical"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -97,21 +108,19 @@
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:clipChildren="false"
+                            android:clipToPadding="false">
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/communication"
                                 style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
-                                android:layout_width="@dimen/layout_width_48dp"
-                                android:layout_height="@dimen/layout_height_48dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:insetLeft="@dimen/inset_left_0dp"
-                                android:insetTop="@dimen/inset_top_0dp"
-                                android:insetRight="@dimen/inset_right_0dp"
-                                android:insetBottom="@dimen/inset_bottom_0dp"
                                 app:icon="@drawable/ic_round_communication_24"
                                 app:iconGravity="textStart"
-                                app:iconSize="@dimen/icon_size_24dp"
+                                app:iconSize="@dimen/icon_size_40dp"
                                 app:layout_constraintBottom_toBottomOf="@+id/recognize_speech"
                                 app:layout_constraintEnd_toStartOf="@+id/recognize_speech"
                                 app:layout_constraintStart_toStartOf="parent"
