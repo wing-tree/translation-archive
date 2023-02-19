@@ -41,8 +41,8 @@
                 android:hint="@string/enter_your_text"
                 android:inputType="textMultiLine"
                 android:maxLength="@integer/limit_characters"
-                android:paddingHorizontal="@dimen/padding_horizontal_20dp"
-                android:paddingTop="@dimen/padding_top_56dp"
+                android:paddingHorizontal="@dimen/padding_horizontal_24dp"
+                android:paddingTop="@dimen/padding_top_48dp"
                 android:text="@={viewModel.sourceText}"
                 android:textAppearance="@style/TextAppearance.HeadlineLarge"
                 tools:ignore="Autofill,LabelFor"
@@ -50,29 +50,34 @@
 
         </androidx.core.widget.NestedScrollView>
 
-        <LinearLayout
-            android:id="@+id/linear_layout"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/layout_height_48dp"
             android:clipChildren="false"
             android:clipToPadding="false"
             android:gravity="center_vertical|end"
             android:orientation="horizontal"
+            android:paddingStart="@dimen/padding_start_24dp"
+            android:paddingEnd="@dimen/padding_8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/nested_scroll_view">
 
             <FrameLayout
+                android:id="@+id/frameLayout"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:id="@+id/display_source_language"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:paddingHorizontal="@dimen/padding_horizontal_20dp"
                     android:text="@{viewModel.displaySourceLanguage}"
                     android:textAppearance="@style/TextAppearance.TitleMedium"
                     android:textColor="?colorOnSurface"
@@ -92,6 +97,9 @@
                 app:iconGravity="textStart"
                 app:iconSize="@dimen/icon_size_24dp"
                 app:iconTint="?attr/colorOnSurface"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/paste_source_text_from_clipboard"
+                app:layout_constraintTop_toTopOf="parent"
                 app:rippleColor="@color/on_surface_ripple" />
 
             <com.google.android.material.button.MaterialButton
@@ -104,6 +112,9 @@
                 app:iconGravity="textStart"
                 app:iconSize="@dimen/icon_size_24dp"
                 app:iconTint="?attr/colorOnSurface"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/speak_source_text"
+                app:layout_constraintTop_toTopOf="parent"
                 app:rippleColor="@color/on_surface_ripple" />
 
             <com.google.android.material.button.MaterialButton
@@ -116,9 +127,28 @@
                 app:iconGravity="textStart"
                 app:iconSize="@dimen/icon_size_24dp"
                 app:iconTint="?attr/colorOnSurface"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:rippleColor="@color/on_surface_ripple" />
 
-        </LinearLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/clear_text"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="@dimen/layout_width_48dp"
+                android:layout_height="@dimen/layout_height_48dp"
+                android:onClick="@{() -> activity.clearText()}"
+                android:visibility="gone"
+                app:icon="@drawable/ic_close_24px"
+                app:iconGravity="textStart"
+                app:iconSize="@dimen/icon_size_24dp"
+                app:iconTint="?attr/colorOnSurface"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:rippleColor="@color/on_surface_ripple" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
