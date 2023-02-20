@@ -4,9 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material3.*
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.wing.tree.bruni.translator.R
 import com.wing.tree.bruni.translator.view.compose.composable.InAppProductsScreen
@@ -28,14 +33,33 @@ class InAppProductsActivity : ComponentActivity() {
 
                 Scaffold(
                     topBar = {
-
+                        TopAppBar(
+                            title = {
+                                Text(text = stringResource(id = R.string.in_app_products))
+                            },
+                            navigationIcon = {
+                                IconButton(
+                                    onClick = {
+                                        finish()
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Rounded.ArrowBack,
+                                        contentDescription = null
+                                    )
+                                }
+                            }
+                        )
                     }
                 ) {
                     InAppProductsScreen(
                         inAppProductsState = state,
                         onItemClick = {
                             viewModel.launchBillingFlow(this, it.productDetails)
-                        }
+                        },
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(it)
                     )
                 }
             }
