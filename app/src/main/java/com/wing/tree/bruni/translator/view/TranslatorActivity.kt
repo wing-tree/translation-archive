@@ -98,6 +98,10 @@ abstract class TranslatorActivity : SpeechRecognizerActivity(), TextToSpeechDele
         updateSourceText(sourceText)
     }
 
+    fun clearText() {
+        sourceText.update { EMPTY }
+    }
+
     fun copyTranslatedTextToClipboard() {
         translatedText?.ifNotBlank { text ->
             copyPlainTextToClipboard(text)
