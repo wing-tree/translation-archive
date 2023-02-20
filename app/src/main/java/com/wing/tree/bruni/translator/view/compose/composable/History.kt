@@ -127,7 +127,6 @@ private fun Item(
         else ->Arrangement.Start
     }
 
-
     SwipeToDismiss(
         state = dismissState,
         background = {
