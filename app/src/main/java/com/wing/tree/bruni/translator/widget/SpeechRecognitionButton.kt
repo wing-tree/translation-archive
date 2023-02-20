@@ -2,8 +2,10 @@ package com.wing.tree.bruni.translator.widget
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.FrameLayout
-import androidx.core.view.updateLayoutParams
+import android.view.animation.LinearInterpolator
+import androidx.annotation.DrawableRes
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.wing.tree.bruni.core.constant.ONE
 import com.wing.tree.bruni.core.constant.TWO
 import com.wing.tree.bruni.core.extension.*
@@ -19,24 +21,20 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-class SpeechRecognitionButton : FrameLayout {
+class SpeechRecognitionButton : ConstraintLayout {
     private val binding = SpeechRecognitionButtonBinding.bind(
         inflate(context, R.layout.speech_recognition_button, this)
     )
 
-    private val configShortAnimTime = resources.configShortAnimTime.long
-    private val decelerateQuadInterpolator = context.decelerateQuadInterpolator
-    private val duration = configShortAnimTime
-    private val materialButton = binding.materialButton
+    private val duration = DURATION
+    private val iconButton = binding.iconButton
+    private val linearInterpolator = LinearInterpolator()
+    private val periodMills = PERIOD_MILLS
     private val ripple = binding.ripple
     private val rmsdB = MutableStateFlow(MINIMUM_RMS_dB)
-    private val periodMills = PERIOD_MILLS
     private val scaleFactor = MAXIMUM_SCALE
         .minus(MINIMUM_SCALE)
         .div(MAXIMUM_RMS_dB)
-
-    private val start = binding.start
-    private val stop = binding.stop
 
     private var job: Job? = null
 
@@ -60,15 +58,15 @@ class SpeechRecognitionButton : FrameLayout {
     }
 
     override fun isClickable(): Boolean {
-        return materialButton.isClickable
+        return iconButton.isClickable
     }
 
     override fun setClickable(clickable: Boolean) {
-        materialButton.isClickable = clickable
+        iconButton.isClickable = clickable
     }
 
     override fun setOnClickListener(l: OnClickListener?) {
-        materialButton.setOnClickListener(l)
+        iconButton.setOnClickListener(l)
     }
 
     init {
@@ -82,24 +80,13 @@ class SpeechRecognitionButton : FrameLayout {
             .getDimension(R.styleable.SpeechRecognitionButton_iconSize, context.dimen(R.dimen.icon_size_24dp))
             .roundToInt()
 
-        start.updateLayoutParams {
-            width = iconSize
-            height = iconSize
-        }
-
-        stop.updateLayoutParams {
-            width = iconSize
-            height = iconSize
-        }
+        iconButton.iconSize = iconSize
 
         typedArray.recycle()
     }
 
     private fun startListening() {
-        start.crossFade(
-            target = stop,
-            duration = duration
-        )
+        morph()
 
         ripple.animate()
             .setDuration(duration)
@@ -109,14 +96,13 @@ class SpeechRecognitionButton : FrameLayout {
                     @OptIn(FlowPreview::class)
                     rmsdB.sample(periodMills).collect {
                         if (isListening) {
-                            val duration = periodMills
                             val scale = scaleFactor
                                 .times(it.plus(TWO))
                                 .plus(MINIMUM_SCALE)
 
                             ripple.animate()
                                 .setDuration(duration)
-                                .setInterpolator(decelerateQuadInterpolator)
+                                .setInterpolator(linearInterpolator)
                                 .scale(scale)
                                 .withLayer()
                         }
@@ -127,14 +113,11 @@ class SpeechRecognitionButton : FrameLayout {
     }
 
     private fun stopListening() {
-        stop.crossFade(
-            target = start,
-            duration = duration
-        )
+        morph()
 
         ripple.animate()
             .setDuration(duration)
-            .setInterpolator(decelerateQuadInterpolator)
+            .setInterpolator(linearInterpolator)
             .scale(ONE.float)
             .withStartAction {
                 job?.cancel()
@@ -146,11 +129,27 @@ class SpeechRecognitionButton : FrameLayout {
         rmsdB.update { value }
     }
 
+    private fun morph() {
+        @DrawableRes
+        val resId = if (isListening) {
+            R.drawable.outline_speech_recognition
+        } else {
+            R.drawable.baseline_speech_recognition
+        }
+
+        val animatedVectorDrawable = AnimatedVectorDrawableCompat.create(context, resId) ?: return
+
+        iconButton.icon = animatedVectorDrawable
+
+        animatedVectorDrawable.start()
+    }
+
     companion object {
+        private const val DURATION = 120L
         private const val MAXIMUM_RMS_dB = 12F
-        private const val MAXIMUM_SCALE = 1.625F
+        private const val MAXIMUM_SCALE = 1.75F
         private const val MINIMUM_RMS_dB = -2F
-        private const val MINIMUM_SCALE = 1.0F
-        private const val PERIOD_MILLS = 150L
+        private const val MINIMUM_SCALE = 1.125F
+        private const val PERIOD_MILLS = 120L
     }
 }

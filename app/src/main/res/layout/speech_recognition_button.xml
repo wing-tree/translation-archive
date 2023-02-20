@@ -1,52 +1,30 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:parentTag="android.widget.FrameLayout">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
     <com.wing.tree.bruni.translator.widget.Ripple
         android:id="@+id/ripple"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="@dimen/layout_width_0dp"
+        android:layout_height="@dimen/layout_height_0dp"
         android:layout_gravity="center"
+        android:layout_margin="@dimen/layout_margin_4dp"
         android:clickable="false"
         android:focusable="false"
-        app:color="@color/primary_ripple" />
+        app:color="@color/primary_ripple"
+        app:layout_constraintBottom_toBottomOf="@+id/icon_button"
+        app:layout_constraintEnd_toEndOf="@+id/icon_button"
+        app:layout_constraintStart_toStartOf="@+id/icon_button"
+        app:layout_constraintTop_toTopOf="@+id/icon_button" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/material_button"
+        android:id="@+id/icon_button"
         style="@style/Widget.Material3.Button.IconButton.Filled"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:insetLeft="@dimen/inset_left_0dp"
-        android:insetTop="@dimen/inset_top_0dp"
-        android:insetRight="@dimen/inset_right_0dp"
-        android:insetBottom="@dimen/inset_bottom_0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/outline_speech_recognition"
         app:rippleColor="@color/on_primary_ripple" />
-
-    <ImageView
-        android:id="@+id/start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:clickable="false"
-        android:focusable="false"
-        android:src="@drawable/ic_round_mic_24"
-        app:tint="?colorOnPrimary"
-        tools:ignore="ContentDescription" />
-
-    <ImageView
-        android:id="@+id/stop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:clickable="false"
-        android:focusable="false"
-        android:visibility="invisible"
-        android:src="@drawable/ic_round_stop_24"
-        app:tint="?colorOnPrimary"
-        tools:ignore="ContentDescription" />
 
 </merge>
