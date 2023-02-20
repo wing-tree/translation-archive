@@ -2,7 +2,7 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android">
 
     <objectAnimator
-        android:duration="@integer/material_motion_duration_medium_1"
+        android:duration="@integer/morph_duration"
         android:propertyName="fillAlpha"
         android:valueFrom="0.0"
         android:valueTo="1.0" />
