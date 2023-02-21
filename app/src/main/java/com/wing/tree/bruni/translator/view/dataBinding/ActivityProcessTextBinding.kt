@@ -86,41 +86,6 @@ internal fun ActivityProcessTextBinding.materialButton(
 }
 
 internal fun ActivityProcessTextBinding.nestedScrollView(processTextActivity: ProcessTextActivity) {
-    val paddingTop = processTextActivity.dimen(R.dimen.padding_top_48dp)
-
-    sourceText.nestedScrollView(processTextActivity, paddingTop)
-    translatedText.nestedScrollView(processTextActivity, paddingTop)
-}
-
-internal fun ActivityProcessTextBinding.sourceText(
-    processTextActivity: ProcessTextActivity
-) = with(processTextActivity) {
-    val iconSize = resources.getDimensionPixelSize(R.dimen.icon_size_20dp)
-    val paddingTop = resources.getDimensionPixelSize(R.dimen.padding_top_48dp)
-
-    with(sourceText) {
-        displaySourceLanguage(R.style.TextAppearance_TitleSmall)
-        materialButton(iconSize)
-        sourceText(
-            resId = R.style.TextAppearance_HeadlineMedium,
-            paddingTop = paddingTop
-        )
-    }
-}
-
-internal fun ActivityProcessTextBinding.translatedText(
-    processTextActivity: ProcessTextActivity
-) = with(processTextActivity) {
-    val iconSize = resources.getDimensionPixelSize(R.dimen.icon_size_20dp)
-    val paddingTop = resources.getDimensionPixelSize(R.dimen.padding_top_48dp)
-
-    with(translatedText) {
-        displayTargetLanguage(R.style.TextAppearance_TitleSmall, colorPrimary)
-        materialButton(iconSize)
-        translatedText(
-            resId = R.style.TextAppearance_HeadlineMedium,
-            color = colorPrimary,
-            paddingTop = paddingTop
-        )
-    }
+    sourceText.nestedScrollView(processTextActivity)
+    translatedText.nestedScrollView(processTextActivity)
 }

@@ -1,9 +1,8 @@
 package com.wing.tree.bruni.translator.view.dataBinding
 
 import android.view.View
-import androidx.annotation.StyleRes
-import androidx.core.view.updatePadding
 import com.wing.tree.bruni.core.constant.ONE
+import com.wing.tree.bruni.core.extension.dimen
 import com.wing.tree.bruni.translator.R
 import com.wing.tree.bruni.translator.databinding.SourceTextBinding
 import com.wing.tree.bruni.translator.extension.getFloat
@@ -21,22 +20,12 @@ internal var SourceTextBinding.isCursorVisible: Boolean
 
 internal fun SourceTextBinding.clearFocus() = sourceText.clearFocus()
 
-internal fun SourceTextBinding.displaySourceLanguage(@StyleRes resId: Int) {
-    displaySourceLanguage.setTextAppearance(resId)
-}
-
-internal fun SourceTextBinding.materialButton(iconSize: Int) {
-    pasteSourceTextFromClipboard.iconSize = iconSize
-    speakSourceText.iconSize = iconSize
-    swapLanguages.iconSize = iconSize
-}
-
 internal fun SourceTextBinding.nestedScrollView(
-    translatorActivity: TranslatorActivity,
-    paddingTop: Float
+    translatorActivity: TranslatorActivity
 ) = with(translatorActivity) {
     val maximumValue = ONE
     val minimumValue = getFloat(R.dimen.alpha_0_13)
+    val paddingTop = dimen(R.dimen.padding_top_48dp)
     val constantOfProportionality = maximumValue
         .minus(minimumValue)
         .div(paddingTop)
@@ -49,12 +38,3 @@ internal fun SourceTextBinding.nestedScrollView(
 }
 
 internal fun SourceTextBinding.requestFocus() = sourceText.requestFocus()
-
-internal fun SourceTextBinding.sourceText(
-    @StyleRes resId: Int,
-    paddingTop: Int
-) = with(sourceText) {
-    setTextAppearance(resId)
-
-    updatePadding(top = paddingTop)
-}
