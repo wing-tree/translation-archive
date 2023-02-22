@@ -19,6 +19,7 @@ import com.wing.tree.bruni.billing.BillingService
 import com.wing.tree.bruni.core.constant.ZERO
 import com.wing.tree.bruni.core.extension.*
 import com.wing.tree.bruni.core.regular.gone
+import com.wing.tree.bruni.core.regular.then
 import com.wing.tree.bruni.core.regular.visible
 import com.wing.tree.bruni.core.useCase.Result
 import com.wing.tree.bruni.translator.R
@@ -66,6 +67,15 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
         }
     }
 
+    private val requestRecordAudioPermissionsLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()) { result ->
+        if (result) {
+            startSpeechRecognition(sourceLanguage)
+        }
+    }
+
+    private val root: View get() = viewDataBinding.root
+
     private val viewDataBinding by lazy {
         ActivityMainBinding
             .inflate(layoutInflater)
@@ -75,15 +85,6 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
                 it.viewModel = viewModel
             }
     }
-
-    private val requestRecordAudioPermissionsLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()) { result ->
-        if (result) {
-            startSpeechRecognition(sourceLanguage)
-        }
-    }
-
-    private val root: View get() = viewDataBinding.root
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -128,11 +129,14 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
                     putExtra(EXTRA_LOAD_FAVORITES, true)
                 }
 
-                startActivity(intent)
-                overridePendingTransition(
-                    R.anim.slide_in_right,
-                    R.anim.slide_out_left
-                )
+                activityResultLauncher
+                    .launch(intent)
+                    .then {
+                        overridePendingTransition(
+                            R.anim.slide_in_right,
+                            R.anim.slide_out_left
+                        )
+                    }
 
                 true
             }
