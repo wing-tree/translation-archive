@@ -855,6 +855,7 @@
     <dimen name="line_height_32dp">32dp</dimen>
     <dimen name="line_height_36dp">36dp</dimen>
     <dimen name="line_height_40dp">40dp</dimen>
+    <dimen name="line_height_44dp">44dp</dimen>
 
     <dimen name="padding_0dp">0dp</dimen>
     <dimen name="padding_4dp">4dp</dimen>
@@ -1554,15 +1555,20 @@
     <dimen name="text_size_20dp">20dp</dimen>
     <dimen name="text_size_22dp">22dp</dimen>
     <dimen name="text_size_24dp">24dp</dimen>
+    <dimen name="text_size_26dp">26dp</dimen>
     <dimen name="text_size_28dp">28dp</dimen>
     <dimen name="text_size_30dp">30dp</dimen>
     <dimen name="text_size_32dp">32dp</dimen>
     <dimen name="text_size_34dp">34dp</dimen>
     <dimen name="text_size_36dp">36dp</dimen>
 
+    <dimen name="extra_extra_large_text_size">@dimen/text_size_36dp</dimen>
+    <dimen name="extra_large_text_size">@dimen/text_size_34dp</dimen>
     <dimen name="large_text_size">@dimen/text_size_32dp</dimen>
     <dimen name="medium_text_size">@dimen/text_size_30dp</dimen>
     <dimen name="small_text_size">@dimen/text_size_28dp</dimen>
+    <dimen name="extra_small_text_size">@dimen/text_size_26dp</dimen>
+    <dimen name="extra_extra_small_text_size">@dimen/text_size_24dp</dimen>
 
     <item name="alpha_0_13" format="float" type="dimen">0.13</item>
     <item name="alpha_0_20" format="float" type="dimen">0.20</item>

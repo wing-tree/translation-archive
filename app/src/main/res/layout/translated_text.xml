@@ -40,7 +40,7 @@
                 android:paddingTop="@dimen/padding_top_48dp"
                 android:scrollbars="vertical"
                 android:text="@{viewModel.translatedText}"
-                android:textAppearance="@style/TextAppearance.HeadlineLarge"
+                android:textAppearance="@style/TextAppearance.DisplaySmall"
                 android:textColor="?colorPrimary"
                 tools:text="Translated Text" />
 

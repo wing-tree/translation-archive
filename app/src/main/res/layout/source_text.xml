@@ -36,7 +36,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:cursorVisible="false"
                 android:gravity="start|top"
                 android:hint="@string/enter_your_text"
                 android:inputType="textMultiLine"
@@ -44,7 +43,7 @@
                 android:paddingHorizontal="@dimen/padding_horizontal_24dp"
                 android:paddingTop="@dimen/padding_top_48dp"
                 android:text="@={viewModel.sourceText}"
-                android:textAppearance="@style/TextAppearance.HeadlineLarge"
+                android:textAppearance="@style/TextAppearance.DisplaySmall"
                 tools:ignore="Autofill,LabelFor"
                 tools:text="Source Text" />
 
