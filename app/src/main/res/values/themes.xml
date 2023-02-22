@@ -39,13 +39,12 @@
     </style>
 
     <style name="Theme.Translator.ProcessText" parent="Theme.Translator">
-        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowAnimationStyle">@null</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <style name="TextAppearance.HeadlineLarge" parent="@style/TextAppearance.Material3.HeadlineLarge">
