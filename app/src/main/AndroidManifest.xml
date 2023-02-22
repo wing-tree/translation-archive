@@ -41,8 +41,9 @@
             android:name=".view.ProcessTextActivity"
             android:exported="true"
             android:label="@string/translate"
-            android:launchMode="singleTask"
-            android:theme="@style/Theme.Translator.ProcessText">
+            android:launchMode="singleInstance"
+            android:theme="@style/Theme.Translator.ProcessText"
+            android:windowSoftInputMode="adjustResize">
 
             <intent-filter>
                 <action android:name="android.intent.action.PROCESS_TEXT" />
