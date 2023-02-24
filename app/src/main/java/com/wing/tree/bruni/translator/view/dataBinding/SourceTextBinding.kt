@@ -106,6 +106,8 @@ internal fun SourceTextBinding.setWindowInsetsAnimationCallback() {
                         val isVisible = rootWindowInsets?.isVisible(ime()) == true
 
                         with(sourceText) {
+                            isCursorVisible = isVisible
+
                             post {
                                 if (isVisible.and(rootView.findFocus().isNull())) {
                                     requestFocus()
