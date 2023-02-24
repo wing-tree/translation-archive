@@ -2,8 +2,6 @@ package com.wing.tree.bruni.translator.extension
 
 import android.view.ViewGroup
 import androidx.annotation.StringRes
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.ViewDataBinding
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
@@ -12,9 +10,6 @@ import com.google.android.gms.ads.AdView
 import com.wing.tree.bruni.core.extension.context
 import com.wing.tree.bruni.translator.BuildConfig
 import com.wing.tree.bruni.translator.R
-
-internal val ViewDataBinding.rootWindowInsets: WindowInsetsCompat?
-    get() = ViewCompat.getRootWindowInsets(root)
 
 internal fun ViewDataBinding.bannerAd(parent: ViewGroup, adSize: AdSize) {
     val adRequest = AdRequest.Builder().build()
