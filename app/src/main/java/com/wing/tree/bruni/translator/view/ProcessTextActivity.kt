@@ -6,12 +6,14 @@ import android.speech.tts.TextToSpeech
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.core.view.*
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.wing.tree.bruni.core.extension.checkPermission
 import com.wing.tree.bruni.core.extension.integer
 import com.wing.tree.bruni.core.extension.launchWithLifecycle
+import com.wing.tree.bruni.core.extension.post
 import com.wing.tree.bruni.core.regular.gone
 import com.wing.tree.bruni.core.regular.visible
 import com.wing.tree.bruni.core.useCase.Result
@@ -22,6 +24,7 @@ import com.wing.tree.bruni.translator.databinding.ActivityProcessTextBinding
 import com.wing.tree.bruni.translator.extension.bannerAd
 import com.wing.tree.bruni.translator.view.dataBinding.*
 import com.wing.tree.bruni.translator.viewModel.ProcessTextViewModel
+import com.wing.tree.bruni.windowInsetsAnimation.DeferredWindowInsetsAnimationCallback
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.zip
 
@@ -31,7 +34,7 @@ class ProcessTextActivity : TranslatorActivity(), InterstitialAdLoader by Inters
 
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            with(BottomSheetBehavior.from(binding.bottomSheet)) {
+            with(BottomSheetBehavior.from(viewDataBinding.bottomSheet)) {
                 if (state == BottomSheetBehavior.STATE_HIDDEN) {
                     finish()
                 } else {
@@ -41,7 +44,14 @@ class ProcessTextActivity : TranslatorActivity(), InterstitialAdLoader by Inters
         }
     }
 
-    private val binding by lazy {
+    private val requestRecordAudioPermissionsLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()) { result ->
+        if (result) {
+            startSpeechRecognition(sourceLanguage)
+        }
+    }
+
+    private val viewDataBinding by lazy {
         ActivityProcessTextBinding.inflate(layoutInflater)
             .also {
                 it.activity = this
@@ -50,22 +60,29 @@ class ProcessTextActivity : TranslatorActivity(), InterstitialAdLoader by Inters
             }
     }
 
-    private val requestRecordAudioPermissionsLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()) { result ->
-        if (result) {
-            startSpeechRecognition(sourceLanguage)
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+        setContentView(viewDataBinding.root)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        with(DeferredWindowInsetsAnimationCallback()) {
+            val decorView = window.decorView
+
+            ViewCompat.setOnApplyWindowInsetsListener(decorView, this)
+            ViewCompat.setWindowInsetsAnimationCallback(decorView, this)
+        }
+
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
 
-        binding.bind(this)
+        viewDataBinding.let {
+            it.bind(this)
+            it.post {
+                translateProcessText(intent)
+            }
+        }
+
         viewModel.collect()
 
-        translateProcessText(intent)
         initTextToSpeech()
         loadInterstitialAd(this)
     }
@@ -76,7 +93,7 @@ class ProcessTextActivity : TranslatorActivity(), InterstitialAdLoader by Inters
 
     private fun initTextToSpeech() {
         initTextToSpeech(this) { status ->
-            with(binding) {
+            with(viewDataBinding) {
                 val speakSourceText = sourceText.speakSourceText
                 val speakTranslatedText = translatedText.speakTranslatedText
 
@@ -89,7 +106,7 @@ class ProcessTextActivity : TranslatorActivity(), InterstitialAdLoader by Inters
         }
     }
 
-    private fun updateRmsdB(rmsdB: Float) = with(binding) {
+    private fun updateRmsdB(rmsdB: Float) = with(viewDataBinding) {
         recognizeSpeech.updateRmsdB(rmsdB)
     }
 
@@ -100,9 +117,7 @@ class ProcessTextActivity : TranslatorActivity(), InterstitialAdLoader by Inters
         editText()
         materialButton(this)
         nestedScrollView(this)
-        sourceText(this)
         speechRecognitionButton()
-        translatedText(this)
 
         bannerAd(adView, AdSize(AD_WIDTH, AD_HEIGHT))
     }
