@@ -5,6 +5,7 @@ import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsCompat.Type.ime
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import com.wing.tree.bruni.core.constant.ONE
@@ -14,7 +15,6 @@ import com.wing.tree.bruni.translator.R
 import com.wing.tree.bruni.translator.databinding.SourceTextBinding
 import com.wing.tree.bruni.translator.extension.getFloat
 import com.wing.tree.bruni.translator.extension.resizeText
-import com.wing.tree.bruni.translator.extension.rootWindowInsets
 import com.wing.tree.bruni.translator.view.TranslatorActivity
 import com.wing.tree.bruni.windowInsetsAnimation.extension.isTypeMasked
 
@@ -48,12 +48,12 @@ internal fun SourceTextBinding.setWindowInsetsAnimationCallback() {
                     animation: WindowInsetsAnimationCompat,
                     bounds: WindowInsetsAnimationCompat.BoundsCompat
                 ): WindowInsetsAnimationCompat.BoundsCompat {
-                    if (animation.isTypeMasked(WindowInsetsCompat.Type.ime())) {
+                    if (animation.isTypeMasked(ime())) {
                         val windowInsets = ViewCompat.getRootWindowInsets(root) ?: return bounds
 
-                        if (windowInsets.isVisible(WindowInsetsCompat.Type.ime())) {
+                        if (windowInsets.isVisible(ime())) {
                             Insets.subtract(
-                                windowInsets.getInsets(WindowInsetsCompat.Type.ime()),
+                                windowInsets.getInsets(ime()),
                                 windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
                             ).let {
                                 Insets.max(it, Insets.NONE)
@@ -74,15 +74,15 @@ internal fun SourceTextBinding.setWindowInsetsAnimationCallback() {
                     runningAnimations: MutableList<WindowInsetsAnimationCompat>
                 ): WindowInsetsCompat {
                     runningAnimations.notContains {
-                        it.isTypeMasked(WindowInsetsCompat.Type.ime())
+                        it.isTypeMasked(ime())
                     }.let {
-                        if (it.or(insets.getBottom(WindowInsetsCompat.Type.ime()).isZero)) {
+                        if (it.or(insets.getBottom(ime()).isZero)) {
                             return insets
                         }
                     }
 
                     Insets.subtract(
-                        insets.getInsets(WindowInsetsCompat.Type.ime()),
+                        insets.getInsets(ime()),
                         insets.getInsets(WindowInsetsCompat.Type.systemBars())
                     ).let {
                         Insets.max(it, Insets.NONE)
@@ -91,7 +91,7 @@ internal fun SourceTextBinding.setWindowInsetsAnimationCallback() {
                     }.let {
                         with(clearText) {
                             alpha = ratio.times(it)
-                            isVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
+                            isVisible = insets.isVisible(ime())
                         }
 
                         speakSourceText.alpha = ratio.times(it).complement
@@ -101,12 +101,11 @@ internal fun SourceTextBinding.setWindowInsetsAnimationCallback() {
                 }
 
                 override fun onEnd(animation: WindowInsetsAnimationCompat) {
-                    if (animation.isTypeMasked(WindowInsetsCompat.Type.ime())) {
-                        val isVisible = rootWindowInsets?.isVisible(WindowInsetsCompat.Type.ime()) == true
+                    if (animation.isTypeMasked(ime())) {
+                        val rootWindowInsets = ViewCompat.getRootWindowInsets(root)
+                        val isVisible = rootWindowInsets?.isVisible(ime()) == true
 
                         with(sourceText) {
-                            isCursorVisible = isVisible
-
                             post {
                                 if (isVisible.and(rootView.findFocus().isNull())) {
                                     requestFocus()
