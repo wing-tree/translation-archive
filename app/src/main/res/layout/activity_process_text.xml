@@ -42,7 +42,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="@dimen/layout_width_0dp"
                 android:layout_height="@dimen/layout_height_360dp"
-                android:layout_marginBottom="@dimen/layout_margin_bottom_20dp"
+                android:layout_marginBottom="@dimen/layout_margin_bottom_12dp"
                 app:layout_constraintBottom_toTopOf="@+id/recognize_speech"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

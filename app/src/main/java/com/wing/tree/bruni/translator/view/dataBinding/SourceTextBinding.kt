@@ -15,6 +15,7 @@ import com.wing.tree.bruni.translator.R
 import com.wing.tree.bruni.translator.databinding.SourceTextBinding
 import com.wing.tree.bruni.translator.extension.getFloat
 import com.wing.tree.bruni.translator.extension.resizeText
+import com.wing.tree.bruni.translator.extension.setWindowInsetsAnimationCallback
 import com.wing.tree.bruni.translator.view.TranslatorActivity
 import com.wing.tree.bruni.windowInsetsAnimation.extension.isTypeMasked
 
@@ -39,8 +40,7 @@ internal fun SourceTextBinding.resizeText() = sourceText.resizeText()
 
 internal fun SourceTextBinding.setWindowInsetsAnimationCallback() {
     post {
-        ViewCompat.setWindowInsetsAnimationCallback(
-            root,
+        root.setWindowInsetsAnimationCallback(
             object : WindowInsetsAnimationCompat.Callback(DISPATCH_MODE_STOP) {
                 private var ratio: Float = ZERO.float
 
