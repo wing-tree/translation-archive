@@ -31,7 +31,7 @@
     <color name="scrim">#000000</color>
     <color name="shadow">#000000</color>
 
-    <color name="primary_ripple">#2976D1FF</color>
-    <color name="on_primary_ripple">#29003548</color>
-    <color name="on_surface_ripple">#29C5C6C9</color>
+    <color name="ripple_primary">#2976D1FF</color>
+    <color name="ripple_primary_container">#29004D67</color>
+    <color name="ripple_on_surface">#29C5C6C9</color>
 </resources>
