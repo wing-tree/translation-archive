@@ -13,7 +13,6 @@ import com.wing.tree.bruni.core.constant.ZERO
 import com.wing.tree.bruni.core.extension.*
 import com.wing.tree.bruni.translator.R
 import com.wing.tree.bruni.translator.databinding.SourceTextBinding
-import com.wing.tree.bruni.translator.extension.getFloat
 import com.wing.tree.bruni.translator.extension.resizeText
 import com.wing.tree.bruni.translator.extension.setWindowInsetsAnimationCallback
 import com.wing.tree.bruni.translator.view.TranslatorActivity
@@ -22,9 +21,9 @@ import com.wing.tree.bruni.windowInsetsAnimation.extension.isTypeMasked
 internal fun SourceTextBinding.nestedScrollView(
     translatorActivity: TranslatorActivity
 ) = with(translatorActivity) {
-    val maximumValue = ONE
-    val minimumValue = getFloat(R.dimen.alpha_0_13)
-    val paddingTop = dimen(R.dimen.padding_top_48dp)
+    val maximumValue = ONE.float
+    val minimumValue = float(R.dimen.alpha_0_13)
+    val paddingTop = dimen(R.dimen.padding_top_60dp)
     val constantOfProportionality = maximumValue
         .minus(minimumValue)
         .div(paddingTop)

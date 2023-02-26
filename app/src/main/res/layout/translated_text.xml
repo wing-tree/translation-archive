@@ -25,6 +25,7 @@
             android:layout_height="@dimen/layout_height_0dp"
             android:fillViewport="true"
             android:requiresFadingEdge="vertical"
+            android:scrollbars="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -37,8 +38,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="start|top"
                 android:paddingHorizontal="@dimen/padding_horizontal_24dp"
-                android:paddingTop="@dimen/padding_top_48dp"
-                android:scrollbars="vertical"
+                android:paddingTop="@dimen/padding_top_60dp"
+                android:paddingBottom="@dimen/padding_bottom_12dp"
                 android:text="@{viewModel.translatedText}"
                 android:textAppearance="@style/TextAppearance.DisplaySmall"
                 android:textColor="?colorPrimary"
@@ -68,7 +69,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:text="@{viewModel.displayTargetLanguage}"
-                    android:textAppearance="@style/TextAppearance.TitleMedium"
+                    android:textAppearance="@style/TextAppearance.TitleLarge"
                     android:textColor="?colorPrimary"
                     tools:text="영어" />
 

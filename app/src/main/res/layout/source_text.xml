@@ -25,6 +25,7 @@
             android:layout_height="@dimen/layout_height_0dp"
             android:fillViewport="true"
             android:requiresFadingEdge="vertical"
+            android:scrollbars="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -42,7 +43,8 @@
                 android:inputType="textMultiLine"
                 android:maxLength="@integer/limit_characters"
                 android:paddingHorizontal="@dimen/padding_horizontal_24dp"
-                android:paddingTop="@dimen/padding_top_48dp"
+                android:paddingTop="@dimen/padding_top_60dp"
+                android:paddingBottom="@dimen/padding_bottom_12dp"
                 android:text="@={viewModel.sourceText}"
                 android:textAppearance="@style/TextAppearance.DisplaySmall"
                 tools:ignore="Autofill,LabelFor"
@@ -66,10 +68,10 @@
 
             <FrameLayout
                 android:id="@+id/frameLayout"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/layout_width_0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/swap_languages"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -79,7 +81,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:text="@{viewModel.displaySourceLanguage}"
-                    android:textAppearance="@style/TextAppearance.TitleMedium"
+                    android:textAppearance="@style/TextAppearance.TitleLarge"
                     android:textColor="?colorOnSurface"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/swap"
