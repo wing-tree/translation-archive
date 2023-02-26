@@ -44,7 +44,7 @@ private fun Background(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.ic_round_delete_24),
+            painter = painterResource(id = R.drawable.round_delete_24px),
             contentDescription = null,
             tint = colorScheme.onError
         )
