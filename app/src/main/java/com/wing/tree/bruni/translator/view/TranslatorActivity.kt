@@ -65,8 +65,6 @@ abstract class TranslatorActivity : SpeechRecognizerActivity(), TextToSpeechDele
         }
     }
 
-    override fun onPartialResults(partialResults: Bundle?) = Unit
-
     private fun updateSourceText(text: CharSequence) {
         sourceText.update { text.string }
     }
