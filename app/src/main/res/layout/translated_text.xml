@@ -80,7 +80,7 @@
                 android:layout_width="@dimen/layout_width_48dp"
                 android:layout_height="@dimen/layout_height_48dp"
                 android:onClick="@{() -> activity.shareTranslatedText()}"
-                app:icon="@drawable/ic_round_share_24"
+                app:icon="@drawable/round_share_24px"
                 app:iconGravity="textStart"
                 app:iconSize="@dimen/icon_size_24dp"
                 app:rippleColor="@color/primary_ripple" />
@@ -91,7 +91,7 @@
                 android:layout_width="@dimen/layout_width_48dp"
                 android:layout_height="@dimen/layout_height_48dp"
                 android:onClick="@{() -> activity.copyTranslatedTextToClipboard()}"
-                app:icon="@drawable/ic_round_content_copy_24"
+                app:icon="@drawable/round_content_copy_24px"
                 app:iconGravity="textStart"
                 app:iconSize="@dimen/icon_size_24dp"
                 app:rippleColor="@color/primary_ripple" />
@@ -102,7 +102,7 @@
                 android:layout_width="@dimen/layout_width_48dp"
                 android:layout_height="@dimen/layout_height_48dp"
                 android:onClick="@{() -> activity.speakTranslatedText()}"
-                app:icon="@drawable/ic_round_volume_up_24"
+                app:icon="@drawable/round_volume_up_24px"
                 app:iconGravity="textStart"
                 app:iconSize="@dimen/icon_size_24dp"
                 app:rippleColor="@color/primary_ripple" />

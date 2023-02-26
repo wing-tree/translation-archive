@@ -4,11 +4,11 @@
         <menu>
             <item
                 android:id="@+id/history"
-                android:icon="@drawable/ic_round_history_24"
+                android:icon="@drawable/round_history_24px"
                 android:title="@string/history" />
             <item
                 android:id="@+id/clear_all"
-                android:icon="@drawable/ic_round_clear_all_24"
+                android:icon="@drawable/round_clear_all_24px"
                 android:title="@string/clear_all" />
 
             <item
@@ -20,6 +20,6 @@
 
     <item
         android:id="@+id/in_app_products"
-        android:icon="@drawable/ic_round_shopping_cart_24"
+        android:icon="@drawable/round_shopping_cart_24px"
         android:title="@string/in_app_products" />
 </menu>
