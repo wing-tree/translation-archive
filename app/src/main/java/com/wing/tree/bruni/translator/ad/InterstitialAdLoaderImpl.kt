@@ -8,6 +8,7 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.wing.tree.bruni.core.extension.string
 import com.wing.tree.bruni.translator.BuildConfig
 import com.wing.tree.bruni.translator.R
 
@@ -24,7 +25,7 @@ class InterstitialAdLoaderImpl : InterstitialAdLoader {
         onAdLoaded: ((InterstitialAd) -> Unit)?
     ) {
         val adRequest = AdRequest.Builder().build()
-        val adUnitId = context.getString(
+        val adUnitId = context.string(
             if (BuildConfig.DEBUG) {
                 R.string.sample_interstitial_ad_unit_id
             } else {

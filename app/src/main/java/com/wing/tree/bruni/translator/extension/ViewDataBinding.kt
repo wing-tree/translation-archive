@@ -8,6 +8,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.wing.tree.bruni.core.extension.context
+import com.wing.tree.bruni.core.extension.string
 import com.wing.tree.bruni.translator.BuildConfig
 import com.wing.tree.bruni.translator.R
 
@@ -22,7 +23,7 @@ internal fun ViewDataBinding.bannerAd(parent: ViewGroup, adSize: AdSize) {
     }
 
     AdView(context).apply adView@ {
-        adUnitId = context.getString(resId)
+        adUnitId = string(resId)
         adListener = object : AdListener() {
             override fun onAdLoaded() {
                 super.onAdLoaded()
