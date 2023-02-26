@@ -33,8 +33,7 @@
                     android:id="@+id/material_toolbar"
                     style="@style/Widget.Material3.Toolbar.Surface"
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    app:navigationIcon="@drawable/ic_round_menu_24" />
+                    android:layout_height="?attr/actionBarSize" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraint_layout"
