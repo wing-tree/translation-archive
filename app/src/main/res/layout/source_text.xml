@@ -102,7 +102,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/paste_source_text_from_clipboard"
                 app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/on_surface_ripple" />
+                app:rippleColor="@color/ripple_on_surface" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/paste_source_text_from_clipboard"
@@ -117,7 +117,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/speak_source_text"
                 app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/on_surface_ripple" />
+                app:rippleColor="@color/ripple_on_surface" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/speak_source_text"
@@ -132,7 +132,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/on_surface_ripple" />
+                app:rippleColor="@color/ripple_on_surface" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/clear_text"
@@ -148,7 +148,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/on_surface_ripple" />
+                app:rippleColor="@color/ripple_on_surface" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -84,7 +84,7 @@
                 app:icon="@drawable/round_share_24px"
                 app:iconGravity="textStart"
                 app:iconSize="@dimen/icon_size_24dp"
-                app:rippleColor="@color/primary_ripple" />
+                app:rippleColor="@color/ripple_primary" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/copy_translated_text_to_clipboard"
@@ -95,7 +95,7 @@
                 app:icon="@drawable/round_content_copy_24px"
                 app:iconGravity="textStart"
                 app:iconSize="@dimen/icon_size_24dp"
-                app:rippleColor="@color/primary_ripple" />
+                app:rippleColor="@color/ripple_primary" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/speak_translated_text"
@@ -106,7 +106,7 @@
                 app:icon="@drawable/round_volume_up_24px"
                 app:iconGravity="textStart"
                 app:iconSize="@dimen/icon_size_24dp"
-                app:rippleColor="@color/primary_ripple" />
+                app:rippleColor="@color/ripple_primary" />
 
         </LinearLayout>
 
