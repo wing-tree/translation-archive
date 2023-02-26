@@ -96,7 +96,7 @@ private fun DismissContent(
             modifier = Modifier.padding(8.dp)
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_round_star_24),
+                painter = painterResource(id = R.drawable.round_fill_star_24px),
                 contentDescription = null,
                 tint = tint.value
             )
@@ -234,7 +234,7 @@ internal fun TopBar(
             if (viewModel.loadFavorites.not()) {
                 IconButton(onClick = actionOnClick) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_round_star_24),
+                        painter = painterResource(id = R.drawable.round_fill_star_24px),
                         null
                     )
                 }
