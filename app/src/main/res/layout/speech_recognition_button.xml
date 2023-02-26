@@ -13,7 +13,7 @@
         android:layout_margin="@dimen/layout_margin_4dp"
         android:clickable="false"
         android:focusable="false"
-        app:color="@color/ripple_on_primary_container"
+        app:color="@color/ripple_on_secondary_container"
         app:layout_constraintBottom_toBottomOf="@+id/icon_button"
         app:layout_constraintEnd_toEndOf="@+id/icon_button"
         app:layout_constraintStart_toStartOf="@+id/icon_button"
@@ -21,12 +21,12 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/icon_button"
-        style="@style/Widget.Material3.Button.IconButton.Filled"
+        style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/primary_container"
+        android:backgroundTint="@color/secondary_container"
         app:icon="@drawable/outline_speech_recognition"
-        app:iconTint="@color/on_primary_container"
-        app:rippleColor="@color/ripple_primary_container" />
+        app:iconTint="@color/on_secondary_container"
+        app:rippleColor="@color/ripple_secondary_container" />
 
 </merge>
