@@ -83,4 +83,16 @@
         <item name="android:lineHeight" tools:targetApi="p">@dimen/line_height_20dp</item>
     </style>
 
+    <style name="TextAppearance.DisplaySourceLanguage" parent="@style/TextAppearance.Material3.TitleLarge">
+        <item name="android:textSize">@dimen/text_size_20dp</item>
+        <item name="lineHeight">@dimen/line_height_26dp</item>
+        <item name="android:lineHeight" tools:targetApi="p">@dimen/line_height_26dp</item>
+    </style>
+
+    <style name="TextAppearance.DisplayTargetLanguage" parent="@style/TextAppearance.Material3.TitleLarge">
+        <item name="android:textSize">@dimen/text_size_20dp</item>
+        <item name="lineHeight">@dimen/line_height_26dp</item>
+        <item name="android:lineHeight" tools:targetApi="p">@dimen/line_height_26dp</item>
+    </style>
+
 </resources>

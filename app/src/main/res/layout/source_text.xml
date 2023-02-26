@@ -81,7 +81,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:text="@{viewModel.displaySourceLanguage}"
-                    android:textAppearance="@style/TextAppearance.TitleLarge"
+                    android:textAppearance="@style/TextAppearance.DisplaySourceLanguage"
                     android:textColor="?colorOnSurface"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/swap"
