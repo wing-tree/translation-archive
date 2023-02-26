@@ -46,6 +46,7 @@
                 android:paddingTop="@dimen/padding_top_60dp"
                 android:paddingBottom="@dimen/padding_bottom_12dp"
                 android:text="@={viewModel.sourceText}"
+                android:textColor="?colorOnSurface"
                 android:textAppearance="@style/TextAppearance.DisplaySmall"
                 tools:ignore="Autofill,LabelFor"
                 tools:text="Source Text" />

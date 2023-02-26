@@ -61,7 +61,7 @@ private fun DismissContent(
         val tint = if (item.isStarred) {
             animateColorAsState(targetValue = colorScheme.primary)
         } else {
-            animateColorAsState(targetValue = colorScheme.onBackground)
+            animateColorAsState(targetValue = colorScheme.onSurface)
         }
 
         Column(
@@ -72,7 +72,7 @@ private fun DismissContent(
         ) {
             Text(
                 text = item.sourceText,
-                color = colorScheme.onBackground,
+                color = colorScheme.onSurface,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = TWO,
                 style = Typography.titleMedium.copyAsDp()
