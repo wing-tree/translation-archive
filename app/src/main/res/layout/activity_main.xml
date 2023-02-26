@@ -17,7 +17,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/surface">
 
         <androidx.drawerlayout.widget.DrawerLayout
             android:id="@+id/drawer_layout"
@@ -97,7 +98,6 @@
                         android:id="@+id/linear_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/surface"
                         android:clipChildren="false"
                         android:clipToPadding="false"
                         android:orientation="vertical"
