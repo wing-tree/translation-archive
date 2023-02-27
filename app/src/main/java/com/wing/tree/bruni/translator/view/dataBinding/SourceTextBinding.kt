@@ -57,9 +57,10 @@ internal fun SourceTextBinding.setWindowInsetsAnimationCallback() {
                             ).let {
                                 Insets.max(it, Insets.NONE)
                             }.let {
-                                ratio = ONE
-                                    .float
-                                    .safeDiv(it.bottom)
+                                it.bottom.reciprocal
+                                ratio = it
+                                    .bottom
+                                    .reciprocal
                                     .negative
                             }
                         }
@@ -108,10 +109,30 @@ internal fun SourceTextBinding.setWindowInsetsAnimationCallback() {
                             isCursorVisible = isVisible
 
                             post {
-                                if (isVisible.and(rootView.findFocus().isNull())) {
-                                    requestFocus()
-                                } else if (isVisible.not().and(isFocused)) {
-                                    clearFocus()
+                                if (isVisible) {
+                                    clearText.enable()
+
+                                    with(speakSourceText) {
+                                        disable()
+                                        isClickable = false
+                                        isFocusable = false
+                                    }
+
+                                    if (rootView.findFocus().isNull()) {
+                                        requestFocus()
+                                    }
+                                } else {
+                                    with(clearText) {
+                                        disable()
+                                        isClickable = false
+                                        isFocusable = false
+                                    }
+
+                                    speakSourceText.enable()
+
+                                    if (isFocused) {
+                                        clearFocus()
+                                    }
                                 }
                             }
                         }
