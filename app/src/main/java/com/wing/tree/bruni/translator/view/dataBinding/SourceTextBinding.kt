@@ -105,34 +105,16 @@ internal fun SourceTextBinding.setWindowInsetsAnimationCallback() {
                         val rootWindowInsets = ViewCompat.getRootWindowInsets(root)
                         val isVisible = rootWindowInsets?.isVisible(ime()) == true
 
+                        clearText.isClickable = isVisible
+
                         with(sourceText) {
                             isCursorVisible = isVisible
 
                             post {
-                                if (isVisible) {
-                                    clearText.enable()
-
-                                    with(speakSourceText) {
-                                        disable()
-                                        isClickable = false
-                                        isFocusable = false
-                                    }
-
-                                    if (rootView.findFocus().isNull()) {
-                                        requestFocus()
-                                    }
-                                } else {
-                                    with(clearText) {
-                                        disable()
-                                        isClickable = false
-                                        isFocusable = false
-                                    }
-
-                                    speakSourceText.enable()
-
-                                    if (isFocused) {
-                                        clearFocus()
-                                    }
+                                if (isVisible.and(rootView.findFocus().isNull())) {
+                                    requestFocus()
+                                } else if (isVisible.not().and(isFocused)) {
+                                    clearFocus()
                                 }
                             }
                         }
