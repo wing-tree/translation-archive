@@ -2,7 +2,6 @@ package com.wing.tree.bruni.translator.view
 
 import android.Manifest
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.view.Menu
@@ -52,15 +51,8 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
             val data = result.data
 
             data?.let {
-                val history: History.Item =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        val clazz = History.Item::class.java
-
-                        it.getParcelableExtra(EXTRA_HISTORY, clazz) ?: return@let
-                    } else {
-                        @Suppress("DEPRECATION")
-                        it.getParcelableExtra(EXTRA_HISTORY) ?: return@let
-                    }
+                val clazz = History.Item::class.java
+                val history = it.getParcelableExtraCompat(EXTRA_HISTORY, clazz) ?: return@let
 
                 viewModel.translateHistory(history)
             }
@@ -171,14 +163,12 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
         materialToolbar(this)
 
         drawerLayout(this)
-        editText()
         materialButton(this)
         navigationView(activityResultLauncher, this)
         nestedScrollView(this)
-        setWindowInsetsAnimationCallback()
+        sourceText()
         speechRecognitionButton()
-
-        bannerAd(adView, AdSize.BANNER)
+        setWindowInsetsAnimationCallback()
     }
 
     private fun ActivityMainBinding.speechRecognitionButton() {
@@ -222,6 +212,10 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
                             }
                         )
                     } else {
+                        with(viewDataBinding) {
+                            bannerAd(adView, AdSize.BANNER)
+                        }
+
                         loadInterstitialAd(context)
 
                         val duration = configShortAnimTime.long
