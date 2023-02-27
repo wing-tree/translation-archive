@@ -10,7 +10,6 @@ import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsCompat.Type.ime
 import androidx.core.view.WindowInsetsCompat.Type.systemBars
-import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -21,7 +20,7 @@ import com.wing.tree.bruni.core.regular.then
 import com.wing.tree.bruni.translator.R
 import com.wing.tree.bruni.translator.constant.EXTRA_LOAD_FAVORITES
 import com.wing.tree.bruni.translator.databinding.ActivityMainBinding
-import com.wing.tree.bruni.translator.extension.resizeText
+import com.wing.tree.bruni.translator.extension.setWindowInsetsAnimationCallback
 import com.wing.tree.bruni.translator.view.HistoryActivity
 import com.wing.tree.bruni.translator.view.InAppProductsActivity
 import com.wing.tree.bruni.translator.view.MainActivity
@@ -42,18 +41,6 @@ internal fun ActivityMainBinding.drawerLayout(mainActivity: MainActivity) = with
     actionBarDrawerToggle.syncState()
 }
 
-internal fun ActivityMainBinding.editText() = with(sourceText) {
-    with(sourceText) {
-        addTextChangedListener {
-            val textSize = resizeText()
-
-            with(translatedText) {
-                translatedText.textSize = textSize
-            }
-        }
-    }
-}
-
 internal fun ActivityMainBinding.materialButton(mainActivity: MainActivity) = with(mainActivity) {
     val swapLanguages = sourceText.swapLanguages
     val displaySourceLanguage = sourceText.displaySourceLanguage
@@ -66,12 +53,12 @@ internal fun ActivityMainBinding.materialButton(mainActivity: MainActivity) = wi
         val accelerateQuadInterpolator = accelerateQuadInterpolator
         val decelerateQuadInterpolator = decelerateQuadInterpolator
         val duration = configShortAnimTime.long.half
-        val translationY = dimen(R.dimen.text_size_22dp)
+        val translationY = dimen(R.dimen.text_size_20dp)
 
         with(displaySourceLanguage) {
-            translateDown(duration, translationY, accelerateQuadInterpolator) {
+            translateY(translationY, duration, accelerateQuadInterpolator) {
                 mainActivity.swapLanguages()
-                translateUp(duration, ZERO.float, decelerateQuadInterpolator) {
+                translateY(ZERO.float, duration, decelerateQuadInterpolator) {
                     swapLanguages.isClickable = true
                     swapLanguages.isFocusable = true
                 }.alpha(ONE.float)
@@ -79,28 +66,30 @@ internal fun ActivityMainBinding.materialButton(mainActivity: MainActivity) = wi
         }
 
         with(displayTargetLanguage) {
-            translateUp(duration, translationY, accelerateQuadInterpolator) {
-                translateDown(duration, ZERO.float, decelerateQuadInterpolator)
+            translateY(translationY.negative, duration, accelerateQuadInterpolator) {
+                translateY(ZERO.float, duration,  decelerateQuadInterpolator)
                     .alpha(ONE.float)
             }.alpha(ZERO.float)
         }
     }
 }
 
-internal fun ActivityMainBinding.materialToolbar(mainActivity: MainActivity) = with(mainActivity) {
-    setSupportActionBar(
-        materialToolbar.apply {
-            setNavigationOnClickListener {
-                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    drawerLayout.closeDrawer(GravityCompat.START)
-                } else {
-                    drawerLayout.openDrawer(GravityCompat.START)
+internal fun ActivityMainBinding.materialToolbar(mainActivity: MainActivity) {
+    with(mainActivity) {
+        setSupportActionBar(
+            materialToolbar.apply {
+                setNavigationOnClickListener {
+                    if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                        drawerLayout.closeDrawer(GravityCompat.START)
+                    } else {
+                        drawerLayout.openDrawer(GravityCompat.START)
+                    }
                 }
             }
-        }
-    )
+        )
 
-    supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+    }
 }
 
 internal fun ActivityMainBinding.navigationView(
@@ -159,11 +148,16 @@ internal fun ActivityMainBinding.navigationView(
                     putExtra(EXTRA_LOAD_FAVORITES, true)
                 }
 
-                startActivity(intent)
-                overridePendingTransition(
-                    android.R.anim.slide_in_left,
-                    android.R.anim.slide_out_right
-                )
+                activityResultLauncher
+                    .launch(intent)
+                    .then {
+                        overridePendingTransition(
+                            android.R.anim.slide_in_left,
+                            android.R.anim.slide_out_right
+                        )
+
+                        shouldCloseDrawer.set(true)
+                    }
 
                 shouldCloseDrawer.set(true)
 
@@ -186,119 +180,102 @@ internal fun ActivityMainBinding.navigationView(
 }
 
 internal fun ActivityMainBinding.nestedScrollView(mainActivity: MainActivity) {
-    val paddingTop = mainActivity.dimen(R.dimen.padding_top_56dp)
-
-    sourceText.nestedScrollView(mainActivity, paddingTop)
-    translatedText.nestedScrollView(mainActivity, paddingTop)
+    sourceText.nestedScrollView(mainActivity)
+    translatedText.nestedScrollView(mainActivity)
 }
 
-internal fun ActivityMainBinding.setWindowInsetsAnimationCallback() = post {
-    ViewCompat.setWindowInsetsAnimationCallback(
-        constraintLayout,
-        object : WindowInsetsAnimationCompat.Callback(DISPATCH_MODE_STOP) {
-            private val rootWindowInsets: WindowInsetsCompat?
-                get() = ViewCompat.getRootWindowInsets(root)
+internal fun ActivityMainBinding.setWindowInsetsAnimationCallback() {
+    post {
+        constraintLayout.setWindowInsetsAnimationCallback(
+            object : WindowInsetsAnimationCompat.Callback(DISPATCH_MODE_STOP) {
+                private var materialToolbarRatio = ZERO.float
+                private var linearLayoutRatio = ZERO.float
+                private var updateHeightRatio = ZERO.float
 
-            private var constraintLayoutHeight = ZERO
-            private var imeHeight = ZERO
-            private var topCoefficient: Float = ZERO.float
-            private var bottomCoefficient: Float = ZERO.float
+                override fun onStart(
+                    animation: WindowInsetsAnimationCompat,
+                    bounds: WindowInsetsAnimationCompat.BoundsCompat
+                ): WindowInsetsAnimationCompat.BoundsCompat {
+                    val rootWindowInsets = ViewCompat.getRootWindowInsets(root) ?: return bounds
 
-            override fun onStart(
-                animation: WindowInsetsAnimationCompat,
-                bounds: WindowInsetsAnimationCompat.BoundsCompat
-            ): WindowInsetsAnimationCompat.BoundsCompat {
-                constraintLayoutHeight = displayHeight.minus(materialToolbar.height)
+                    if (rootWindowInsets.isVisible(ime())) {
+                        Insets.subtract(
+                            rootWindowInsets.getInsets(ime()),
+                            rootWindowInsets.getInsets(systemBars())
+                        ).let {
+                            Insets.max(it, Insets.NONE)
+                        }.let {
+                            materialToolbarRatio = materialToolbar.height
+                                .float
+                                .safeDiv(it.bottom)
 
-                if (animation.isTypeMasked(ime())) {
-                    rootWindowInsets?.let { windowInsets ->
-                        if (windowInsets.isVisible(ime())) {
-                            Insets.subtract(
-                                windowInsets.getInsets(ime()),
-                                windowInsets.getInsets(systemBars())
-                            ).let {
-                                Insets.max(it, Insets.NONE).height
-                            }.let {
-                                imeHeight = it
+                            linearLayoutRatio = linearLayout.height
+                                .float
+                                .safeDiv(it.bottom)
+                                .complement
+                                .negative
 
-                                topCoefficient = materialToolbar
-                                    .height
-                                    .float
-                                    .safeDiv(it)
-
-                                bottomCoefficient = linearLayout
-                                    .height
-                                    .float
-                                    .safeDiv(it)
-                                    .complement
-                            }
+                            updateHeightRatio = actionBarSize
+                                .plus(linearLayout.height)
+                                .float
+                                .safeDiv(it.bottom)
+                                .complement
                         }
                     }
+
+                    return bounds
                 }
 
-                return bounds
-            }
-
-            override fun onProgress(
-                insets: WindowInsetsCompat,
-                runningAnimations: MutableList<WindowInsetsAnimationCompat>
-            ): WindowInsetsCompat {
-                runningAnimations.notContains {
-                    it.isTypeMasked(ime())
-                }.let {
-                    if (it.or(imeHeight.isZero)) {
-                        return insets
-                    }
-                }
-
-                Insets.subtract(
-                    insets.getInsets(ime()),
-                    insets.getInsets(systemBars())
-                ).let {
-                    Insets.max(it, Insets.NONE)
-                }.let {
-                    it.top.minus(it.bottom).float
-                }.let {
-                    val topTranslationY = topCoefficient.times(it)
-                    val bottomTranslationY = bottomCoefficient.times(it)
-
-                    materialToolbar.translationY = topTranslationY
-                    constraintLayout.translationY = topTranslationY
-
-                    with(constraintLayout) {
-                        val height = constraintLayoutHeight
-                            .minus(topTranslationY)
-                            .plus(bottomTranslationY)
-                            .int
-
-                        updateHeight(height)
-                    }
-
-                    linearLayout.translationY = bottomTranslationY.negative
-                }
-
-                return insets
-            }
-
-            override fun onEnd(animation: WindowInsetsAnimationCompat) {
-                if (animation.isTypeMasked(ime())) {
-                    val isVisible = rootWindowInsets?.isVisible(ime()) == true
-
-                    with(sourceText) {
-                        isCursorVisible = isVisible
-
-                        post {
-                            if (isVisible.and(rootView.findFocus().isNull())) {
-                                requestFocus()
-                            } else if (isVisible.not().and(isFocused)) {
-                                clearFocus()
-                            }
+                override fun onProgress(
+                    insets: WindowInsetsCompat,
+                    runningAnimations: MutableList<WindowInsetsAnimationCompat>
+                ): WindowInsetsCompat {
+                    runningAnimations.notContains {
+                        it.isTypeMasked(ime())
+                    }.let {
+                        if (it.or(insets.getBottom(ime()).isZero)) {
+                            return insets
                         }
                     }
+
+                    Insets.subtract(
+                        insets.getInsets(ime()),
+                        insets.getInsets(systemBars())
+                    ).let {
+                        Insets.max(it, Insets.NONE)
+                    }.let {
+                        it.top.minus(it.bottom)
+                    }.let {
+                        materialToolbar.translationY = materialToolbarRatio.times(it)
+                        linearLayout.translationY = linearLayoutRatio.times(it)
+                        constraintLayout.translationY = materialToolbarRatio.times(it)
+
+                        constraintLayout.updateHeight { _ ->
+                            screenSize
+                                .height
+                                .minus(actionBarSize)
+                                .plus(updateHeightRatio.times(it))
+                                .int
+                        }
+                    }
+
+                    return insets
                 }
             }
+        )
+    }
+}
 
-            private val Insets.height: Int get() = bottom
+internal fun ActivityMainBinding.sourceText() {
+    with(sourceText) {
+        setWindowInsetsAnimationCallback()
+
+        doAfterTextChanged {
+            val textSize = resizeText()
+
+            with(translatedText) {
+                translatedText.textSize = textSize
+            }
         }
-    )
+    }
 }
