@@ -41,4 +41,5 @@
     <color name="ripple_secondary_container">#29D1E5F3</color>
     <color name="ripple_on_secondary_container">#29091E28</color>
     <color name="ripple_on_surface">#29191C1E</color>
+    <color name="ripple_on_background">#29191C1E</color>
 </resources>

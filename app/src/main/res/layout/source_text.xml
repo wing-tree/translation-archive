@@ -46,7 +46,7 @@
                 android:paddingTop="@dimen/padding_top_60dp"
                 android:paddingBottom="@dimen/padding_bottom_12dp"
                 android:text="@={viewModel.sourceText}"
-                android:textColor="?colorOnSurface"
+                android:textColor="?colorOnBackground"
                 android:textAppearance="@style/TextAppearance.DisplaySmall"
                 tools:ignore="Autofill,LabelFor"
                 tools:text="Source Text" />
@@ -83,7 +83,7 @@
                     android:gravity="center_vertical"
                     android:text="@{viewModel.displaySourceLanguage}"
                     android:textAppearance="@style/TextAppearance.DisplaySourceLanguage"
-                    android:textColor="?colorOnSurface"
+                    android:textColor="?colorOnBackground"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/swap"
                     app:layout_constraintTop_toTopOf="parent"
@@ -99,11 +99,11 @@
                 app:icon="@drawable/round_swap_vert_24px"
                 app:iconGravity="textStart"
                 app:iconSize="@dimen/icon_size_24dp"
-                app:iconTint="?attr/colorOnSurface"
+                app:iconTint="?attr/colorOnBackground"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/paste_source_text_from_clipboard"
                 app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/ripple_on_surface" />
+                app:rippleColor="@color/ripple_on_background" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/paste_source_text_from_clipboard"
@@ -114,11 +114,11 @@
                 app:icon="@drawable/round_content_paste_24px"
                 app:iconGravity="textStart"
                 app:iconSize="@dimen/icon_size_24dp"
-                app:iconTint="?attr/colorOnSurface"
+                app:iconTint="?attr/colorOnBackground"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/speak_source_text"
                 app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/ripple_on_surface" />
+                app:rippleColor="@color/ripple_on_background" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/speak_source_text"
@@ -129,11 +129,11 @@
                 app:icon="@drawable/round_volume_up_24px"
                 app:iconGravity="textStart"
                 app:iconSize="@dimen/icon_size_24dp"
-                app:iconTint="?attr/colorOnSurface"
+                app:iconTint="?attr/colorOnBackground"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/ripple_on_surface" />
+                app:rippleColor="@color/ripple_on_background" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/clear_text"
@@ -145,11 +145,11 @@
                 app:icon="@drawable/round_close_24px"
                 app:iconGravity="textStart"
                 app:iconSize="@dimen/icon_size_24dp"
-                app:iconTint="?attr/colorOnSurface"
+                app:iconTint="?attr/colorOnBackground"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:rippleColor="@color/ripple_on_surface" />
+                app:rippleColor="@color/ripple_on_background" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
