@@ -160,15 +160,15 @@ class MainActivity : TranslatorActivity(), InterstitialAdLoader by InterstitialA
     }
 
     private fun ActivityMainBinding.bind(mainActivity: MainActivity) = with(mainActivity) {
-        materialToolbar(this)
+        toolbar(this)
 
+        button(this)
         drawerLayout(this)
-        materialButton(this)
         navigationView(activityResultLauncher, this)
         nestedScrollView(this)
+        setWindowInsetsAnimationCallback()
         sourceText()
         speechRecognitionButton()
-        setWindowInsetsAnimationCallback()
     }
 
     private fun ActivityMainBinding.speechRecognitionButton() {

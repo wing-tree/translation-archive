@@ -27,11 +27,46 @@ import com.wing.tree.bruni.translator.view.MainActivity
 import com.wing.tree.bruni.windowInsetsAnimation.extension.isTypeMasked
 import java.util.concurrent.atomic.AtomicBoolean
 
-internal fun ActivityMainBinding.drawerLayout(mainActivity: MainActivity) = with(mainActivity) {
+internal fun ActivityMainBinding.button(mainActivity: MainActivity) {
+    with(mainActivity) {
+        val swapLanguages = sourceText.swapLanguages
+        val displaySourceLanguage = sourceText.displaySourceLanguage
+        val displayTargetLanguage = translatedText.displayTargetLanguage
+
+        swapLanguages.setOnClickListener {
+            swapLanguages.isClickable = false
+            swapLanguages.isFocusable = false
+
+            val accelerateQuadInterpolator = accelerateQuadInterpolator
+            val decelerateQuadInterpolator = decelerateQuadInterpolator
+            val duration = configShortAnimTime.long.half
+            val translationY = dimen(R.dimen.text_size_20dp)
+
+            with(displaySourceLanguage) {
+                translateY(translationY, duration, accelerateQuadInterpolator) {
+                    swapLanguages()
+                    translateY(ZERO.float, duration, decelerateQuadInterpolator) {
+                        swapLanguages.isClickable = true
+                        swapLanguages.isFocusable = true
+                    }.alpha(ONE.float)
+                }.alpha(ZERO.float)
+            }
+
+            with(displayTargetLanguage) {
+                translateY(translationY.negative, duration, accelerateQuadInterpolator) {
+                    translateY(ZERO.float, duration, decelerateQuadInterpolator)
+                        .alpha(ONE.float)
+                }.alpha(ZERO.float)
+            }
+        }
+    }
+}
+
+internal fun ActivityMainBinding.drawerLayout(mainActivity: MainActivity) {
     val actionBarDrawerToggle = ActionBarDrawerToggle(
-        this,
+        mainActivity,
         drawerLayout,
-        materialToolbar,
+        toolbar,
         R.string.open_drawer,
         R.string.close_drawer
     )
@@ -41,140 +76,91 @@ internal fun ActivityMainBinding.drawerLayout(mainActivity: MainActivity) = with
     actionBarDrawerToggle.syncState()
 }
 
-internal fun ActivityMainBinding.materialButton(mainActivity: MainActivity) = with(mainActivity) {
-    val swapLanguages = sourceText.swapLanguages
-    val displaySourceLanguage = sourceText.displaySourceLanguage
-    val displayTargetLanguage = translatedText.displayTargetLanguage
-
-    swapLanguages.setOnClickListener {
-        swapLanguages.isClickable = false
-        swapLanguages.isFocusable = false
-
-        val accelerateQuadInterpolator = accelerateQuadInterpolator
-        val decelerateQuadInterpolator = decelerateQuadInterpolator
-        val duration = configShortAnimTime.long.half
-        val translationY = dimen(R.dimen.text_size_20dp)
-
-        with(displaySourceLanguage) {
-            translateY(translationY, duration, accelerateQuadInterpolator) {
-                mainActivity.swapLanguages()
-                translateY(ZERO.float, duration, decelerateQuadInterpolator) {
-                    swapLanguages.isClickable = true
-                    swapLanguages.isFocusable = true
-                }.alpha(ONE.float)
-            }.alpha(ZERO.float)
-        }
-
-        with(displayTargetLanguage) {
-            translateY(translationY.negative, duration, accelerateQuadInterpolator) {
-                translateY(ZERO.float, duration,  decelerateQuadInterpolator)
-                    .alpha(ONE.float)
-            }.alpha(ZERO.float)
-        }
-    }
-}
-
-internal fun ActivityMainBinding.materialToolbar(mainActivity: MainActivity) {
+internal fun ActivityMainBinding.navigationView(
+    activityResultLauncher: ActivityResultLauncher<Intent>,
+    mainActivity: MainActivity
+) {
     with(mainActivity) {
-        setSupportActionBar(
-            materialToolbar.apply {
-                setNavigationOnClickListener {
+        val shouldCloseDrawer = AtomicBoolean(false)
+
+        lifecycle.addObserver(
+            object : DefaultLifecycleObserver {
+                override fun onStop(owner: LifecycleOwner) {
                     if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                        drawerLayout.closeDrawer(GravityCompat.START)
-                    } else {
-                        drawerLayout.openDrawer(GravityCompat.START)
+                        if (shouldCloseDrawer.compareAndSet(true, false)) {
+                            drawerLayout.closeDrawer(GravityCompat.START, false)
+                        }
                     }
+
+                    super.onStop(owner)
                 }
             }
         )
 
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-    }
-}
+        navigationView.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.history -> {
+                    activityResultLauncher
+                        .launch(Intent(this, HistoryActivity::class.java))
+                        .then {
+                            overridePendingTransition(
+                                android.R.anim.slide_in_left,
+                                android.R.anim.slide_out_right
+                            )
 
-internal fun ActivityMainBinding.navigationView(
-    activityResultLauncher: ActivityResultLauncher<Intent>,
-    mainActivity: MainActivity
-) = with(mainActivity) {
-    val shouldCloseDrawer = AtomicBoolean(false)
+                            shouldCloseDrawer.set(true)
+                        }
 
-    lifecycle.addObserver(
-        object : DefaultLifecycleObserver {
-            override fun onStop(owner: LifecycleOwner) {
-                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    if (shouldCloseDrawer.compareAndSet(true, false)) {
-                        drawerLayout.closeDrawer(GravityCompat.START, false)
-                    }
+                    false
                 }
+                R.id.clear_all -> {
+                    MaterialAlertDialogBuilder(this)
+                        .setTitle(R.string.clear_all)
+                        .setMessage(R.string.clear_all_histories)
+                        .setPositiveButton(R.string.clear_all) { dialog, _ ->
+                            viewModel.clearAllHistories()
+                            dialog.dismiss()
+                        }
+                        .setNegativeButton(R.string.cancel) { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        .show()
 
-                super.onStop(owner)
-            }
-        }
-    )
-
-    navigationView.setNavigationItemSelectedListener {
-        when (it.itemId) {
-            R.id.history -> {
-                activityResultLauncher
-                    .launch(Intent(this, HistoryActivity::class.java))
-                    .then {
-                        overridePendingTransition(
-                            android.R.anim.slide_in_left,
-                            android.R.anim.slide_out_right
-                        )
-
-                        shouldCloseDrawer.set(true)
-                    }
-
-                false
-            }
-            R.id.clear_all -> {
-                MaterialAlertDialogBuilder(this)
-                    .setTitle(R.string.clear_all)
-                    .setMessage(R.string.clear_all_histories)
-                    .setPositiveButton(R.string.clear_all) { dialog, _ ->
-                        viewModel.clearAllHistories()
-                        dialog.dismiss()
-                    }
-                    .setNegativeButton(R.string.cancel) { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    .show()
-
-                false
-            }
-            R.id.favorites -> {
-                val intent = Intent(this, HistoryActivity::class.java).apply {
-                    putExtra(EXTRA_LOAD_FAVORITES, true)
+                    false
                 }
-
-                activityResultLauncher
-                    .launch(intent)
-                    .then {
-                        overridePendingTransition(
-                            android.R.anim.slide_in_left,
-                            android.R.anim.slide_out_right
-                        )
-
-                        shouldCloseDrawer.set(true)
+                R.id.favorites -> {
+                    val intent = Intent(this, HistoryActivity::class.java).apply {
+                        putExtra(EXTRA_LOAD_FAVORITES, true)
                     }
 
-                shouldCloseDrawer.set(true)
+                    activityResultLauncher
+                        .launch(intent)
+                        .then {
+                            overridePendingTransition(
+                                android.R.anim.slide_in_left,
+                                android.R.anim.slide_out_right
+                            )
 
-                false
+                            shouldCloseDrawer.set(true)
+                        }
+
+                    shouldCloseDrawer.set(true)
+
+                    false
+                }
+                R.id.in_app_products -> {
+                    startActivity<InAppProductsActivity>()
+                    overridePendingTransition(
+                        android.R.anim.slide_in_left,
+                        android.R.anim.slide_out_right
+                    )
+
+                    shouldCloseDrawer.set(true)
+
+                    false
+                }
+                else -> true
             }
-            R.id.in_app_products -> {
-                startActivity<InAppProductsActivity>()
-                overridePendingTransition(
-                    android.R.anim.slide_in_left,
-                    android.R.anim.slide_out_right
-                )
-
-                shouldCloseDrawer.set(true)
-
-                false
-            }
-            else -> true
         }
     }
 }
@@ -187,7 +173,7 @@ internal fun ActivityMainBinding.nestedScrollView(mainActivity: MainActivity) {
 internal fun ActivityMainBinding.setWindowInsetsAnimationCallback() {
     post {
         constraintLayout.setWindowInsetsAnimationCallback(
-            object : WindowInsetsAnimationCompat.Callback(DISPATCH_MODE_STOP) {
+            object : WindowInsetsAnimationCompat.Callback(DISPATCH_MODE_CONTINUE_ON_SUBTREE) {
                 private var materialToolbarRatio = ZERO.float
                 private var linearLayoutRatio = ZERO.float
                 private var updateHeightRatio = ZERO.float
@@ -205,7 +191,7 @@ internal fun ActivityMainBinding.setWindowInsetsAnimationCallback() {
                         ).let {
                             Insets.max(it, Insets.NONE)
                         }.let {
-                            materialToolbarRatio = materialToolbar.height
+                            materialToolbarRatio = toolbar.height
                                 .float
                                 .safeDiv(it.bottom)
 
@@ -246,7 +232,7 @@ internal fun ActivityMainBinding.setWindowInsetsAnimationCallback() {
                     }.let {
                         it.top.minus(it.bottom)
                     }.let {
-                        materialToolbar.translationY = materialToolbarRatio.times(it)
+                        toolbar.translationY = materialToolbarRatio.times(it)
                         linearLayout.translationY = linearLayoutRatio.times(it)
                         constraintLayout.translationY = materialToolbarRatio.times(it)
 
@@ -277,5 +263,24 @@ internal fun ActivityMainBinding.sourceText() {
                 translatedText.textSize = textSize
             }
         }
+    }
+}
+
+
+internal fun ActivityMainBinding.toolbar(mainActivity: MainActivity) {
+    with(mainActivity) {
+        setSupportActionBar(
+            toolbar.apply {
+                setNavigationOnClickListener {
+                    if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                        drawerLayout.closeDrawer(GravityCompat.START)
+                    } else {
+                        drawerLayout.openDrawer(GravityCompat.START)
+                    }
+                }
+            }
+        )
+
+        supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 }
