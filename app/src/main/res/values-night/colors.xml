@@ -32,6 +32,7 @@
     <color name="shadow">#000000</color>
 
     <color name="ripple_primary">#2976D1FF</color>
+    <color name="ripple_on_primary">#29003548</color>
     <color name="ripple_primary_container">#29004D67</color>
     <color name="ripple_on_primary_container">#29C2E8FF</color>
     <color name="ripple_secondary_container">#29B5C9D7</color>
