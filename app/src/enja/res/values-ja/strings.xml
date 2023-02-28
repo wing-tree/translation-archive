@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">日英翻訳アプリ</string>
+    <string name="cancel">キャンセル</string>
+    <string name="clear_all">全てをクリア</string>
+    <string name="clear_all_histories">履歴を全てクリア</string>
+    <string name="copied_to_clipboard">クリップボードにコピーしました</string>
+    <string name="enter_your_text">テキストを入力してください。</string>
+    <string name="favorites">お気に入り</string>
+    <string name="history">履歴</string>
+    <string name="in_app_products">アプリ内商品</string>
+    <string name="language_data_is_missing">言語データがありません</string>
+    <string name="language_is_not_supported">言語はサポートされていません</string>
+    <string name="pattern">yyyy年M月d日</string>
+    <string name="remove_ads">広告を削除</string>
+    <string name="request_record_audio_permission_rationale_material_alert_dialog_message">音声認識を行うためにTranslatorがマイクにアクセスすることを許可してください。</string>
+    <string name="request_record_audio_permission_rationale_material_alert_dialog_title">マイクの許可が拒否されました</string>
+    <string name="settings">設定</string>
+    <string name="translate">翻訳</string>
+</resources>

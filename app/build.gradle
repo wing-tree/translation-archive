@@ -35,6 +35,14 @@ android {
             buildConfigField "String", "SOURCE", "\"en\""
             buildConfigField "String", "TARGET", "\"ko\""
         }
+
+        create("enja") {
+            dimension = "version"
+            applicationIdSuffix = ".enja"
+            versionNameSuffix = "-enja"
+            buildConfigField "String", "SOURCE", "\"en\""
+            buildConfigField "String", "TARGET", "\"ja\""
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
