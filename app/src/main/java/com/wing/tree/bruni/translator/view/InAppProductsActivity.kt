@@ -54,8 +54,8 @@ class InAppProductsActivity : ComponentActivity() {
                 ) {
                     InAppProductsScreen(
                         inAppProductsState = state,
-                        onItemClick = {
-                            viewModel.launchBillingFlow(this, it.productDetails)
+                        onItemClick = { inAppProduct ->
+                            viewModel.launchBillingFlow(this, inAppProduct.productDetails)
                         },
                         modifier = Modifier
                             .fillMaxSize()
