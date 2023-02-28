@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">日英翻訳アプリ</string>
+    <string name="app_name">英日翻訳アプリ</string>
     <string name="cancel">キャンセル</string>
     <string name="clear_all">全てをクリア</string>
     <string name="clear_all_histories">履歴を全てクリア</string>
